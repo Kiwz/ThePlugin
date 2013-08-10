@@ -1,4 +1,18 @@
-- test
-  - test
-    - test
-- ja
+name: ThePlugin
+main: net.kiwz.ThePlugin.ThePlugin
+version: 0.01
+author: Kiwz
+
+commands:
+  gm:
+    description: Endre GameMode
+    aliases: []
+    permission: 
+    permission-message: Du har ikke tilgang!
+    usage: 
+  test:
+    description: Bare en test kommando
+    aliases: []
+    permission: 
+    permission-message: Du har ikke tilgang!
+    usage: Bare en test kommando
