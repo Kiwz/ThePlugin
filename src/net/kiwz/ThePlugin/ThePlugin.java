@@ -14,8 +14,11 @@ public class ThePlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		Commands cmds = new Commands();
-		getCommand("test").setExecutor(cmds);
 		getCommand("gm").setExecutor(cmds);
+		getCommand("fly").setExecutor(cmds);
+		getCommand("heal").setExecutor(cmds);
+		getCommand("mat").setExecutor(cmds);
+		getCommand("test").setExecutor(cmds);
 		
 	    LoginListener ll = new LoginListener();
 	    pm.registerEvents(ll, this);

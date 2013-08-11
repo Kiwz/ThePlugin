@@ -10,6 +10,24 @@ commands:
     permission: 
     permission-message: Du har ikke tilgang!
     usage: 
+  fly:
+    description: Endre flymodus
+    aliases: []
+    permission: 
+    permission-message: Du har ikke tilgang!
+    usage: 
+  heal:
+    description: Sett til full helse
+    aliases: []
+    permission: 
+    permission-message: Du har ikke tilgang!
+    usage:
+  mat:
+    description: Sett til mett
+    aliases: []
+    permission: 
+    permission-message: Du har ikke tilgang!
+    usage: 
   test:
     description: Bare en test kommando
     aliases: []
