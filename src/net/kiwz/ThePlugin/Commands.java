@@ -44,7 +44,7 @@ public class Commands implements CommandExecutor {
 			
 			// Test her:
 			
-			
+			sender.sendMessage("Håvar som tester!");
 			
 			// Test slutter!
 			
