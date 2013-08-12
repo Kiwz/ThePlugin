@@ -18,6 +18,8 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("fly").setExecutor(cmds);
 		getCommand("heal").setExecutor(cmds);
 		getCommand("mat").setExecutor(cmds);
+	    getCommand("teleport").setExecutor(cmds);
+	    getCommand("gi").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 		
 	    LoginListener ll = new LoginListener();

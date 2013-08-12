@@ -14,33 +14,9 @@ public class ChangeGM {
 		ChatColor dgreen = ChatColor.DARK_GREEN;
 		ChatColor red = ChatColor.RED;
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
+		Player receivingPlayer = null;
 		
-		if (args.length >= 1 && !sender.getName().toLowerCase().startsWith(args[0].toLowerCase())){
-			Player[] onlinePlayers = Bukkit.getServer().getOnlinePlayers();
-			for (Player playername : onlinePlayers) {
-				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					player = Bukkit.getServer().getPlayer(playername.getName());
-				}
-				else player = null;
-			}
-			if (player != null) {
-				String gmStatus = player.getGameMode().toString();
-				if (gmStatus == "SURVIVAL") {
-					player.setGameMode(GameMode.CREATIVE);
-					sender.sendMessage(dgreen + player.getName() + " er nå i Creative modus!");
-					player.sendMessage(dgreen + sender.getName() + " endret modusen din til Creative!");
-				}
-				if (gmStatus == "CREATIVE") {
-					player.setGameMode(GameMode.SURVIVAL);
-					sender.sendMessage(dgreen + player.getName() + " er nå i Survival modus!");
-					player.sendMessage(dgreen + sender.getName() + " endret modusen din til Survival!");
-				}
-			}
-			
-			else sender.sendMessage(red + "Fant ingen spiller som passet dette navnet!");
-		}
-		
-		if (args.length < 1 || sender.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
+		if (args.length == 0 || sender.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
 			
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(red + "Spesifiser en spiller!");
@@ -57,6 +33,31 @@ public class ChangeGM {
 					sender.sendMessage(dgreen + "Du er nå i Survival modus!");
 				}
 			}
+		}
+		
+		if (args.length >= 1 && !sender.getName().toLowerCase().startsWith(args[0].toLowerCase())){
+			Player[] onlinePlayers = Bukkit.getServer().getOnlinePlayers();
+			for (Player playername : onlinePlayers) {
+				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
+					receivingPlayer = Bukkit.getServer().getPlayer(playername.getName());
+				}
+			}
+			
+			if (receivingPlayer != null) {
+				String gmStatus = receivingPlayer.getGameMode().toString();
+				if (gmStatus == "SURVIVAL") {
+					receivingPlayer.setGameMode(GameMode.CREATIVE);
+					sender.sendMessage(dgreen + receivingPlayer.getName() + " er nå i Creative modus!");
+					receivingPlayer.sendMessage(dgreen + sender.getName() + " endret modusen din til Creative!");
+				}
+				if (gmStatus == "CREATIVE") {
+					receivingPlayer.setGameMode(GameMode.SURVIVAL);
+					sender.sendMessage(dgreen + receivingPlayer.getName() + " er nå i Survival modus!");
+					receivingPlayer.sendMessage(dgreen + sender.getName() + " endret modusen din til Survival!");
+				}
+			}
+			
+			else sender.sendMessage(red + "Fant ingen spiller som passet dette navnet!");
 		}
 	}
 }

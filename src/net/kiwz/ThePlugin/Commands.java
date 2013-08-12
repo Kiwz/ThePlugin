@@ -2,8 +2,10 @@ package net.kiwz.ThePlugin;
 
 import net.kiwz.ThePlugin.utils.ChangeGM;
 import net.kiwz.ThePlugin.utils.Fly;
+import net.kiwz.ThePlugin.utils.GiveItem;
 import net.kiwz.ThePlugin.utils.Heal;
 import net.kiwz.ThePlugin.utils.Mat;
+import net.kiwz.ThePlugin.utils.Teleport;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -39,6 +41,18 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 		
+	    if ((cmd.getName().equalsIgnoreCase("teleport")) && (sender.isOp())) {
+			Teleport tp = new Teleport();
+			tp.tp(sender, cmd, args);
+			return true;
+	    }
+	    
+	    if ((cmd.getName().equalsIgnoreCase("gi")) && (sender.isOp())) {
+	    	GiveItem item = new GiveItem();
+    		item.giveItem(sender, cmd, args);
+    		return true;
+	    }
+	    
 		else if (cmd.getName().equalsIgnoreCase("test") && sender.isOp()) {
 			sender.sendMessage("Du er OP og dette er test-kommandoen");
 			

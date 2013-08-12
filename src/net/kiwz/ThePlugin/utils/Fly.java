@@ -13,32 +13,9 @@ public class Fly {
 		ChatColor dgreen = ChatColor.DARK_GREEN;
 		ChatColor red = ChatColor.RED;
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
+		Player receivingPlayer = null;
 		
-		if (args.length >= 1 && !sender.getName().toLowerCase().startsWith(args[0].toLowerCase())){
-			Player[] onlinePlayers = Bukkit.getServer().getOnlinePlayers();
-			for (Player playername : onlinePlayers) {
-				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					player = Bukkit.getServer().getPlayer(playername.getName());
-				}
-				else player = null;
-			}
-			if (player != null) {
-				if (player.getAllowFlight()) {
-					player.setAllowFlight(false);
-					sender.sendMessage(dgreen + player.getName() + " kan ikke fly!");
-					player.sendMessage(dgreen + sender.getName() + " skrudde av fly modus!");
-				}
-				else {
-					player.setAllowFlight(true);
-					sender.sendMessage(dgreen + player.getName() + " kan fly!");
-					player.sendMessage(dgreen + sender.getName() + " skrudde på fly modus!");
-				}
-			}
-			
-			else sender.sendMessage(red + "Fant ingen spiller som passet dette navnet!");
-		}
-		
-		if (args.length < 1 || sender.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
+		if (args.length == 0 || sender.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
 			
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(red + "Spesifiser en spiller!");
@@ -54,6 +31,29 @@ public class Fly {
 					sender.sendMessage(dgreen + "Du kan fly!");
 				}
 			}
+		}
+		
+		if (args.length >= 1 && !sender.getName().toLowerCase().startsWith(args[0].toLowerCase())){
+			Player[] onlinePlayers = Bukkit.getServer().getOnlinePlayers();
+			for (Player playername : onlinePlayers) {
+				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
+					receivingPlayer = Bukkit.getServer().getPlayer(playername.getName());
+				}
+			}
+			if (receivingPlayer != null) {
+				if (receivingPlayer.getAllowFlight()) {
+					receivingPlayer.setAllowFlight(false);
+					sender.sendMessage(dgreen + receivingPlayer.getName() + " kan ikke fly!");
+					receivingPlayer.sendMessage(dgreen + sender.getName() + " skrudde av fly modus!");
+				}
+				else {
+					receivingPlayer.setAllowFlight(true);
+					sender.sendMessage(dgreen + receivingPlayer.getName() + " kan fly!");
+					receivingPlayer.sendMessage(dgreen + sender.getName() + " skrudde på fly modus!");
+				}
+			}
+			
+			else sender.sendMessage(red + "Fant ingen spiller som passet dette navnet!");
 		}
 	}
 }

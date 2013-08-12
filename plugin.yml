@@ -28,6 +28,18 @@ commands:
     permission: 
     permission-message: Du har ikke tilgang!
     usage: 
+  teleport:
+    description: Teleport til en annen eller til koordinater
+    aliases: [tp]
+    permission: 
+    permission-message: Du har ikke tilgang!
+    usage: 
+  gi:
+    description: Gi ett item til deg eller en annen
+    aliases: [i, give]
+    permission: 
+    permission-message: Du har ikke tilgang!
+    usage: 
   test:
     description: Bare en test kommando
     aliases: []
