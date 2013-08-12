@@ -33,12 +33,11 @@ public class Teleport {
 			}
 			
 			else {
-				Player[] onlinePlayers = Bukkit.getServer().getOnlinePlayers();
 				
-				for (Player playername : onlinePlayers) {
+				for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
 					
 					if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					destination = Bukkit.getServer().getPlayer(playername.getName());
+						destination = Bukkit.getServer().getPlayer(playername.getName());
 					}
 				}
 				
@@ -54,16 +53,15 @@ public class Teleport {
 		}
 		
 		if (args.length == 2) {
-			Player[] onlinePlayers = Bukkit.getServer().getOnlinePlayers();
 			
-			for (Player playername : onlinePlayers) {
+			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
 				
 				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
 					traveler = Bukkit.getServer().getPlayer(playername.getName());
 				}
 			}
 			
-			for (Player playername : onlinePlayers) {
+			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
 				
 				if (playername.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
 					destination = Bukkit.getServer().getPlayer(playername.getName());

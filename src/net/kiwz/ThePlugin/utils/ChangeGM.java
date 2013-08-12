@@ -36,8 +36,8 @@ public class ChangeGM {
 		}
 		
 		if (args.length >= 1 && !sender.getName().toLowerCase().startsWith(args[0].toLowerCase())){
-			Player[] onlinePlayers = Bukkit.getServer().getOnlinePlayers();
-			for (Player playername : onlinePlayers) {
+
+			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
 				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
 					receivingPlayer = Bukkit.getServer().getPlayer(playername.getName());
 				}

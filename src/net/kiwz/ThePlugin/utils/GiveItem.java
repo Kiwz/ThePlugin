@@ -14,7 +14,8 @@ public class GiveItem {
 		ChatColor dgreen = ChatColor.DARK_GREEN;
 		ChatColor red = ChatColor.RED;
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
-		Player receivingPlayer = null;
+		//Player receivingPlayer = null;
+		int id = 0;
 		
 		if (args.length == 0) {
 			
@@ -28,8 +29,44 @@ public class GiveItem {
 		}
 		
 		if (args.length == 1) {
-			ItemStack item = new ItemStack(Material.getMaterial(args[0].toUpperCase()).getId(), 1, (short) 0);
-			player.getInventory().addItem(new ItemStack[] { item });
+			
+			for (Material mat : Material.values()) {
+				int matId = mat.getId();
+				String matName = Material.getMaterial(matId).toString();
+				
+				if (matName.startsWith(args[0].toUpperCase())) {
+					id = matId;
+					break;
+				}
+			}
+			
+			if (id > 0) {
+				String material = Material.getMaterial(id).toString();
+				ItemStack item = new ItemStack(id, 1, (short) 0);
+				player.getInventory().addItem(new ItemStack[] { item });
+				sender.sendMessage(dgreen + "Du fikk 1 " + material);
+			}
+		}
+		
+		if (args.length == 2 && args[0].toString().matches("[0-9]+")) {
+			
+			for (Material mat : Material.values()) {
+				int matId = mat.getId();
+				String matName = Material.getMaterial(matId).toString();
+				
+				if (matName.startsWith(args[1].toUpperCase())) {
+					id = matId;
+					break;
+				}
+			}
+			
+			if (id > 0) {
+				int amount = Integer.parseInt(args[0]);
+				String material = Material.getMaterial(id).toString();
+				ItemStack item = new ItemStack(id, amount, (short) 0);
+				player.getInventory().addItem(new ItemStack[] { item });
+				sender.sendMessage(dgreen + "Du fikk " + args[0] + " " + material);
+			}
 		}
 	}
 }
