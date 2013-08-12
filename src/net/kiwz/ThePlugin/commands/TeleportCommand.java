@@ -1,4 +1,4 @@
-package net.kiwz.ThePlugin.utils;
+package net.kiwz.ThePlugin.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Teleport {
+public class TeleportCommand {
 	
 	public void tp(CommandSender sender, Command cmd, String[] args) {
 		ChatColor dgreen = ChatColor.DARK_GREEN;

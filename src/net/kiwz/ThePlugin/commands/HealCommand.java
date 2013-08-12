@@ -1,4 +1,4 @@
-package net.kiwz.ThePlugin.utils;
+package net.kiwz.ThePlugin.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Heal {
+public class HealCommand {
 	
 	public void heal(CommandSender sender, Command cmd, String[] args) {
 		

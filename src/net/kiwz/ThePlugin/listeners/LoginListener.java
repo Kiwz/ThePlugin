@@ -1,4 +1,4 @@
-package net.kiwz.ThePlugin;
+package net.kiwz.ThePlugin.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;

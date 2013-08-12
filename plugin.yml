@@ -4,45 +4,76 @@ version: 0.01
 author: Kiwz
 
 commands:
-  gm:
-    description: Endre GameMode
-    aliases: []
-    permission: 
+  feed:
+    description: Sett til mett
+    aliases: [mat]
+    permission: ThePlugin.feed
     permission-message: Du har ikke tilgang!
-    usage: 
+    usage: |
+      /feed
+      /feed <player>
   fly:
     description: Endre flymodus
     aliases: []
-    permission: 
+    permission: ThePlugin.fly
     permission-message: Du har ikke tilgang!
-    usage: 
+    usage: |
+      /fly
+      /fly <player>
+  give:
+    description: Gi ett item til deg eller en annen
+    aliases: [i, gi]
+    permission: ThePlugin.give
+    permission-message: Du har ikke tilgang!
+    usage: |
+      /give <item>
+      /give <amount> <item>
+      /give <amount> <item> <data>
+      /give <player> <item>
+      /give <player> <amount> <item>
+      /give <player> <amount> <item> <data>
+  gm:
+    description: Endre GameMode
+    aliases: []
+    permission: ThePlugin.gm
+    permission-message: Du har ikke tilgang!
+    usage: |
+      /gm
+      /gm <player>
   heal:
     description: Sett til full helse
     aliases: []
-    permission: 
+    permission: ThePlugin.heal
     permission-message: Du har ikke tilgang!
-    usage:
-  mat:
-    description: Sett til mett
+    usage: |
+      /heal
+      /heal <player>
+  hjelp:
+    description: Viser deg hjelp menyen
     aliases: []
-    permission: 
+    permission: ThePlugin.hjelp
     permission-message: Du har ikke tilgang!
-    usage: 
+    usage: |
+      /hjelp <sideNummer>
+      /hjelp <emne>
+      /hjelp <emne> <sideNummer>
   teleport:
-    description: Teleport til en annen eller til koordinater
+    description: Teleporter til en annen eller til koordinater
     aliases: [tp]
-    permission: 
+    permission: ThePlugin.teleport
     permission-message: Du har ikke tilgang!
-    usage: 
-  gi:
-    description: Gi ett item til deg eller en annen
-    aliases: [i, give]
-    permission: 
-    permission-message: Du har ikke tilgang!
-    usage: 
+    usage: |
+      /teleport <player>
+      /teleport <x y z>
+      /teleport <player> <player>
+      /teleport <player> <x y z>
   test:
     description: Bare en test kommando
     aliases: []
-    permission: 
+    permission: ThePlugin.test
     permission-message: Du har ikke tilgang!
-    usage: Bare en test kommando
+    usage: /test
+
+permissions:
+  ThePlugin.hjelp:
+    default: true

@@ -1,7 +1,8 @@
 package net.kiwz.ThePlugin;
 
 import net.kiwz.ThePlugin.Commands;
-import net.kiwz.ThePlugin.LoginListener;
+import net.kiwz.ThePlugin.listeners.CommandListener;
+import net.kiwz.ThePlugin.listeners.LoginListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -13,17 +14,23 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		
 		Commands cmds = new Commands();
-		getCommand("gm").setExecutor(cmds);
+		getCommand("feed").setExecutor(cmds);
 		getCommand("fly").setExecutor(cmds);
+	    getCommand("give").setExecutor(cmds);
+		getCommand("gm").setExecutor(cmds);
 		getCommand("heal").setExecutor(cmds);
-		getCommand("mat").setExecutor(cmds);
+		getCommand("hjelp").setExecutor(cmds);
 	    getCommand("teleport").setExecutor(cmds);
-	    getCommand("gi").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 		
-	    LoginListener ll = new LoginListener();
-	    pm.registerEvents(ll, this);
+	    LoginListener lListener = new LoginListener();
+	    pm.registerEvents(lListener, this);
+	    
+	    CommandListener cmdListener = new CommandListener();
+	    pm.registerEvents(cmdListener, this);
+
 	}
 	
 	@Override
