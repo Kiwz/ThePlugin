@@ -17,7 +17,7 @@ public class OpenInvCommand {
 		Server server = Bukkit.getServer();
 		if (sender instanceof Player && args.length == 1) {
 			Player player = server.getPlayer(args[0]);
-			if (player.isOnline()) {
+			if (player != null && player.isOnline()) {
 				Inventory inventory = player.getInventory();
 				Bukkit.getServer().getPlayer(sender.getName()).openInventory(inventory);
 			}
