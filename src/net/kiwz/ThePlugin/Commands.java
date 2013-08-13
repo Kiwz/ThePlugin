@@ -6,8 +6,8 @@ import net.kiwz.ThePlugin.commands.FlyCommand;
 import net.kiwz.ThePlugin.commands.GiveCommand;
 import net.kiwz.ThePlugin.commands.HealCommand;
 import net.kiwz.ThePlugin.commands.HelpCommand;
+import net.kiwz.ThePlugin.commands.OpenInvCommand;
 import net.kiwz.ThePlugin.commands.TeleportCommand;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -53,6 +53,14 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 		
+	    if (cmd.getName().equalsIgnoreCase("openinv")) {
+			OpenInvCommand openinv = new OpenInvCommand();
+			if (!openinv.openInv(sender, cmd, args)) {
+				return false;
+			}
+			return true;
+	    }
+		
 	    if (cmd.getName().equalsIgnoreCase("teleport")) {
 			TeleportCommand tp = new TeleportCommand();
 			tp.tp(sender, cmd, args);
@@ -62,9 +70,8 @@ public class Commands implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("test")) {
 			sender.sendMessage("Du er OP og dette er test-kommandoen");
 			
+			
 			// Test her:
-			
-			
 			
 			// Test slutter!
 			

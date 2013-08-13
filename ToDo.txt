@@ -1,31 +1,47 @@
 Kommandoer:
 
-OpenInv
 Spawn
 SetSpawn
 Home
 Sethome
 
 
+Specials:
+
+Teleport-skilt
+1: [Teleport]
+2: [x: -99999]
+3: [y: 256]
+4: [z: -99999]
+
+Verdens ende:
+Stop player at specified coords, world spesific
+
+Chat format:
+PlayerName: text
+
 Protection:
 
+/plass (viser hjelpe-menyen til kommandoen "/plass")
+/plass <navn> (viser hjelpe-menyen til kommandoen "/plass")
 /plass <navn> ny [radius i blokker, standard til 30, maks 60, maks uenderlig for OP] (kan brukes av alle, men man kan bare eie 3 plasser)
 /plass <navn> endre [radius i blokker, standard til samme strl som opprinnelig, ellers som over men bare eieren kan gjøre dette)
 /plass <navn> <nytt-navn>
-/plass <navn>
+/plass <navn> flag <commaseperated flags>
 /plass <navn> inviter <spiller>
 /plass <navn> fjern <spiller>
 /plass <navn> eier <ny-eier>
 /plass <navn> spawn (kan brukes av alle)
 /plass <navn> setspawn
-/plass <navn> info (navn, spawn koordinat, plass koordinat, eier, medlemmer, opprettelsestidspunktet)
+/plass <navn> info (navn, spawn koordinat, plass koordinat, eier, medlemmer, opprettelsestidspunktet, flags)
+/plass <list> (får en liste med plass-navn og eier navn)
 
 Regler for plasser:
 Avstand fra grensen til nærmeste grense min 20.
-Maks en plass pr spiller.
+Maks tre plasser pr spiller.
 Spillere kan være medlemmer i så mange plasser som de vil.
 spawn uten navn vil føre spilleren til en random plass, kanskje ifølge alfabetet eller tidspunkt for invitasjon.
-Alt skal være beskyttet bortsett fra tre-dør, tre-lemm og trykk-knapp.
+Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm og trykk-knapp.
 
 
 MultiWorld:

@@ -2,6 +2,7 @@ package net.kiwz.ThePlugin;
 
 import net.kiwz.ThePlugin.Commands;
 import net.kiwz.ThePlugin.listeners.CommandListener;
+import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.LoginListener;
 
 import org.bukkit.Bukkit;
@@ -22,14 +23,18 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("gm").setExecutor(cmds);
 		getCommand("heal").setExecutor(cmds);
 		getCommand("hjelp").setExecutor(cmds);
+	    getCommand("openinv").setExecutor(cmds);
 	    getCommand("teleport").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 		
-	    LoginListener lListener = new LoginListener();
-	    pm.registerEvents(lListener, this);
+	    LoginListener loginL = new LoginListener();
+	    pm.registerEvents(loginL, this);
 	    
-	    CommandListener cmdListener = new CommandListener();
-	    pm.registerEvents(cmdListener, this);
+	    CommandListener commandL = new CommandListener();
+	    pm.registerEvents(commandL, this);
+	    
+	    InventoryListener InventoryL = new InventoryListener();
+	    pm.registerEvents(InventoryL, this);
 
 	}
 	

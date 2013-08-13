@@ -57,6 +57,12 @@ commands:
       /hjelp <sideNummer>
       /hjelp <emne>
       /hjelp <emne> <sideNummer>
+  openinv:
+    description: Åpner inventaret til spilleren
+    aliases: [tp]
+    permission: ThePlugin.openinv
+    permission-message: Du har ikke tilgang!
+    usage: /openinv <player>
   teleport:
     description: Teleporter til en annen eller til koordinater
     aliases: [tp]
