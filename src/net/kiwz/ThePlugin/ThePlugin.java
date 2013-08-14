@@ -1,6 +1,7 @@
 package net.kiwz.ThePlugin;
 
 import net.kiwz.ThePlugin.Commands;
+import net.kiwz.ThePlugin.listeners.PlayerInteractListener;
 import net.kiwz.ThePlugin.listeners.CommandListener;
 import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.LoginListener;
@@ -35,6 +36,9 @@ public class ThePlugin extends JavaPlugin {
 	    
 	    InventoryListener InventoryL = new InventoryListener();
 	    pm.registerEvents(InventoryL, this);
+	    
+	    PlayerInteractListener BlockChangeL = new PlayerInteractListener();
+	    pm.registerEvents(BlockChangeL, this);
 
 	}
 	

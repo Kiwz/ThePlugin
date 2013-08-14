@@ -10,75 +10,75 @@ commands:
     permission: ThePlugin.feed
     permission-message: Du har ikke tilgang!
     usage: |
-      /feed
-      /feed <player>
+      §c/feed
+      §c/feed <player>
   fly:
     description: Endre flymodus
     aliases: []
     permission: ThePlugin.fly
     permission-message: Du har ikke tilgang!
     usage: |
-      /fly
-      /fly <player>
+      §c/fly
+      §c/fly <player>
   give:
     description: Gi ett item til deg eller en annen
     aliases: [i, gi]
     permission: ThePlugin.give
     permission-message: Du har ikke tilgang!
     usage: |
-      /give <item>
-      /give <amount> <item>
-      /give <amount> <item> <data>
-      /give <player> <item>
-      /give <player> <amount> <item>
-      /give <player> <amount> <item> <data>
+      §c/give <item>
+      §c/give <amount> <item>
+      §c/give <amount> <item> <data>
+      §c/give <player> <item>
+      §c/give <player> <amount> <item>
+      §c/give <player> <amount> <item> <data>
   gm:
     description: Endre GameMode
     aliases: []
     permission: ThePlugin.gm
     permission-message: Du har ikke tilgang!
     usage: |
-      /gm
-      /gm <player>
+      §c/gm
+      §c/gm <player>
   heal:
     description: Sett til full helse
     aliases: []
     permission: ThePlugin.heal
     permission-message: Du har ikke tilgang!
     usage: |
-      /heal
-      /heal <player>
+      §c/heal
+      §c/heal <player>
   hjelp:
     description: Viser deg hjelp menyen
     aliases: []
     permission: ThePlugin.hjelp
     permission-message: Du har ikke tilgang!
     usage: |
-      /hjelp <sideNummer>
-      /hjelp <emne>
-      /hjelp <emne> <sideNummer>
+      §c/hjelp <sideNummer>
+      §c/hjelp <emne>
+      §c/hjelp <emne> <sideNummer>
   openinv:
     description: Åpner inventaret til spilleren
-    aliases: [tp]
+    aliases: [oi, oinv, openi, openinventory]
     permission: ThePlugin.openinv
     permission-message: Du har ikke tilgang!
-    usage: /openinv <player>
+    usage: §c/openinv <player>
   teleport:
     description: Teleporter til en annen eller til koordinater
     aliases: [tp]
     permission: ThePlugin.teleport
     permission-message: Du har ikke tilgang!
     usage: |
-      /teleport <player>
-      /teleport <x y z>
-      /teleport <player> <player>
-      /teleport <player> <x y z>
+      §c/teleport <player>
+      §c/teleport <x y z>
+      §c/teleport <player> <player>
+      §c/teleport <player> <x y z>
   test:
     description: Bare en test kommando
     aliases: []
     permission: ThePlugin.test
     permission-message: Du har ikke tilgang!
-    usage: /test
+    usage: §c/test
 
 permissions:
   ThePlugin.hjelp:

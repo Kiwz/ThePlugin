@@ -9,14 +9,14 @@ import org.bukkit.entity.Player;
 
 public class FeedCommand {
 	
-	public void feed(CommandSender sender, Command cmd, String[] args) {
+	public boolean feed(CommandSender sender, Command cmd, String[] args) {
 		ChatColor gold = ChatColor.GOLD;
 		ChatColor red = ChatColor.RED;
 		Server server = Bukkit.getServer();
 		Player playerA = server.getPlayer(sender.getName());
 		Player playerB = null;
 		if (!(sender instanceof Player) && args.length == 0) {
-			sender.sendMessage(red + "Spesifiser en spiller");
+			return false;
 		}
 		else {
 			if (args.length == 0 || sender.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
@@ -39,5 +39,6 @@ public class FeedCommand {
 				}
 			}
 		}
+		return true;
 	}
 }

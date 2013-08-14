@@ -22,10 +22,15 @@ public class OpenInvCommand {
 				Bukkit.getServer().getPlayer(sender.getName()).openInventory(inventory);
 			}
 			else {
-				OfflinePlayer offlineP = new OfflinePlayer();
-				Player offlinep = offlineP.getOfflinePlayer(args[0]);
-				Inventory inventory = offlinep.getInventory();
-				Bukkit.getServer().getPlayer(sender.getName()).openInventory(inventory);
+				OfflinePlayer offlinePlayer = new OfflinePlayer();
+				player = offlinePlayer.getOfflinePlayer(args[0]);
+				if (player != null) {
+					Inventory inventory = player.getInventory();
+					Bukkit.getServer().getPlayer(sender.getName()).openInventory(inventory);
+				}
+				else {
+					sender.sendMessage(red + "Fant ingen spiller som passet dette navnet");
+				}
 			}
 		}
 		else {

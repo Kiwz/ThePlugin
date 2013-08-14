@@ -16,55 +16,49 @@ public class Commands implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		
+		// feed er ferdig "formatert"
 		if (cmd.getName().equalsIgnoreCase("feed")) {
 			FeedCommand feed = new FeedCommand();
-			feed.feed(sender, cmd, args);
-			return true;
+			if (!feed.feed(sender, cmd, args)) {
+				return false;
+			}
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("fly")) {
 			FlyCommand fly = new FlyCommand();
 			fly.fly(sender, cmd, args);
-			return true;
 		}
 	    
 	    if (cmd.getName().equalsIgnoreCase("give")) {
 	    	GiveCommand give = new GiveCommand();
     		give.giveItem(sender, cmd, args);
-    		return true;
 	    }
 		
 		if (cmd.getName().equalsIgnoreCase("gm")) {
 			GameModeCommand gm = new GameModeCommand();
 			gm.gameMode(sender, cmd, args);
-			return true;
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("heal")) {
 			HealCommand heal = new HealCommand();
 			heal.heal(sender, cmd, args);
-			return true;
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("hjelp")) {
 			HelpCommand help = new HelpCommand();
 			help.help(sender, cmd, args);
-			return true;
 		}
-		
+		// openinv er ferdig "formatert"
 	    if (cmd.getName().equalsIgnoreCase("openinv")) {
 			OpenInvCommand openinv = new OpenInvCommand();
 			if (!openinv.openInv(sender, cmd, args)) {
 				return false;
 			}
-			return true;
 	    }
 		
 	    if (cmd.getName().equalsIgnoreCase("teleport")) {
 			TeleportCommand tp = new TeleportCommand();
 			tp.tp(sender, cmd, args);
-			return true;
 	    }
 	    
 		if (cmd.getName().equalsIgnoreCase("test")) {
@@ -75,7 +69,6 @@ public class Commands implements CommandExecutor {
 			
 			// Test slutter!
 			
-			return true;
 		}
 	    return true;
 	}
