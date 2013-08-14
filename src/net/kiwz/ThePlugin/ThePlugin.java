@@ -1,10 +1,13 @@
 package net.kiwz.ThePlugin;
 
+import java.sql.SQLException;
+
 import net.kiwz.ThePlugin.Commands;
 import net.kiwz.ThePlugin.listeners.PlayerInteractListener;
 import net.kiwz.ThePlugin.listeners.CommandListener;
 import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.LoginListener;
+import net.kiwz.ThePlugin.mysql.CreateDatabase;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -16,6 +19,14 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		
+		CreateDatabase cDB = new CreateDatabase();
+		try {
+			cDB.createDB();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Commands cmds = new Commands();
 		getCommand("feed").setExecutor(cmds);
@@ -44,6 +55,7 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		// Todo some crazy shit!
+		
+		
 	}
 }
