@@ -7,7 +7,7 @@ import net.kiwz.ThePlugin.listeners.PlayerInteractListener;
 import net.kiwz.ThePlugin.listeners.CommandListener;
 import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.LoginListener;
-import net.kiwz.ThePlugin.mysql.CreateDatabase;
+import net.kiwz.ThePlugin.mysql.CreateTables;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -20,9 +20,9 @@ public class ThePlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
-		CreateDatabase cDB = new CreateDatabase();
+		CreateTables cDB = new CreateTables();
 		try {
-			cDB.createDB();
+			cDB.createTables();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
