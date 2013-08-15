@@ -70,7 +70,7 @@ public class TeleportCommand {
 		
 			if ((traveler != null) || (destination != null)) {
 				traveler.teleport(destination);
-				sender.sendMessage("Du teleporterte " + traveler.getName() + " til " + destination.getName());
+				sender.sendMessage(dgreen + "Du teleporterte " + traveler.getName() + " til " + destination.getName());
 				traveler.sendMessage(dgreen + "Du ble teleportert til " + destination.getName() + " av " + sender.getName());
 			}
 			

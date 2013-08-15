@@ -17,9 +17,6 @@ Teleport-skilt
 Verdens ende:
 Stop player at specified coords, world spesific
 
-Chat format:
-PlayerName: text
-
 Protection:
 
 /plass (viser hjelpe-menyen til kommandoen "/plass")

@@ -3,10 +3,13 @@ package net.kiwz.ThePlugin;
 import java.sql.SQLException;
 
 import net.kiwz.ThePlugin.Commands;
+import net.kiwz.ThePlugin.listeners.ChatListener;
+import net.kiwz.ThePlugin.listeners.DeathListener;
 import net.kiwz.ThePlugin.listeners.PlayerInteractListener;
 import net.kiwz.ThePlugin.listeners.CommandListener;
 import net.kiwz.ThePlugin.listeners.InventoryListener;
-import net.kiwz.ThePlugin.listeners.LoginListener;
+import net.kiwz.ThePlugin.listeners.JoinListener;
+import net.kiwz.ThePlugin.listeners.QuitListener;
 import net.kiwz.ThePlugin.mysql.CreateTables;
 
 import org.bukkit.Bukkit;
@@ -24,7 +27,6 @@ public class ThePlugin extends JavaPlugin {
 		try {
 			cDB.createTables();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -39,8 +41,17 @@ public class ThePlugin extends JavaPlugin {
 	    getCommand("teleport").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 		
-	    LoginListener loginL = new LoginListener();
+	    JoinListener loginL = new JoinListener();
 	    pm.registerEvents(loginL, this);
+		
+	    QuitListener QuitL = new QuitListener();
+	    pm.registerEvents(QuitL, this);
+		
+	    DeathListener DeathL = new DeathListener();
+	    pm.registerEvents(DeathL, this);
+		
+	    ChatListener ChatL = new ChatListener();
+	    pm.registerEvents(ChatL, this);
 	    
 	    CommandListener commandL = new CommandListener();
 	    pm.registerEvents(commandL, this);

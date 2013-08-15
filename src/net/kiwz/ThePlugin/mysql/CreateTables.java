@@ -9,25 +9,25 @@ import org.bukkit.plugin.Plugin;
 import com.mysql.jdbc.PreparedStatement;
 
 public class CreateTables {
-	
-	private String createPlayers = "CREATE TABLE IF NOT EXISTS Players "
-			+ "(PlayerID int, Player varchar(255), UNIQUE (PlayerID));";
-	
-	private String createHomes = "CREATE TABLE IF NOT EXISTS Homes "
-			+ "(PlayerID int, World varchar(255), Coords varchar(255), Yaw varchar(255));";
-	
-	private String createWorlds = "CREATE TABLE IF NOT EXISTS Worlds "
-			+ "(World varchar(255), PvP boolean, Claimable boolean, FireSpread boolean, Explosions boolean,"
-			+ "Endermen boolean, Trample boolean, Monsters boolean, Animals boolean, UNIQUE (World));";
-	
-	private String createPlaces = "CREATE TABLE IF NOT EXISTS Places "
-			+ "(PlaceID int, Time int, Name varchar(255), Owner varchar(255), Members mediumtext, "
-			+ "Coords varchar(255), SpawnCoords varchar(255), SpawnYaw varchar(255), PvP boolean, "
-			+ "Monsters boolean, Animals boolean, UNIQUE (PlaceID, Name));";
 
 	private Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
-	MySQL MySQL = new MySQL(plugin, "109.247.37.74", "3306", "theplugin", "kiwz", "test");
-	Connection conn = null;
+	private MySQL MySQL = new MySQL(plugin, "109.247.37.74", "3306", "theplugin", "kiwz", "test");
+	private Connection conn = null;
+	
+	private String createPlayers = "CREATE TABLE IF NOT EXISTS Players "
+			+ "(PlayerID INT NOT NULL AUTO_INCREMENT, Player VARCHAR(255), UNIQUE (PlayerID), PRIMARY KEY (Player));";
+	
+	private String createHomes = "CREATE TABLE IF NOT EXISTS Homes "
+			+ "(PlayerID INT, World VARCHAR(255), Coords VARCHAR(255), Yaw VARCHAR(255));";
+	
+	private String createWorlds = "CREATE TABLE IF NOT EXISTS Worlds "
+			+ "(World VARCHAR(255), PvP BOOLEAN, Claimable BOOLEAN, FireSpread BOOLEAN, Explosions BOOLEAN,"
+			+ "Endermen BOOLEAN, Trample BOOLEAN, Monsters BOOLEAN, Animals BOOLEAN, PRIMARY KEY (World));";
+	
+	private String createPlaces = "CREATE TABLE IF NOT EXISTS Places "
+			+ "(PlaceID INT NOT NULL AUTO_INCREMENT, Time INT, Name VARCHAR(255), Owner VARCHAR(255), Members MEDIUMTEXT, "
+			+ "Coords VARCHAR(255), SpawnCoords VARCHAR(255), SpawnYaw VARCHAR(255), PvP BOOLEAN, "
+			+ "Monsters BOOLEAN, Animals BOOLEAN, PRIMARY KEY (PlaceID), UNIQUE (Name));";
 	
 	public void createTables() throws SQLException {
 		conn = MySQL.openConnection();
