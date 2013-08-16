@@ -6,8 +6,10 @@ import net.kiwz.ThePlugin.commands.FlyCommand;
 import net.kiwz.ThePlugin.commands.GiveCommand;
 import net.kiwz.ThePlugin.commands.HealCommand;
 import net.kiwz.ThePlugin.commands.HelpCommand;
+import net.kiwz.ThePlugin.commands.HomeCommand;
 import net.kiwz.ThePlugin.commands.OpenInvCommand;
 import net.kiwz.ThePlugin.commands.TeleportCommand;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -48,6 +50,13 @@ public class Commands implements CommandExecutor {
 			HelpCommand help = new HelpCommand();
 			help.help(sender, cmd, args);
 		}
+		
+		if (cmd.getName().equalsIgnoreCase("home")) {
+			HomeCommand home = new HomeCommand();
+			if (!home.home(sender, cmd, args)) {
+				return false;
+			}
+		}
 		// openinv er ferdig "formatert"
 	    if (cmd.getName().equalsIgnoreCase("openinv")) {
 			OpenInvCommand openinv = new OpenInvCommand();
@@ -55,6 +64,13 @@ public class Commands implements CommandExecutor {
 				return false;
 			}
 	    }
+		
+		if (cmd.getName().equalsIgnoreCase("sethome")) {
+			HomeCommand home = new HomeCommand();
+			if (!home.setHome(sender, cmd, args)) {
+				return false;
+			}
+		}
 		
 	    if (cmd.getName().equalsIgnoreCase("teleport")) {
 			TeleportCommand tp = new TeleportCommand();

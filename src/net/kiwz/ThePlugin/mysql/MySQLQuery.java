@@ -5,18 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+
+import net.kiwz.ThePlugin.ThePlugin;
 
 public class MySQLQuery {
 	
-	private Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
-	MySQL MySQL = new MySQL(plugin, "109.247.37.74", "3306", "theplugin", "kiwz", "test");
-	Connection conn = null;
+	Connection conn = ThePlugin.conn;
 	
 	public void toDB(String statement) throws SQLException {
-		
-		conn = MySQL.openConnection();
 		
 		PreparedStatement exec = conn.prepareStatement(statement);
 		exec.executeUpdate();
@@ -25,9 +21,7 @@ public class MySQLQuery {
 	}
 	
 	public ResultSet fromDB(String queryString) throws SQLException {
-		
-		conn = MySQL.openConnection();
-		
+
 		Statement statement = conn.createStatement();
 		ResultSet res = statement.executeQuery(queryString);
 		

@@ -2,8 +2,6 @@ Kommandoer:
 
 Spawn
 SetSpawn
-Home
-Sethome
 
 
 Specials:

@@ -40,12 +40,13 @@ public class JoinListener implements Listener {
         	if (roll == 4) player.setPlayerListName(ChatColor.GOLD + pName + ChatColor.WHITE);
         	if (roll == 5) player.setPlayerListName(ChatColor.DARK_GRAY + pName + ChatColor.WHITE);
         }
-        
+
+        long time = System.nanoTime();
 		MySQLQuery query = new MySQLQuery();
 		try {
-			ResultSet res = query.fromDB("SELECT * FROM Players WHERE player = '" + pName + "'");
+			ResultSet res = query.fromDB("SELECT * FROM players WHERE player LIKE '" + pName + "'");
 			if (!res.next()) {
-				query.toDB("INSERT INTO Players (Player) VALUES ('" + pName + "');");
+				query.toDB("INSERT INTO players (Player) VALUES ('" + pName + "');");
 				for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 					if (!onlinePlayer.getName().equals(pName)) {
 						onlinePlayer.sendMessage(ChatColor.GREEN + pName + " logget inn for første gang");
@@ -62,7 +63,7 @@ public class JoinListener implements Listener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println(System.nanoTime() - time);
         player.sendMessage(ChatColor.GOLD + "Velkommen til LarvikGaming");
         player.sendMessage(ChatColor.GOLD + "Besøk vår hjemmeside: http://larvikgaming.net");
 	}

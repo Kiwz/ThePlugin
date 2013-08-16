@@ -54,15 +54,28 @@ commands:
     permission: ThePlugin.hjelp
     permission-message: Du har ikke tilgang!
     usage: |
+      §c/hjelp
       §c/hjelp <sideNummer>
       §c/hjelp <emne>
       §c/hjelp <emne> <sideNummer>
+  home:
+    description: Teleporterer deg hjem, husk å sette ett hjem først
+    aliases: [hjem, h]
+    permission: ThePlugin.home
+    permission-message: Du har ikke tilgang!
+    usage: §c/home
   openinv:
     description: Åpner inventaret til spilleren
     aliases: [oi, oinv, openi, openinventory]
     permission: ThePlugin.openinv
     permission-message: Du har ikke tilgang!
     usage: §c/openinv <player>
+  sethome:
+    description: Setter ditt hjem der du står
+    aliases: [setthjem, sh]
+    permission: ThePlugin.sethome
+    permission-message: Du har ikke tilgang!
+    usage: §c/sethome
   teleport:
     description: Teleporter til en annen eller til koordinater
     aliases: [tp]
@@ -82,4 +95,8 @@ commands:
 
 permissions:
   ThePlugin.hjelp:
+    default: true
+  ThePlugin.home:
+    default: true
+  ThePlugin.sethome:
     default: true
