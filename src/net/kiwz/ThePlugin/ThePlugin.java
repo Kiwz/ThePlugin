@@ -2,6 +2,7 @@ package net.kiwz.ThePlugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import net.kiwz.ThePlugin.Commands;
 import net.kiwz.ThePlugin.listeners.ChatListener;
@@ -11,8 +12,9 @@ import net.kiwz.ThePlugin.listeners.CommandListener;
 import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.JoinListener;
 import net.kiwz.ThePlugin.listeners.QuitListener;
-import net.kiwz.ThePlugin.mysql.CreateTables;
+import net.kiwz.ThePlugin.mysql.MakeTables;
 import net.kiwz.ThePlugin.mysql.MySQL;
+import net.kiwz.ThePlugin.utils.ConsoleFilter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -24,18 +26,21 @@ public class ThePlugin extends JavaPlugin {
 	private static PluginManager pm = Bukkit.getServer().getPluginManager();
 	private static Plugin pl = pm.getPlugin("ThePlugin");
 	private static MySQL MySQL = new MySQL(pl, "109.247.37.74", "3306", "theplugin", "kiwz", "test");
-	//private static MySQL MySQL = new MySQL(pl, "localhost", "3306", "theplugin", "rooty", "booty");
+	//private static MySQL MySQL = new MySQL(pl, "127.0.0.1", "3306", "theplugin", "rooty", "booty");
 	public static Connection conn = MySQL.openConnection();
+	private Logger logServer = Logger.getLogger("Minecraft-Server");
+
+	@Override
+	public void onLoad() {
+		
+		MakeTables makeTables = new MakeTables();
+		makeTables.createTables();
+	}
 	
 	@Override
 	public void onEnable() {
 		
-		CreateTables cDB = new CreateTables();
-		try {
-			cDB.createTables(conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		logServer.setFilter(new ConsoleFilter());
 		
 		Commands cmds = new Commands();
 		getCommand("feed").setExecutor(cmds);
@@ -45,8 +50,10 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("heal").setExecutor(cmds);
 		getCommand("hjelp").setExecutor(cmds);
 		getCommand("home").setExecutor(cmds);
+		getCommand("homeset").setExecutor(cmds);
 	    getCommand("openinv").setExecutor(cmds);
-		getCommand("sethome").setExecutor(cmds);
+		getCommand("spawn").setExecutor(cmds);
+		getCommand("spawnset").setExecutor(cmds);
 	    getCommand("teleport").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 		
@@ -70,7 +77,6 @@ public class ThePlugin extends JavaPlugin {
 	    
 	    PlayerInteractListener BlockChangeL = new PlayerInteractListener();
 	    pm.registerEvents(BlockChangeL, this);
-
 	}
 	
 	@Override
@@ -81,6 +87,5 @@ public class ThePlugin extends JavaPlugin {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 }

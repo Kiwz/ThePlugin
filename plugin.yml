@@ -64,18 +64,30 @@ commands:
     permission: ThePlugin.home
     permission-message: Du har ikke tilgang!
     usage: §c/home
+  homeset:
+    description: Setter ditt hjem der du står
+    aliases: [hs, sh, sethome, setthjem]
+    permission: ThePlugin.sethome
+    permission-message: Du har ikke tilgang!
+    usage: §c/homeset
   openinv:
     description: Åpner inventaret til spilleren
     aliases: [oi, oinv, openi, openinventory]
     permission: ThePlugin.openinv
     permission-message: Du har ikke tilgang!
     usage: §c/openinv <player>
-  sethome:
-    description: Setter ditt hjem der du står
-    aliases: [setthjem, sh]
-    permission: ThePlugin.sethome
+  spawn:
+    description: Teleporterer deg til spawn
+    aliases: []
+    permission: ThePlugin.spawn
     permission-message: Du har ikke tilgang!
-    usage: §c/sethome
+    usage: §c/spawn
+  spawnset:
+    description: Setter spawnen i verdenen du er i
+    aliases: [setspawn]
+    permission: ThePlugin.setspawn
+    permission-message: Du har ikke tilgang!
+    usage: §c/spawnset
   teleport:
     description: Teleporter til en annen eller til koordinater
     aliases: [tp]
@@ -99,4 +111,6 @@ permissions:
   ThePlugin.home:
     default: true
   ThePlugin.sethome:
+    default: true
+  ThePlugin.spawn:
     default: true

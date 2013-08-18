@@ -28,7 +28,7 @@ public class HomeCommand {
 		else {
 			MySQLQuery query = new MySQLQuery();
 			try {
-				ResultSet res = query.fromDB("SELECT * FROM homes, players "
+				ResultSet res = query.query("SELECT * FROM homes, players "
 						+ "WHERE homes.PlayerID LIKE players.PlayerID "
 						+ "AND players.Player LIKE '" + sender.getName() + "' "
 						+ "AND homes.World LIKE '" + playerA.getWorld().getName() + "';");
@@ -38,16 +38,16 @@ public class HomeCommand {
 				else {
 					String homeWorld = res.getString("World");
 					String[] homeCoords = res.getString("Coords").split(" ");
-					String[] homeYaw = res.getString("Yaw").split(" ");
+					String[] homePitch = res.getString("Pitch").split(" ");
 					World world = server.getWorld(homeWorld);
 					double x = Double.parseDouble(homeCoords[0]);
 					double y = Double.parseDouble(homeCoords[1]);
 					double z = Double.parseDouble(homeCoords[2]);
-					float yaw = Float.parseFloat(homeYaw[0]);
-					float pitch = Float.parseFloat(homeYaw[1]);
+					float pitch = Float.parseFloat(homePitch[0]);
+					float yaw = Float.parseFloat(homePitch[1]);
 					Location loc = new Location(world, x, y, z);
-					loc.setYaw(yaw);
 					loc.setPitch(pitch);
+					loc.setYaw(yaw);
 					playerA.teleport(loc);
 					sender.sendMessage(gold + "Velkommen til ditt hjem");
 				}
@@ -72,20 +72,20 @@ public class HomeCommand {
 			String coords = Double.toString(playerA.getLocation().getX()) + " "
 					+ Double.toString(playerA.getLocation().getY()) + " "
 					+ Double.toString(playerA.getLocation().getZ());
-			String yaw = Float.toString(playerA.getLocation().getYaw()) + " "
-					+ Float.toString(playerA.getLocation().getPitch());
+			String pitch = Float.toString(playerA.getLocation().getPitch()) + " "
+					+ Float.toString(playerA.getLocation().getYaw());
 			MySQLQuery query = new MySQLQuery();
 			try {
-				ResultSet res = query.fromDB("SELECT * FROM players WHERE Player LIKE '" + sender.getName() + "';");
+				ResultSet res = query.query("SELECT * FROM players WHERE Player LIKE '" + sender.getName() + "';");
 				res.next();
 				String playerID = res.getString("PlayerID");
-				res = query.fromDB("SELECT * FROM homes WHERE PlayerID LIKE '" + playerID + "' AND World LIKE '" + world + "';");
+				res = query.query("SELECT * FROM homes WHERE PlayerID LIKE '" + playerID + "' AND World LIKE '" + world + "';");
 				if (res.next()) {
-					query.toDB("UPDATE homes SET Coords='" + coords + "', Yaw='" + yaw + "' WHERE PlayerID LIKE '" + playerID + "' AND World LIKE '" + world + "';");
+					query.update("UPDATE homes SET Coords='" + coords + "', Pitch='" + pitch + "' WHERE PlayerID LIKE '" + playerID + "' AND World LIKE '" + world + "';");
 				}
 				else {
-					query.toDB("INSERT INTO homes (PlayerID, World, Coords, Yaw) "
-							+ "VALUES ('" + playerID + "', '" + world + "', '" + coords + "', '" + yaw + "');");
+					query.update("INSERT INTO homes (PlayerID, World, Coords, Pitch) "
+							+ "VALUES ('" + playerID + "', '" + world + "', '" + coords + "', '" + pitch + "');");
 				}
 				sender.sendMessage(gold + "Du har satt hjemmet ditt her");
 			} catch (SQLException e) {

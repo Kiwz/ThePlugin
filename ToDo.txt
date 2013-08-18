@@ -1,22 +1,17 @@
 Kommandoer:
-
-Spawn
-SetSpawn
-
+none atm!
 
 Specials:
-
 Teleport-skilt
 1: [Teleport]
 2: [x: -99999]
 3: [y: 256]
 4: [z: -99999]
 
-Verdens ende:
+Worlds end:
 Stop player at specified coords, world spesific
 
 Protection:
-
 /plass (viser hjelpe-menyen til kommandoen "/plass")
 /plass <navn> (viser hjelpe-menyen til kommandoen "/plass")
 /plass <navn> ny [radius i blokker, standard til 30, maks 60, maks uenderlig for OP] (kan brukes av alle, men man kan bare eie 3 plasser)
@@ -40,7 +35,6 @@ Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm og trykk-knapp.
 
 
 MultiWorld:
-
 /verden <navn> (for å spawne i spawnen til den verdenen)
 /verden ny <navn> [normal, nether, end] [flat, etc, etc] [seed]
 /verden slett <navn>

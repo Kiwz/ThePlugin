@@ -2,12 +2,15 @@ package net.kiwz.ThePlugin.listeners;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
+import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.mysql.MySQLQuery;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +22,12 @@ public class JoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         String pName = player.getName();
+        
+        String ip = player.getAddress().toString();
+        String worldName = player.getWorld().getName();
+        String coords = player.getLocation().getBlockX() + ", " + player.getLocation().getBlockY() + ", " + player.getLocation().getBlockZ();
+        String log = "Spiller logget inn";
+        
         event.setJoinMessage("");
         
     	if (pName.length() + 4 > 16) {
@@ -26,7 +35,7 @@ public class JoinListener implements Listener {
     	}
     	
         if (player.isOp()) {
-            player.setPlayerListName(ChatColor.DARK_RED + pName + ChatColor.WHITE);
+            player.setPlayerListName(ChatColor.RED + pName + ChatColor.WHITE);
         }
         
         else {
@@ -41,12 +50,15 @@ public class JoinListener implements Listener {
         	if (roll == 5) player.setPlayerListName(ChatColor.DARK_GRAY + pName + ChatColor.WHITE);
         }
 
-        long time = System.nanoTime();
 		MySQLQuery query = new MySQLQuery();
 		try {
-			ResultSet res = query.fromDB("SELECT * FROM players WHERE player LIKE '" + pName + "'");
+			ResultSet res = query.query("SELECT * FROM players WHERE player LIKE '" + pName + "'");
 			if (!res.next()) {
-				query.toDB("INSERT INTO players (Player) VALUES ('" + pName + "');");
+		        log = pName + " [" + ip + "] logget inn for første gang ([" + worldName + "] " + coords + ")";
+				SpawnCommand spawn = new SpawnCommand();
+				Location loc = spawn.getSpawn(event.getPlayer().getWorld());
+				player.teleport(loc);
+				query.update("INSERT INTO players (Player) VALUES ('" + pName + "');");
 				for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 					if (!onlinePlayer.getName().equals(pName)) {
 						onlinePlayer.sendMessage(ChatColor.GREEN + pName + " logget inn for første gang");
@@ -54,6 +66,7 @@ public class JoinListener implements Listener {
 				}
 			}
 			else {
+		        log = pName + " [" + ip + "] logget inn ([" + worldName + "] " + coords + ")";
 				for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
 					if (!onlinePlayer.getName().equals(pName)) {
 						onlinePlayer.sendMessage(ChatColor.GREEN + pName + " logget inn");
@@ -63,7 +76,7 @@ public class JoinListener implements Listener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(System.nanoTime() - time);
+        Logger.getLogger("Minecraft-Server").info(log);
         player.sendMessage(ChatColor.GOLD + "Velkommen til LarvikGaming");
         player.sendMessage(ChatColor.GOLD + "Besøk vår hjemmeside: http://larvikgaming.net");
 	}
