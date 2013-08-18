@@ -58,7 +58,7 @@ public class HomeCommand {
 		return true;
 	}
 	
-	public boolean setHome(CommandSender sender, Command cmd, String[] args) {
+	public boolean homeSet(CommandSender sender, Command cmd, String[] args) {
 		ChatColor gold = ChatColor.GOLD;
 		ChatColor red = ChatColor.RED;
 		Server server = Bukkit.getServer();

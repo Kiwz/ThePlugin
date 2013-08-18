@@ -76,6 +76,16 @@ commands:
     permission: ThePlugin.openinv
     permission-message: Du har ikke tilgang!
     usage: §c/openinv <player>
+  plass:
+    description: Plass kommandoer
+    aliases: []
+    permission: ThePlugin.plass
+    permission-message: Du har ikke tilgang!
+    usage: |
+      §c/plass
+      §c/plass ny <navn> [radius]
+      §c/plass info <navn>
+      §c/plass <endre> <navn> [radius]
   spawn:
     description: Teleporterer deg til spawn
     aliases: []
@@ -109,6 +119,8 @@ permissions:
   ThePlugin.hjelp:
     default: true
   ThePlugin.home:
+    default: true
+  ThePlugin.plass:
     default: true
   ThePlugin.sethome:
     default: true

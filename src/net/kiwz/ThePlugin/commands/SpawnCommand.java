@@ -30,7 +30,7 @@ public class SpawnCommand {
 		return true;
 	}
 	
-	public boolean setSpawn(CommandSender sender, Command cmd, String[] args) {
+	public boolean spawnSet(CommandSender sender, Command cmd, String[] args) {
 		ChatColor gold = ChatColor.GOLD;
 		ChatColor red = ChatColor.RED;
 		Server server = Bukkit.getServer();

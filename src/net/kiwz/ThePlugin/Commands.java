@@ -8,8 +8,10 @@ import net.kiwz.ThePlugin.commands.HealCommand;
 import net.kiwz.ThePlugin.commands.HelpCommand;
 import net.kiwz.ThePlugin.commands.HomeCommand;
 import net.kiwz.ThePlugin.commands.OpenInvCommand;
+import net.kiwz.ThePlugin.commands.PlaceCommand;
 import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TeleportCommand;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -60,7 +62,7 @@ public class Commands implements CommandExecutor {
 		
 		if (cmd.getName().equalsIgnoreCase("homeset")) {
 			HomeCommand home = new HomeCommand();
-			if (!home.setHome(sender, cmd, args)) {
+			if (!home.homeSet(sender, cmd, args)) {
 				return false;
 			}
 		}
@@ -72,6 +74,13 @@ public class Commands implements CommandExecutor {
 			}
 	    }
 		
+		if (cmd.getName().equalsIgnoreCase("plass")) {
+			PlaceCommand place = new PlaceCommand();
+			if (!place.place(sender, cmd, args)) {
+				return false;
+			}
+		}
+		
 		if (cmd.getName().equalsIgnoreCase("spawn")) {
 			SpawnCommand spawn = new SpawnCommand();
 			if (!spawn.spawn(sender, cmd, args)) {
@@ -81,7 +90,7 @@ public class Commands implements CommandExecutor {
 		
 		if (cmd.getName().equalsIgnoreCase("spawnset")) {
 			SpawnCommand spawn = new SpawnCommand();
-			if (!spawn.setSpawn(sender, cmd, args)) {
+			if (!spawn.spawnSet(sender, cmd, args)) {
 				return false;
 			}
 		}

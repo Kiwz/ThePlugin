@@ -25,7 +25,7 @@ public class MakeTables {
 	
 	private String createPlaces = "CREATE TABLE IF NOT EXISTS places "
 			+ "(PlaceID INT NOT NULL AUTO_INCREMENT, Time INT, Name VARCHAR(255), Owner VARCHAR(255), Members MEDIUMTEXT, "
-			+ "Coords VARCHAR(255), SpawnCoords VARCHAR(255), SpawnPitch VARCHAR(255), PvP BOOLEAN, "
+			+ "X INT, Z INT, Size INT, SpawnCoords VARCHAR(255), SpawnPitch VARCHAR(255), PvP BOOLEAN, "
 			+ "Monsters BOOLEAN, Animals BOOLEAN, PRIMARY KEY (PlaceID), UNIQUE (Name));";
 	
 	public void createTables() {

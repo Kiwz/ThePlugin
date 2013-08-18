@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import net.kiwz.ThePlugin.Commands;
+import net.kiwz.ThePlugin.listeners.BlockListener;
 import net.kiwz.ThePlugin.listeners.ChatListener;
 import net.kiwz.ThePlugin.listeners.DeathListener;
-import net.kiwz.ThePlugin.listeners.PlayerInteractListener;
 import net.kiwz.ThePlugin.listeners.CommandListener;
 import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.JoinListener;
@@ -52,6 +52,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("home").setExecutor(cmds);
 		getCommand("homeset").setExecutor(cmds);
 	    getCommand("openinv").setExecutor(cmds);
+	    getCommand("plass").setExecutor(cmds);
 		getCommand("spawn").setExecutor(cmds);
 		getCommand("spawnset").setExecutor(cmds);
 	    getCommand("teleport").setExecutor(cmds);
@@ -75,8 +76,11 @@ public class ThePlugin extends JavaPlugin {
 	    InventoryListener InventoryL = new InventoryListener();
 	    pm.registerEvents(InventoryL, this);
 	    
-	    PlayerInteractListener BlockChangeL = new PlayerInteractListener();
-	    pm.registerEvents(BlockChangeL, this);
+	    //PlayerListener playerL = new PlayerListener();
+	    //pm.registerEvents(playerL, this);
+	    
+	    BlockListener blockL = new BlockListener();
+	    pm.registerEvents(blockL, this);
 	}
 	
 	@Override
