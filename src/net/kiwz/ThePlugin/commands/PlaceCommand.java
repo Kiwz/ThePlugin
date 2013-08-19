@@ -18,7 +18,7 @@ public class PlaceCommand {
 		}
 		
 		if (args.length > 2 && args[0].equalsIgnoreCase("ny") && args[1].matches("[a-zA-Z]+") && args[2].matches("[0-9]+")) {
-			new HandlePlaces().addPlace(args[1], player, args[2]);
+			sender.sendMessage(new HandlePlaces().addPlace(args[1], player, args[2]));
 			return true;
 		}
 		

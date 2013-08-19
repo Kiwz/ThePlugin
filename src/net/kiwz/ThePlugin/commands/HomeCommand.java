@@ -1,97 +1,96 @@
 package net.kiwz.ThePlugin.commands;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.HashMap;
 
-import net.kiwz.ThePlugin.mysql.MySQLQuery;
-
+import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.mysql.Homes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class HomeCommand {
+	ChatColor gold = ChatColor.GOLD;
+	ChatColor red = ChatColor.RED;
 	
 	public boolean home(CommandSender sender, Command cmd, String[] args) {
-		ChatColor gold = ChatColor.GOLD;
-		ChatColor red = ChatColor.RED;
-		Server server = Bukkit.getServer();
-		Player playerA = server.getPlayer(sender.getName());
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(red + "/home kan bare brukes av spillere");
-			return true;
-		}
-		else {
-			MySQLQuery query = new MySQLQuery();
-			try {
-				ResultSet res = query.query("SELECT * FROM homes, players "
-						+ "WHERE homes.PlayerID LIKE players.PlayerID "
-						+ "AND players.Player LIKE '" + sender.getName() + "' "
-						+ "AND homes.World LIKE '" + playerA.getWorld().getName() + "';");
-				if (!res.next()) {
-					sender.sendMessage(red + "Du har ikke satt ett hjem i denne verdenen, bruk /setthjem");
-				}
-				else {
-					String homeWorld = res.getString("World");
-					String[] homeCoords = res.getString("Coords").split(" ");
-					String[] homePitch = res.getString("Pitch").split(" ");
-					World world = server.getWorld(homeWorld);
+		Player player = Bukkit.getServer().getPlayer(sender.getName());
+		World world = player.getWorld();
+		
+		if (sender instanceof Player) {
+			HashMap<String, Homes> homes = ThePlugin.getHomes;
+			
+			for (String key : homes.keySet()) {
+				String homePlayer = homes.get(key).player;
+				String homeWorld = homes.get(key).world;
+				
+				if (homePlayer.equals(player.getName()) && homeWorld.equals(world.getName())) {
+					String[] homeCoords = homes.get(key).coords.split(" ");
+					String[] homePitch = homes.get(key).pitch.split(" ");
+					
 					double x = Double.parseDouble(homeCoords[0]);
 					double y = Double.parseDouble(homeCoords[1]);
 					double z = Double.parseDouble(homeCoords[2]);
 					float pitch = Float.parseFloat(homePitch[0]);
 					float yaw = Float.parseFloat(homePitch[1]);
+					
 					Location loc = new Location(world, x, y, z);
 					loc.setPitch(pitch);
 					loc.setYaw(yaw);
-					playerA.teleport(loc);
+					
+					player.teleport(loc);
 					sender.sendMessage(gold + "Velkommen til ditt hjem");
+					return true;
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-		}
-		return true;
-	}
-	
-	public boolean homeSet(CommandSender sender, Command cmd, String[] args) {
-		ChatColor gold = ChatColor.GOLD;
-		ChatColor red = ChatColor.RED;
-		Server server = Bukkit.getServer();
-		Player playerA = server.getPlayer(sender.getName());
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(red + "/sethome kan bare brukes av spillere");
+			sender.sendMessage(red + "Du har ikke satt ett hjem i denne verdenen, bruk /setthjem");
 			return true;
 		}
 		else {
-			String world = playerA.getWorld().getName();
-			String coords = Double.toString(playerA.getLocation().getX()) + " "
-					+ Double.toString(playerA.getLocation().getY()) + " "
-					+ Double.toString(playerA.getLocation().getZ());
-			String pitch = Float.toString(playerA.getLocation().getPitch()) + " "
-					+ Float.toString(playerA.getLocation().getYaw());
-			MySQLQuery query = new MySQLQuery();
-			try {
-				ResultSet res = query.query("SELECT * FROM players WHERE Player LIKE '" + sender.getName() + "';");
-				res.next();
-				String playerID = res.getString("PlayerID");
-				res = query.query("SELECT * FROM homes WHERE PlayerID LIKE '" + playerID + "' AND World LIKE '" + world + "';");
-				if (res.next()) {
-					query.update("UPDATE homes SET Coords='" + coords + "', Pitch='" + pitch + "' WHERE PlayerID LIKE '" + playerID + "' AND World LIKE '" + world + "';");
-				}
-				else {
-					query.update("INSERT INTO homes (PlayerID, World, Coords, Pitch) "
-							+ "VALUES ('" + playerID + "', '" + world + "', '" + coords + "', '" + pitch + "');");
-				}
-				sender.sendMessage(gold + "Du har satt hjemmet ditt her");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			sender.sendMessage(red + "/home kan bare brukes av spillere");
+			return true;
 		}
-		return true;
+	}
+	
+	public boolean homeSet(CommandSender sender, Command cmd, String[] args) {
+		Player player = Bukkit.getServer().getPlayer(sender.getName());
+		String playerName = player.getName();
+		World world = player.getWorld();
+		String worldName = world.getName();
+		
+		Location loc = player.getLocation();
+		String coords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
+		String pitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
+		
+		if (sender instanceof Player) {
+			HashMap<String, Homes> homes = ThePlugin.getHomes;
+			
+			for (String key : homes.keySet()) {
+				String homePlayer = homes.get(key).player;
+				String homeWorld = homes.get(key).world;
+				
+				if (homePlayer.equals(playerName) && homeWorld.equals(worldName)) {
+					homes.get(key).coords = coords;
+					homes.get(key).pitch = pitch;
+					sender.sendMessage(gold + "Du har flyttet ditt hjem hit");
+					return true;
+				}
+			}
+			Homes home = new Homes();
+			home.player = playerName;
+			home.world = worldName;
+			home.coords = coords;
+			home.pitch = pitch;
+			homes.put(playerName, home);
+			sender.sendMessage(gold + "Du har satt ditt hjem her");
+			return true;
+		}
+		else {
+			sender.sendMessage(red + "/sethome kan bare brukes av spillere");
+			return true;
+		}
 	}
 }

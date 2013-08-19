@@ -2,6 +2,7 @@ package net.kiwz.ThePlugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import net.kiwz.ThePlugin.Commands;
@@ -12,8 +13,10 @@ import net.kiwz.ThePlugin.listeners.CommandListener;
 import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.JoinListener;
 import net.kiwz.ThePlugin.listeners.QuitListener;
+import net.kiwz.ThePlugin.mysql.Homes;
 import net.kiwz.ThePlugin.mysql.MakeTables;
 import net.kiwz.ThePlugin.mysql.MySQL;
+import net.kiwz.ThePlugin.mysql.Places;
 import net.kiwz.ThePlugin.utils.ConsoleFilter;
 
 import org.bukkit.Bukkit;
@@ -25,22 +28,32 @@ public class ThePlugin extends JavaPlugin {
 	
 	private static PluginManager pm = Bukkit.getServer().getPluginManager();
 	private static Plugin pl = pm.getPlugin("ThePlugin");
-	private static MySQL MySQL = new MySQL(pl, "109.247.37.74", "3306", "theplugin", "kiwz", "test");
-	//private static MySQL MySQL = new MySQL(pl, "127.0.0.1", "3306", "theplugin", "rooty", "booty");
-	public static Connection conn = MySQL.openConnection();
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
-
+	public static Connection conn;
+	public static HashMap<String, Homes> getHomes;
+	private Homes homes = new Homes();
+	private Places places = new Places();
+	public static HashMap<Integer, Places> getPlaces;
+	
+	@SuppressWarnings("static-access")
 	@Override
 	public void onLoad() {
 		
+		logServer.setFilter(new ConsoleFilter());
+		
+		MySQL MySQL = new MySQL(pl, "109.247.37.74", "3306", "theplugin", "kiwz", "test");
+		//MySQL MySQL = new MySQL(pl, "127.0.0.1", "3306", "theplugin", "rooty", "booty");
+		this.conn = MySQL.openConnection();
+		
 		MakeTables makeTables = new MakeTables();
 		makeTables.createTables();
+		
+		this.getHomes = homes.getTableHomes();
+		this.getPlaces = places.getTablePlaces();
 	}
 	
 	@Override
 	public void onEnable() {
-		
-		logServer.setFilter(new ConsoleFilter());
 		
 		Commands cmds = new Commands();
 		getCommand("feed").setExecutor(cmds);
@@ -83,11 +96,15 @@ public class ThePlugin extends JavaPlugin {
 	    pm.registerEvents(blockL, this);
 	}
 	
+	@SuppressWarnings("static-access")
 	@Override
 	public void onDisable() {
+		
+		homes.setTableHomes(this.getHomes);
+		places.setTablePlaces(this.getPlaces);
 
 		try {
-			conn.close();
+			this.conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

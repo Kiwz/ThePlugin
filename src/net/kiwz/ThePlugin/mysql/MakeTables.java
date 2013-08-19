@@ -13,10 +13,10 @@ public class MakeTables {
 	private Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
 	
 	private String createPlayers = "CREATE TABLE IF NOT EXISTS players "
-			+ "(PlayerID INT NOT NULL AUTO_INCREMENT, Player VARCHAR(255), UNIQUE (PlayerID), PRIMARY KEY (Player));";
+			+ "(Player VARCHAR(255), TimePlayed INT, PRIMARY KEY (Player));";
 	
 	private String createHomes = "CREATE TABLE IF NOT EXISTS homes "
-			+ "(PlayerID INT, World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255));";
+			+ "(Player VARCHAR(255), World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255));";
 	
 	private String createWorlds = "CREATE TABLE IF NOT EXISTS worlds "
 			+ "(World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255), PvP BOOLEAN, Claimable BOOLEAN, "
@@ -24,9 +24,9 @@ public class MakeTables {
 			+ "Animals BOOLEAN, PRIMARY KEY (World));";
 	
 	private String createPlaces = "CREATE TABLE IF NOT EXISTS places "
-			+ "(PlaceID INT NOT NULL AUTO_INCREMENT, Time INT, Name VARCHAR(255), Owner VARCHAR(255), Members MEDIUMTEXT, "
-			+ "X INT, Z INT, Size INT, SpawnCoords VARCHAR(255), SpawnPitch VARCHAR(255), PvP BOOLEAN, "
-			+ "Monsters BOOLEAN, Animals BOOLEAN, PRIMARY KEY (PlaceID), UNIQUE (Name));";
+			+ "(PlaceID INT, Time INT, Name VARCHAR(255), Owner VARCHAR(255), Members MEDIUMTEXT, "
+			+ "World VARCHAR(255), X INT, Z INT, Size INT, SpawnCoords VARCHAR(255), SpawnPitch VARCHAR(255), "
+			+ "PvP BOOLEAN, Monsters BOOLEAN, Animals BOOLEAN, PRIMARY KEY (PlaceID), UNIQUE (Name));";
 	
 	public void createTables() {
 		
