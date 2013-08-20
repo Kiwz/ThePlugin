@@ -25,6 +25,26 @@ public class HandlePlaces {
 		while (places.containsKey(id)) {
 			id++;
 		}
+		Places place = new Places();
+		place.id = id;
+		place.time = (int) (System.currentTimeMillis() / 1000);
+		place.name = name;
+		place.owner = playerName;
+		place.members = "";
+		place.members = worldName;
+		place.x = (int) loc.getX();
+		place.z = (int) loc.getZ();
+		place.size = Integer.parseInt(radius);
+		place.spawnCoords = spawnCoords;
+		place.spawnPitch = spawnPitch;
+		place.pvp = 0;
+		place.monsters = 0;
+		place.animals = 1;
+		places.put(id, place);
+		return ""+id;
+	}
+}
+
 		
 		/*for (int key : places.keySet()) {
 			if (places.get(key).name.equals(name)) {
@@ -50,22 +70,6 @@ public class HandlePlaces {
 				return "";
 			}
 		}*/
-		Places place = new Places();
-		place.id = id;
-		place.time = (int) (System.currentTimeMillis() / 1000);
-		place.name = name;
-		place.owner = playerName;
-		place.members = "";
-		place.members = worldName;
-		place.x = (int) loc.getX();
-		place.z = (int) loc.getZ();
-		place.size = Integer.parseInt(radius);
-		place.spawnCoords = spawnCoords;
-		place.spawnPitch = spawnPitch;
-		place.pvp = 0;
-		place.monsters = 0;
-		place.animals = 1;
-		places.put(id, place);
 		/*
 		Location loc = player.getLocation();
 		int time = (int) (System.currentTimeMillis() / 1000);
@@ -93,6 +97,3 @@ public class HandlePlaces {
 			e.printStackTrace();
 		}
 		return false;*/
-		return ""+id;
-	}
-}

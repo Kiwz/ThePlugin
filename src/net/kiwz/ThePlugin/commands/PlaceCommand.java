@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 public class PlaceCommand {
 	
 	public boolean place(CommandSender sender, Command cmd, String[] args) {
+		HandlePlaces hPlaces = new HandlePlaces();
 		Player player = Bukkit.getPlayer(sender.getName());
 		
 		if (args.length == 0) {
@@ -18,7 +19,7 @@ public class PlaceCommand {
 		}
 		
 		if (args.length > 2 && args[0].equalsIgnoreCase("ny") && args[1].matches("[a-zA-Z]+") && args[2].matches("[0-9]+")) {
-			sender.sendMessage(new HandlePlaces().addPlace(args[1], player, args[2]));
+			sender.sendMessage(hPlaces.addPlace(args[1], player, args[2]));
 			return true;
 		}
 		

@@ -1,5 +1,6 @@
 package net.kiwz.ThePlugin.mysql;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,12 +14,12 @@ public class Homes {
 	public String coords;
 	public String pitch;
 	
-	public HashMap<String, Homes> getTableHomes() {
+	public HashMap<String, Homes> getTableHomes(Connection conn) {
 		MySQLQuery query = new MySQLQuery();
 		Homes home = new Homes();
 		HashMap<String, Homes> homes = new HashMap<String, Homes>();
 		try {
-			ResultSet res = query.query("SELECT * FROM homes;");
+			ResultSet res = query.query(conn, "SELECT * FROM homes;");
 			while (res.next()) {
 				home.player = res.getString("Player");
 				home.world = res.getString("World");
@@ -33,11 +34,11 @@ public class Homes {
 		return homes;
 	}
 	
-	public void setTableHomes(HashMap<String, Homes> homes) {
+	public void setTableHomes(Connection conn, HashMap<String, Homes> homes) {
 		MySQLQuery query = new MySQLQuery();
 		List<Integer> oldKeys = new ArrayList<Integer>();
 		try {
-			ResultSet res = query.query("SELECT * FROM homes;");
+			ResultSet res = query.query(conn, "SELECT * FROM homes;");
 			while (res.next()) {
 				for (String key : homes.keySet()) {
 					String homePlayer = homes.get(key).player;
@@ -46,7 +47,7 @@ public class Homes {
 					String homePitch = homes.get(key).pitch;
 					
 					if (homePlayer.equals(res.getString("Player")) && homeWorld.equals(res.getString("World"))) {
-						query.update("UPDATE homes SET Coords='" + homeCoords + "', Pitch='" + homePitch +
+						query.update(conn, "UPDATE homes SET Coords='" + homeCoords + "', Pitch='" + homePitch +
 								"' WHERE Player LIKE '" + homePlayer + "' AND World LIKE '" + homeWorld + "';");
 					}
 				}
@@ -60,7 +61,7 @@ public class Homes {
 				String homeCoords = homes.get(key).coords;
 				String homePitch = homes.get(key).pitch;
 				
-				query.update("INSERT INTO homes (Player, World, Coords, Pitch) "
+				query.update(conn, "INSERT INTO homes (Player, World, Coords, Pitch) "
 						+ "VALUES ('" + homePlayer + "', '" + homeWorld + "', '" + homeCoords + "', '" + homePitch + "');");
 			}
 		} catch (SQLException e) {

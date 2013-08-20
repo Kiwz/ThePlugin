@@ -1,5 +1,6 @@
 package net.kiwz.ThePlugin.mysql;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,11 +24,11 @@ public class Places {
 	public int monsters;
 	public int animals;
 	
-	public HashMap<Integer, Places> getTablePlaces() {
+	public HashMap<Integer, Places> getTablePlaces(Connection conn) {
 		Places place = new Places();
 		HashMap<Integer, Places> places = new HashMap<Integer, Places>();
 		try {
-			ResultSet res = new MySQLQuery().query("SELECT * FROM places;");
+			ResultSet res = new MySQLQuery().query(conn, "SELECT * FROM places;");
 			while (res.next()) {
 				place.id = res.getInt("PlaceID");
 				place.time = res.getInt("Time");
@@ -52,11 +53,11 @@ public class Places {
 		return places;
 	}
 	
-	public void setTablePlaces(HashMap<Integer, Places> places) {
+	public void setTablePlaces(Connection conn, HashMap<Integer, Places> places) {
 		MySQLQuery query = new MySQLQuery();
 		List<Integer> oldKeys = new ArrayList<Integer>();
 		try {
-			ResultSet res = query.query("SELECT * FROM places;");
+			ResultSet res = query.query(conn, "SELECT * FROM places;");
 			while (res.next()) {
 				for (int key : places.keySet()) {
 					int id = places.get(key).id;
@@ -80,7 +81,7 @@ public class Places {
 								"', Size='" + size + "', SpawnCoords='" + spawnCoords + "', SpawnPitch='" + spawnPitch +
 								"', PvP='" + pvp + "', Monsters='" + monsters + "', Animals='" + animals +
 								"' WHERE PlaceID LIKE '" + id + "';");
-						query.update(queryString);
+						query.update(conn, queryString);
 						oldKeys.add(key);
 					}
 				}
@@ -109,7 +110,7 @@ public class Places {
 						+ "VALUES ('" + id + "', '" + time + "', '" + name + "', '" + owner + "', '"
 						+ members + "', '" + world + "', '" + x + "', '" + z + "', '" + size + "', '"
 						+ spawnCoords + "', '" + spawnPitch + "', '" + pvp + "', '" + monsters + "', '" + animals + "');";
-				query.update(queryString);
+				query.update(conn, queryString);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

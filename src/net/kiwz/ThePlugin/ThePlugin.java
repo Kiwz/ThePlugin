@@ -17,6 +17,8 @@ import net.kiwz.ThePlugin.mysql.Homes;
 import net.kiwz.ThePlugin.mysql.MakeTables;
 import net.kiwz.ThePlugin.mysql.MySQL;
 import net.kiwz.ThePlugin.mysql.Places;
+import net.kiwz.ThePlugin.mysql.Players;
+import net.kiwz.ThePlugin.mysql.Worlds;
 import net.kiwz.ThePlugin.utils.ConsoleFilter;
 
 import org.bukkit.Bukkit;
@@ -26,30 +28,40 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ThePlugin extends JavaPlugin {
 	
-	private static PluginManager pm = Bukkit.getServer().getPluginManager();
-	private static Plugin pl = pm.getPlugin("ThePlugin");
+	private PluginManager pm = Bukkit.getServer().getPluginManager();
+	private Plugin pl = pm.getPlugin("ThePlugin");
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
-	public static Connection conn;
-	public static HashMap<String, Homes> getHomes;
+	private MySQL MySQL = new MySQL(pl, "IPstring", "3306", "theplugin", "user", "pass");
+	private Connection conn;
 	private Homes homes = new Homes();
 	private Places places = new Places();
+	private Players players = new Players();
+	private Worlds worlds = new Worlds();
+	public static HashMap<String, Homes> getHomes;
 	public static HashMap<Integer, Places> getPlaces;
+	public static HashMap<String, Players> getPlayers;
+	public static HashMap<String, Worlds> getWorlds;
 	
-	@SuppressWarnings("static-access")
 	@Override
 	public void onLoad() {
 		
 		logServer.setFilter(new ConsoleFilter());
 		
-		MySQL MySQL = new MySQL(pl, "109.247.37.74", "3306", "theplugin", "kiwz", "test");
-		//MySQL MySQL = new MySQL(pl, "127.0.0.1", "3306", "theplugin", "rooty", "booty");
 		this.conn = MySQL.openConnection();
 		
 		MakeTables makeTables = new MakeTables();
-		makeTables.createTables();
+		makeTables.createTables(this.conn);
+
+		ThePlugin.getHomes = homes.getTableHomes(this.conn);
+		ThePlugin.getPlaces = places.getTablePlaces(this.conn);
+		ThePlugin.getPlayers = players.getTablePlayers(this.conn);
+		ThePlugin.getWorlds = worlds.getTableWorlds(this.conn);
 		
-		this.getHomes = homes.getTableHomes();
-		this.getPlaces = places.getTablePlaces();
+		try {
+			this.conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -96,12 +108,15 @@ public class ThePlugin extends JavaPlugin {
 	    pm.registerEvents(blockL, this);
 	}
 	
-	@SuppressWarnings("static-access")
 	@Override
 	public void onDisable() {
 		
-		homes.setTableHomes(this.getHomes);
-		places.setTablePlaces(this.getPlaces);
+		this.conn = MySQL.openConnection();
+
+		homes.setTableHomes(this.conn, ThePlugin.getHomes);
+		places.setTablePlaces(this.conn, ThePlugin.getPlaces);
+		players.setTablePlayers(this.conn, ThePlugin.getPlayers);
+		worlds.setTableWorlds(this.conn, ThePlugin.getWorlds);
 
 		try {
 			this.conn.close();

@@ -7,14 +7,14 @@ import net.kiwz.ThePlugin.ThePlugin;
 
 public class MySQLQuery {
 	
-	Connection conn = ThePlugin.conn;
+	//Connection conn = ThePlugin.conn;
 	
-	public void update(String queryString) throws SQLException {
+	public void update(Connection conn, String queryString) throws SQLException {
 		
 		conn.createStatement().executeUpdate(queryString);
 	}
 	
-	public ResultSet query(String queryString) throws SQLException {
+	public ResultSet query(Connection conn, String queryString) throws SQLException {
 		
 		ResultSet res = conn.createStatement().executeQuery(queryString);
 		
