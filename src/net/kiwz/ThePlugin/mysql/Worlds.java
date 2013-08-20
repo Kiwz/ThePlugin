@@ -29,6 +29,16 @@ public class Worlds {
 			ResultSet res = query.query(conn, "SELECT * FROM worlds;");
 			while (res.next()) {
 				world.world = res.getString("World");
+				world.coords = res.getString("Coords");
+				world.pitch = res.getString("Pitch");
+				world.pvp = res.getInt("PvP");
+				world.claimable = res.getInt("Claimable");
+				world.firespread = res.getInt("FireSpread");
+				world.explosions = res.getInt("Explosions");
+				world.endermen = res.getInt("Endermen");
+				world.trample = res.getInt("Trample");
+				world.monsters = res.getInt("Monsters");
+				world.animals = res.getInt("Animals");
 				
 				worlds.put(world.world, world);
 			}
@@ -40,27 +50,56 @@ public class Worlds {
 	
 	public void setTableWorlds(Connection conn, HashMap<String, Worlds> worlds) {
 		MySQLQuery query = new MySQLQuery();
-		List<Integer> oldKeys = new ArrayList<Integer>();
+		List<String> oldKeys = new ArrayList<String>();
 		try {
 			ResultSet res = query.query(conn, "SELECT * FROM worlds;");
 			while (res.next()) {
 				for (String key : worlds.keySet()) {
 					String world = worlds.get(key).world;
+					String coords = worlds.get(key).coords;
+					String pitch = worlds.get(key).pitch;
+					int pvp = worlds.get(key).pvp;
+					int claimable = worlds.get(key).claimable;
+					int firespread = worlds.get(key).firespread;
+					int explosions = worlds.get(key).explosions;
+					int endermen = worlds.get(key).endermen;
+					int trample = worlds.get(key).trample;
+					int monsters = worlds.get(key).monsters;
+					int animals = worlds.get(key).animals;
 					
 					if (world.equals(res.getString("World"))) {
-						query.update(conn, "UPDATE worlds SET Coords='" + homeCoords + "', Pitch='" + homePitch +
-								"' WHERE Player LIKE '" + homePlayer + "' AND World LIKE '" + homeWorld + "';");
+						String queryString = "UPDATE worlds SET Coords='" + coords + "', Pitch='" + pitch +
+								"', PvP='" + pvp + "', Claimable='" + claimable + "', FireSpread='" + firespread +
+								"', Explosions='" + explosions + "', Endermen='" + endermen +
+								"', Trample='" + trample + "', Monsters='" + monsters + "', Animals='" + animals +
+								"' WHERE World LIKE '" + world + "';";
+						query.update(conn, queryString);
+						oldKeys.add(key);
 					}
 				}
 			}
-			for (int key : oldKeys) {
+			for (String key : oldKeys) {
 				worlds.remove(key);
 			}
 			for (String key : worlds.keySet()) {
 				String world = worlds.get(key).world;
+				String coords = worlds.get(key).coords;
+				String pitch = worlds.get(key).pitch;
+				int pvp = worlds.get(key).pvp;
+				int claimable = worlds.get(key).claimable;
+				int firespread = worlds.get(key).firespread;
+				int explosions = worlds.get(key).explosions;
+				int endermen = worlds.get(key).endermen;
+				int trample = worlds.get(key).trample;
+				int monsters = worlds.get(key).monsters;
+				int animals = worlds.get(key).animals;
 				
-				query.update(conn, "INSERT INTO worlds (World, World, Coords, Pitch) "
-						+ "VALUES ('" + homePlayer + "', '" + homeWorld + "', '" + homeCoords + "', '" + homePitch + "');");
+				String queryString = "INSERT INTO worlds (World, Coords, Pitch, PvP, Claimable, "
+						+ "FireSpread, Explosions, Endermen, Trample, Monsters, Animals) "
+						+ "VALUES ('" + world + "', '" + coords + "', '" + pitch + "', '" + pvp + "', '"
+						+ claimable + "', '" + firespread + "', '" + explosions + "', '" + endermen + "', '"
+						+ trample + "', '" + monsters + "', '" + animals + "');";
+				query.update(conn, queryString);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -5,9 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-public class MySQL extends Database {
+public class MySQL {
+	private final Plugin plugin;
     private final String user;
     private final String database;
     private final String password;
@@ -19,11 +21,9 @@ public class MySQL extends Database {
     /**
      * Creates a new MySQL instance
      * 
-     * @param plugin
-     *            Plugin instance
      * @param hostname
      *            Name of the host
-     * @param portnmbr
+     * @param portnumber
      *            Port number
      * @param database
      *            Database name
@@ -32,8 +32,8 @@ public class MySQL extends Database {
      * @param password
      *            Password
      */
-    public MySQL(Plugin plugin, String hostname, String port, String database, String username, String password) {
-        super(plugin);
+    public MySQL(String hostname, String port, String database, String username, String password) {
+    	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
         this.hostname = hostname;
         this.port = port;
         this.database = database;
@@ -42,52 +42,24 @@ public class MySQL extends Database {
         this.connection = null;
     }
 
-    @Override
     public Connection openConnection() {
-    	boolean dbCreated = false;
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
         } catch (SQLException e) {
+        	plugin.getLogger().log(Level.INFO, "MySQL DB not found, trying to create one");
             try {
-				connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port, this.user, this.password);
+	            connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port, this.user, this.password);
 	            connection.createStatement().execute("CREATE DATABASE IF NOT EXISTS theplugin;");
 	            connection.close();
 	            connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
-	            //plugin.getLogger().log(Level.INFO, "Created new DB: theplugin");
-	            System.out.println("[ThePlugin] MySQL DB created (DB name: theplugin)");
-	            dbCreated = true;
+	            plugin.getLogger().log(Level.INFO, "MySQL DB created (DB name: " + this.database + ")");
 			} catch (SQLException e1) {
 	            plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server! because: " + e1.getMessage());
 			}
-	        if (!dbCreated) {
-	        	plugin.getLogger().log(Level.SEVERE, "Could not connect to MySQL server! because: " + e.getMessage());
-	        }
         } catch (ClassNotFoundException e) {
             plugin.getLogger().log(Level.SEVERE, "JDBC Driver not found!");
         }
         return connection;
-    }
-
-    @Override
-    public boolean checkConnection() {
-        return connection != null;
-    }
-
-    @Override
-    public Connection getConnection() {
-        return connection;
-    }
-
-    @Override
-    public void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                plugin.getLogger().log(Level.SEVERE, "Error closing the MySQL Connection!");
-                e.printStackTrace();
-            }
-        }
     }
 }

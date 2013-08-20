@@ -14,58 +14,68 @@ import net.kiwz.ThePlugin.listeners.InventoryListener;
 import net.kiwz.ThePlugin.listeners.JoinListener;
 import net.kiwz.ThePlugin.listeners.QuitListener;
 import net.kiwz.ThePlugin.mysql.Homes;
-import net.kiwz.ThePlugin.mysql.MakeTables;
+import net.kiwz.ThePlugin.mysql.BuildTables;
 import net.kiwz.ThePlugin.mysql.MySQL;
 import net.kiwz.ThePlugin.mysql.Places;
 import net.kiwz.ThePlugin.mysql.Players;
 import net.kiwz.ThePlugin.mysql.Worlds;
 import net.kiwz.ThePlugin.utils.ConsoleFilter;
+import net.kiwz.ThePlugin.utils.HandleWorlds;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ThePlugin extends JavaPlugin {
-	
+	private String ip = "109.247.37.74";
+	private String port = "3306";
+	private String db = "theplugin";
+	private String user = "kiwz";
+	private String pass = "";
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
-	private Plugin pl = pm.getPlugin("ThePlugin");
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
-	private MySQL MySQL = new MySQL(pl, "IPstring", "3306", "theplugin", "user", "pass");
-	private Connection conn;
+	
 	private Homes homes = new Homes();
-	private Places places = new Places();
-	private Players players = new Players();
-	private Worlds worlds = new Worlds();
 	public static HashMap<String, Homes> getHomes;
+	private Places places = new Places();
 	public static HashMap<Integer, Places> getPlaces;
+	private Players players = new Players();
 	public static HashMap<String, Players> getPlayers;
+	private Worlds worlds = new Worlds();
 	public static HashMap<String, Worlds> getWorlds;
 	
 	@Override
 	public void onLoad() {
-		
 		logServer.setFilter(new ConsoleFilter());
 		
-		this.conn = MySQL.openConnection();
+		MySQL MySQL = new MySQL(ip, port, db, user, pass);
+		Connection conn = MySQL.openConnection();
 		
-		MakeTables makeTables = new MakeTables();
-		makeTables.createTables(this.conn);
+		BuildTables makeTables = new BuildTables();
+		makeTables.createTables(conn);
 
-		ThePlugin.getHomes = homes.getTableHomes(this.conn);
-		ThePlugin.getPlaces = places.getTablePlaces(this.conn);
-		ThePlugin.getPlayers = players.getTablePlayers(this.conn);
-		ThePlugin.getWorlds = worlds.getTableWorlds(this.conn);
+		ThePlugin.getHomes = homes.getTableHomes(conn);
+		ThePlugin.getPlaces = places.getTablePlaces(conn);
+		ThePlugin.getPlayers = players.getTablePlayers(conn);
+		ThePlugin.getWorlds = worlds.getTableWorlds(conn);
 		
 		try {
-			this.conn.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	@Override
 	public void onEnable() {
+		HandleWorlds hWorlds = new HandleWorlds();
+		for (World world : Bukkit.getServer().getWorlds()) {
+			if (!getWorlds.containsKey(world.getName())) {
+				hWorlds.addWorld(Bukkit.getServer().getWorld("world"));
+			}
+		}
 		
 		Commands cmds = new Commands();
 		getCommand("feed").setExecutor(cmds);
@@ -110,16 +120,16 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		
-		this.conn = MySQL.openConnection();
+		MySQL MySQL = new MySQL(ip, port, db, user, pass);
+		Connection conn = MySQL.openConnection();
 
-		homes.setTableHomes(this.conn, ThePlugin.getHomes);
-		places.setTablePlaces(this.conn, ThePlugin.getPlaces);
-		players.setTablePlayers(this.conn, ThePlugin.getPlayers);
-		worlds.setTableWorlds(this.conn, ThePlugin.getWorlds);
+		homes.setTableHomes(conn, ThePlugin.getHomes);
+		places.setTablePlaces(conn, ThePlugin.getPlaces);
+		players.setTablePlayers(conn, ThePlugin.getPlayers);
+		worlds.setTableWorlds(conn, ThePlugin.getWorlds);
 
 		try {
-			this.conn.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

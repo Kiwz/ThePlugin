@@ -1,17 +1,14 @@
 package net.kiwz.ThePlugin.utils;
 
 import java.util.HashMap;
-
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.Places;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-public class HandlePlaces {
-	ChatColor gold = ChatColor.GOLD;
+public class HandleHomes {
 	
 	public String addPlace(String name, Player player, String radius) {
 		String playerName = player.getName();
@@ -44,8 +41,7 @@ public class HandlePlaces {
 		place.monsters = 0;
 		place.animals = 1;
 		places.put(id, place);
-		int size = (Integer.parseInt(radius) * 2) + 1;
-		return gold + "Din nye plass heter \"" + name + "\" og er " + size + " x " + size + " blokker stor";
+		return ""+id;
 	}
 }
 

@@ -1,6 +1,6 @@
 package net.kiwz.ThePlugin.listeners;
 
-import net.kiwz.ThePlugin.commands.SpawnCommand;
+import net.kiwz.ThePlugin.utils.HandleWorlds;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,8 +34,8 @@ public class DeathListener implements Listener {
 	public void onRespawn(PlayerRespawnEvent event) {
 		
 		Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
-		SpawnCommand spawn = new SpawnCommand();
-		final Location loc = spawn.getSpawn(event.getPlayer().getWorld());
+		HandleWorlds spawn = new HandleWorlds();
+		final Location loc = spawn.getSpawn(event.getPlayer().getWorld().getName());
 		final Player player = event.getPlayer();
 		
 		if (player.getBedSpawnLocation() == null) {

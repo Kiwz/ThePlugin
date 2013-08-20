@@ -36,7 +36,7 @@ public class Homes {
 	
 	public void setTableHomes(Connection conn, HashMap<String, Homes> homes) {
 		MySQLQuery query = new MySQLQuery();
-		List<Integer> oldKeys = new ArrayList<Integer>();
+		List<String> oldKeys = new ArrayList<String>();
 		try {
 			ResultSet res = query.query(conn, "SELECT * FROM homes;");
 			while (res.next()) {
@@ -49,10 +49,11 @@ public class Homes {
 					if (homePlayer.equals(res.getString("Player")) && homeWorld.equals(res.getString("World"))) {
 						query.update(conn, "UPDATE homes SET Coords='" + homeCoords + "', Pitch='" + homePitch +
 								"' WHERE Player LIKE '" + homePlayer + "' AND World LIKE '" + homeWorld + "';");
+						oldKeys.add(key);
 					}
 				}
 			}
-			for (int key : oldKeys) {
+			for (String key : oldKeys) {
 				homes.remove(key);
 			}
 			for (String key : homes.keySet()) {
