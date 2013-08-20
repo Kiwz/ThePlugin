@@ -22,11 +22,10 @@ public class Worlds {
 	public int animals;
 	
 	public HashMap<String, Worlds> getTableWorlds(Connection conn) {
-		MySQLQuery query = new MySQLQuery();
 		Worlds world = new Worlds();
 		HashMap<String, Worlds> worlds = new HashMap<String, Worlds>();
 		try {
-			ResultSet res = query.query(conn, "SELECT * FROM worlds;");
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM worlds;");
 			while (res.next()) {
 				world.world = res.getString("World");
 				world.coords = res.getString("Coords");
@@ -49,10 +48,9 @@ public class Worlds {
 	}
 	
 	public void setTableWorlds(Connection conn, HashMap<String, Worlds> worlds) {
-		MySQLQuery query = new MySQLQuery();
 		List<String> oldKeys = new ArrayList<String>();
 		try {
-			ResultSet res = query.query(conn, "SELECT * FROM worlds;");
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM worlds;");
 			while (res.next()) {
 				for (String key : worlds.keySet()) {
 					String world = worlds.get(key).world;
@@ -73,7 +71,7 @@ public class Worlds {
 								"', Explosions='" + explosions + "', Endermen='" + endermen +
 								"', Trample='" + trample + "', Monsters='" + monsters + "', Animals='" + animals +
 								"' WHERE World LIKE '" + world + "';";
-						query.update(conn, queryString);
+						conn.createStatement().executeUpdate(queryString);
 						oldKeys.add(key);
 					}
 				}
@@ -99,7 +97,7 @@ public class Worlds {
 						+ "VALUES ('" + world + "', '" + coords + "', '" + pitch + "', '" + pvp + "', '"
 						+ claimable + "', '" + firespread + "', '" + explosions + "', '" + endermen + "', '"
 						+ trample + "', '" + monsters + "', '" + animals + "');";
-				query.update(conn, queryString);
+				conn.createStatement().executeUpdate(queryString);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

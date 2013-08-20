@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-public class MySQL {
+public class ConnectToMySQL {
 	private final Plugin plugin;
     private final String user;
     private final String database;
@@ -32,7 +32,7 @@ public class MySQL {
      * @param password
      *            Password
      */
-    public MySQL(String hostname, String port, String database, String username, String password) {
+    public ConnectToMySQL(String hostname, String port, String database, String username, String password) {
     	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
         this.hostname = hostname;
         this.port = port;

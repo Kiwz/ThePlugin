@@ -14,11 +14,10 @@ public class Players {
 	public int timePlayed;
 	
 	public HashMap<String, Players> getTablePlayers(Connection conn) {
-		MySQLQuery query = new MySQLQuery();
 		Players player = new Players();
 		HashMap<String, Players> players = new HashMap<String, Players>();
 		try {
-			ResultSet res = query.query(conn, "SELECT * FROM players;");
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM players;");
 			while (res.next()) {
 				player.player = res.getString("Player");
 				player.lastLogin = res.getInt("LastLogin");
@@ -33,10 +32,9 @@ public class Players {
 	}
 	
 	public void setTablePlayers(Connection conn, HashMap<String, Players> players) {
-		MySQLQuery query = new MySQLQuery();
 		List<String> oldKeys = new ArrayList<String>();
 		try {
-			ResultSet res = query.query(conn, "SELECT * FROM players;");
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM players;");
 			while (res.next()) {
 				for (String key : players.keySet()) {
 					String player = players.get(key).player;
@@ -44,7 +42,7 @@ public class Players {
 					int timePlayed = players.get(key).timePlayed;
 					
 					if (player.equals(res.getString("Player"))) {
-						query.update(conn, "UPDATE players SET LastLogin='" + lastLogin + "', TimePlayed='" + timePlayed + "' WHERE Player LIKE '" + player + "';");
+						conn.createStatement().executeUpdate("UPDATE players SET LastLogin='" + lastLogin + "', TimePlayed='" + timePlayed + "' WHERE Player LIKE '" + player + "';");
 						oldKeys.add(key);
 					}
 				}
@@ -57,7 +55,7 @@ public class Players {
 				int lastLogin = players.get(key).lastLogin;
 				int timePlayed = players.get(key).timePlayed;
 				
-				query.update(conn, "INSERT INTO players (Player, LastLogin, TimePlayed) "
+				conn.createStatement().executeUpdate("INSERT INTO players (Player, LastLogin, TimePlayed) "
 						+ "VALUES ('" + player + "', '" + lastLogin + "', '" + timePlayed + "');");
 			}
 		} catch (SQLException e) {

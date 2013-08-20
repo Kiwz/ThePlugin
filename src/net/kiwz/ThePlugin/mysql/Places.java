@@ -28,7 +28,7 @@ public class Places {
 		Places place = new Places();
 		HashMap<Integer, Places> places = new HashMap<Integer, Places>();
 		try {
-			ResultSet res = new MySQLQuery().query(conn, "SELECT * FROM places;");
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM places;");
 			while (res.next()) {
 				place.id = res.getInt("PlaceID");
 				place.time = res.getInt("Time");
@@ -54,10 +54,9 @@ public class Places {
 	}
 	
 	public void setTablePlaces(Connection conn, HashMap<Integer, Places> places) {
-		MySQLQuery query = new MySQLQuery();
 		List<Integer> oldKeys = new ArrayList<Integer>();
 		try {
-			ResultSet res = query.query(conn, "SELECT * FROM places;");
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM places;");
 			while (res.next()) {
 				for (int key : places.keySet()) {
 					int id = places.get(key).id;
@@ -81,7 +80,7 @@ public class Places {
 								"', Size='" + size + "', SpawnCoords='" + spawnCoords + "', SpawnPitch='" + spawnPitch +
 								"', PvP='" + pvp + "', Monsters='" + monsters + "', Animals='" + animals +
 								"' WHERE PlaceID LIKE '" + id + "';");
-						query.update(conn, queryString);
+						conn.createStatement().executeUpdate(queryString);
 						oldKeys.add(key);
 					}
 				}
@@ -110,7 +109,7 @@ public class Places {
 						+ "VALUES ('" + id + "', '" + time + "', '" + name + "', '" + owner + "', '"
 						+ members + "', '" + world + "', '" + x + "', '" + z + "', '" + size + "', '"
 						+ spawnCoords + "', '" + spawnPitch + "', '" + pvp + "', '" + monsters + "', '" + animals + "');";
-				query.update(conn, queryString);
+				conn.createStatement().executeUpdate(queryString);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

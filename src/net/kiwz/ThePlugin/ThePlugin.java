@@ -15,7 +15,7 @@ import net.kiwz.ThePlugin.listeners.JoinListener;
 import net.kiwz.ThePlugin.listeners.QuitListener;
 import net.kiwz.ThePlugin.mysql.Homes;
 import net.kiwz.ThePlugin.mysql.BuildTables;
-import net.kiwz.ThePlugin.mysql.MySQL;
+import net.kiwz.ThePlugin.mysql.ConnectToMySQL;
 import net.kiwz.ThePlugin.mysql.Places;
 import net.kiwz.ThePlugin.mysql.Players;
 import net.kiwz.ThePlugin.mysql.Worlds;
@@ -32,7 +32,7 @@ public class ThePlugin extends JavaPlugin {
 	private String port = "3306";
 	private String db = "theplugin";
 	private String user = "kiwz";
-	private String pass = "";
+	private String pass = "test";
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
 	
@@ -49,7 +49,7 @@ public class ThePlugin extends JavaPlugin {
 	public void onLoad() {
 		logServer.setFilter(new ConsoleFilter());
 		
-		MySQL MySQL = new MySQL(ip, port, db, user, pass);
+		ConnectToMySQL MySQL = new ConnectToMySQL(ip, port, db, user, pass);
 		Connection conn = MySQL.openConnection();
 		
 		BuildTables makeTables = new BuildTables();
@@ -120,7 +120,7 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		MySQL MySQL = new MySQL(ip, port, db, user, pass);
+		ConnectToMySQL MySQL = new ConnectToMySQL(ip, port, db, user, pass);
 		Connection conn = MySQL.openConnection();
 
 		homes.setTableHomes(conn, ThePlugin.getHomes);
