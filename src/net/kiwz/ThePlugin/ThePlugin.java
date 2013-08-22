@@ -21,6 +21,7 @@ import net.kiwz.ThePlugin.mysql.Players;
 import net.kiwz.ThePlugin.mysql.Worlds;
 import net.kiwz.ThePlugin.utils.ConsoleFilter;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
+import net.kiwz.ThePlugin.utils.ServerManagement;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -28,11 +29,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ThePlugin extends JavaPlugin {
-	private String ip = "109.247.37.74";
-	private String port = "3306";
-	private String db = "theplugin";
-	private String user = "kiwz";
-	private String pass = "test";
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
 	
@@ -45,16 +41,18 @@ public class ThePlugin extends JavaPlugin {
 	private Worlds worlds = new Worlds();
 	public static HashMap<String, Worlds> getWorlds;
 	
+	private ServerManagement sm = new ServerManagement();
+	
 	@Override
 	public void onLoad() {
 		logServer.setFilter(new ConsoleFilter());
 		
-		ConnectToMySQL MySQL = new ConnectToMySQL(ip, port, db, user, pass);
+		ConnectToMySQL MySQL = new ConnectToMySQL();
 		Connection conn = MySQL.openConnection();
 		
-		BuildTables makeTables = new BuildTables();
-		makeTables.createTables(conn);
-
+		BuildTables buildTables = new BuildTables();
+		buildTables.createTables(conn);
+		
 		ThePlugin.getHomes = homes.getTableHomes(conn);
 		ThePlugin.getPlaces = places.getTablePlaces(conn);
 		ThePlugin.getPlayers = players.getTablePlayers(conn);
@@ -65,7 +63,6 @@ public class ThePlugin extends JavaPlugin {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@Override
@@ -116,18 +113,21 @@ public class ThePlugin extends JavaPlugin {
 	    
 	    BlockListener blockL = new BlockListener();
 	    pm.registerEvents(blockL, this);
+	    
+	    sm.autoStop();
+	    sm.save(12000L);
 	}
 	
 	@Override
 	public void onDisable() {
-		ConnectToMySQL MySQL = new ConnectToMySQL(ip, port, db, user, pass);
+		ConnectToMySQL MySQL = new ConnectToMySQL();
 		Connection conn = MySQL.openConnection();
-
-		homes.setTableHomes(conn, ThePlugin.getHomes);
-		places.setTablePlaces(conn, ThePlugin.getPlaces);
-		players.setTablePlayers(conn, ThePlugin.getPlayers);
-		worlds.setTableWorlds(conn, ThePlugin.getWorlds);
-
+		
+		homes.setTableHomes(conn, getHomes);
+		places.setTablePlaces(conn, getPlaces);
+		players.setTablePlayers(conn, getPlayers);
+		worlds.setTableWorlds(conn, getWorlds);
+		
 		try {
 			conn.close();
 		} catch (SQLException e) {

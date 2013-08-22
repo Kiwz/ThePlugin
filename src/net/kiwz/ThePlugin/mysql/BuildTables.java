@@ -7,7 +7,7 @@ import java.sql.Statement;
 public class BuildTables {
 	
 	private String homes = "CREATE TABLE IF NOT EXISTS homes "
-			+ "(Player VARCHAR(255), World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255));";
+			+ "(Player VARCHAR(255), World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255), PRIMARY KEY (Player, World));";
 	
 	private String places = "CREATE TABLE IF NOT EXISTS places "
 			+ "(PlaceID INT, Time INT, Name VARCHAR(255), Owner VARCHAR(255), Members MEDIUMTEXT, "
@@ -15,7 +15,7 @@ public class BuildTables {
 			+ "PvP BOOLEAN, Monsters BOOLEAN, Animals BOOLEAN, PRIMARY KEY (PlaceID), UNIQUE (Name));";
 	
 	private String players = "CREATE TABLE IF NOT EXISTS players "
-			+ "(Player VARCHAR(255), LastLogin INT, TimePlayed INT, PRIMARY KEY (Player));";
+			+ "(Player VARCHAR(255), LastLogin INT, TimePlayed INT, Mute BOOLEAN, IP VARCHAR(255), PRIMARY KEY (Player));";
 	
 	private String worlds = "CREATE TABLE IF NOT EXISTS worlds "
 			+ "(World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255), PvP BOOLEAN, Claimable BOOLEAN, "

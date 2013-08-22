@@ -1,4 +1,5 @@
 *.class
+ConnectToMySQL.java
 
 # Package Files #
 *.jar

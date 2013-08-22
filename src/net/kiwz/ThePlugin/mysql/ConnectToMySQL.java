@@ -21,24 +21,14 @@ public class ConnectToMySQL {
     /**
      * Creates a new MySQL instance
      * 
-     * @param hostname
-     *            Name of the host
-     * @param portnumber
-     *            Port number
-     * @param database
-     *            Database name
-     * @param username
-     *            Username
-     * @param password
-     *            Password
      */
-    public ConnectToMySQL(String hostname, String port, String database, String username, String password) {
+    public ConnectToMySQL() {
     	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
-        this.hostname = hostname;
-        this.port = port;
-        this.database = database;
-        this.user = username;
-        this.password = password;
+        this.hostname = "109.247.37.74";
+        this.port = "3306";
+        this.database = "theplugin";
+        this.user = "kiwz";
+        this.password = "test";
         this.connection = null;
     }
 

@@ -11,8 +11,19 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class HandlePlaces {
-	ChatColor gold = ChatColor.GOLD;
+	private ChatColor gold = ChatColor.GOLD;
+	private ChatColor red = ChatColor.RED;
+	private HashMap<Integer, Places> places = ThePlugin.getPlaces;
 	
+	public int getID(String name) {
+		int id = 0;
+		for (int key : places.keySet()) {
+			if (places.get(key).name.equalsIgnoreCase(name)) {
+				id = places.get(key).id;
+			}
+		}
+		return id;
+	}
 	public String addPlace(String name, Player player, String radius) {
 		String playerName = player.getName();
 		World world = player.getWorld();
@@ -22,7 +33,11 @@ public class HandlePlaces {
 		String spawnCoords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
 		String spawnPitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
 		
-		HashMap<Integer, Places> places = ThePlugin.getPlaces;
+		for (int key : places.keySet()) {
+			if (places.get(key).name.equalsIgnoreCase(name)) {
+				return red + "Dette navnet finnes fra før";
+			}
+		}
 		
 		int id = 1;
 		while (places.containsKey(id)) {
@@ -34,7 +49,7 @@ public class HandlePlaces {
 		place.name = name;
 		place.owner = playerName;
 		place.members = "";
-		place.members = worldName;
+		place.world = worldName;
 		place.x = (int) loc.getX();
 		place.z = (int) loc.getZ();
 		place.size = Integer.parseInt(radius);
@@ -47,57 +62,38 @@ public class HandlePlaces {
 		int size = (Integer.parseInt(radius) * 2) + 1;
 		return gold + "Din nye plass heter \"" + name + "\" og er " + size + " x " + size + " blokker stor";
 	}
-}
-
-		
-		/*for (int key : places.keySet()) {
-			if (places.get(key).name.equals(name)) {
-				return "Dette navnet er opptatt";
-			}
-			id = places.get(key).id;
-			int time = places.get(key).time;
-			String name = places.get(key).name;
-			String owner = places.get(key).owner;
-			String members = places.get(key).members;
-			int x = places.get(key).x;
-			int z = places.get(key).z;
-			int size = places.get(key).size;
-			String spawnCoords = places.get(key).spawnCoords;
-			String spawnPitch = places.get(key).spawnPitch;
-			int pvp = places.get(key).pvp;
-			int monsters = places.get(key).monsters;
-			int animals = places.get(key).animals;
-			
-			if (homePlayer.equals(playerName) && homeWorld.equals(worldName)) {
-				homes.get(key).coords = coords;
-				homes.get(key).pitch = pitch;
-				return "";
-			}
-		}*/
-		/*
-		Location loc = player.getLocation();
-		int time = (int) (System.currentTimeMillis() / 1000);
-		String owner = player.getName();
-		int x = (int) loc.getX();
-		int z = (int) loc.getZ();
-		int size = Integer.parseInt(radius);
-		String spawnX = Double.toString(loc.getX());
-		String spawnY = Double.toString(loc.getY());
-		String spawnZ = Double.toString(loc.getZ());
-		String spawnCoords = spawnX + " " + spawnY + " " + spawnZ;
-		String spawnP = Double.toString(loc.getPitch());
-		String spawnYa = Double.toString(loc.getYaw());
-		String spawnPitch = spawnP + " " + spawnYa;
-		int pvp = 0;
-		int monsters = 0;
-		int animals = 1;
-		String queryString = "INSERT INTO places (Time, Name, Owner, X, Z, Size, SpawnCoords, SpawnPitch, PvP, Monsters, Animals) "
-				+ "VALUES ('" + time + "', '" + name + "', '" + owner + "', '" + x + "', '" + z + "', '" + size + "', '"
-				+ spawnCoords + "', '" + spawnPitch + "', '" + pvp + "', '" + monsters + "', '" + animals + "');";
-		
-		try {
-			new MySQLQuery().update(queryString);
-		} catch (SQLException e) {
-			e.printStackTrace();
+	
+	public String setName(Player player, int id, String name) {
+		if (places.get(id).owner.equals(player.getName())) {
+			Places place = new Places();
+			place.name = name;
+			place.getRemainingValues(id, places);
+			places.put(id, place);
+			return gold + "Du har byttet navn på plassen din til: " + name;
 		}
-		return false;*/
+		else {
+			return red + "Dette navnet er allerede brukt";
+		}
+	}
+	
+	public String setPvP(Player player, int id) {
+		if (places.get(id).owner.equals(player.getName())) {
+			String returnString;
+			Places place = new Places();
+			if (places.get(id).pvp == 0) {
+				place.pvp = 1;
+				returnString = gold + "PvP er AKTIVERT";
+			}
+			else {
+				place.pvp = 0;
+				returnString = gold + "PvP er DEAKTIVERT";
+			}
+			place.getRemainingValues(id, places);
+			places.put(id, place);
+			return returnString;
+		}
+		else {
+			return red + "Du eier ikke denne plassen";
+		}
+	}
+}

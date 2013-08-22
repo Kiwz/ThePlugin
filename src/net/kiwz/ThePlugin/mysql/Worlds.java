@@ -3,9 +3,7 @@ package net.kiwz.ThePlugin.mysql;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Worlds {
 	
@@ -22,11 +20,11 @@ public class Worlds {
 	public int animals;
 	
 	public HashMap<String, Worlds> getTableWorlds(Connection conn) {
-		Worlds world = new Worlds();
 		HashMap<String, Worlds> worlds = new HashMap<String, Worlds>();
 		try {
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM worlds;");
 			while (res.next()) {
+				Worlds world = new Worlds();
 				world.world = res.getString("World");
 				world.coords = res.getString("Coords");
 				world.pitch = res.getString("Pitch");
@@ -48,59 +46,32 @@ public class Worlds {
 	}
 	
 	public void setTableWorlds(Connection conn, HashMap<String, Worlds> worlds) {
-		List<String> oldKeys = new ArrayList<String>();
-		try {
-			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM worlds;");
-			while (res.next()) {
-				for (String key : worlds.keySet()) {
-					String world = worlds.get(key).world;
-					String coords = worlds.get(key).coords;
-					String pitch = worlds.get(key).pitch;
-					int pvp = worlds.get(key).pvp;
-					int claimable = worlds.get(key).claimable;
-					int firespread = worlds.get(key).firespread;
-					int explosions = worlds.get(key).explosions;
-					int endermen = worlds.get(key).endermen;
-					int trample = worlds.get(key).trample;
-					int monsters = worlds.get(key).monsters;
-					int animals = worlds.get(key).animals;
-					
-					if (world.equals(res.getString("World"))) {
-						String queryString = "UPDATE worlds SET Coords='" + coords + "', Pitch='" + pitch +
-								"', PvP='" + pvp + "', Claimable='" + claimable + "', FireSpread='" + firespread +
-								"', Explosions='" + explosions + "', Endermen='" + endermen +
-								"', Trample='" + trample + "', Monsters='" + monsters + "', Animals='" + animals +
-								"' WHERE World LIKE '" + world + "';";
-						conn.createStatement().executeUpdate(queryString);
-						oldKeys.add(key);
-					}
-				}
-			}
-			for (String key : oldKeys) {
-				worlds.remove(key);
-			}
-			for (String key : worlds.keySet()) {
-				String world = worlds.get(key).world;
-				String coords = worlds.get(key).coords;
-				String pitch = worlds.get(key).pitch;
-				int pvp = worlds.get(key).pvp;
-				int claimable = worlds.get(key).claimable;
-				int firespread = worlds.get(key).firespread;
-				int explosions = worlds.get(key).explosions;
-				int endermen = worlds.get(key).endermen;
-				int trample = worlds.get(key).trample;
-				int monsters = worlds.get(key).monsters;
-				int animals = worlds.get(key).animals;
-				
-				String queryString = "INSERT INTO worlds (World, Coords, Pitch, PvP, Claimable, "
-						+ "FireSpread, Explosions, Endermen, Trample, Monsters, Animals) "
-						+ "VALUES ('" + world + "', '" + coords + "', '" + pitch + "', '" + pvp + "', '"
-						+ claimable + "', '" + firespread + "', '" + explosions + "', '" + endermen + "', '"
-						+ trample + "', '" + monsters + "', '" + animals + "');";
+		for (String key : worlds.keySet()) {
+			String world = worlds.get(key).world;
+			String coords = worlds.get(key).coords;
+			String pitch = worlds.get(key).pitch;
+			int pvp = worlds.get(key).pvp;
+			int claimable = worlds.get(key).claimable;
+			int firespread = worlds.get(key).firespread;
+			int explosions = worlds.get(key).explosions;
+			int endermen = worlds.get(key).endermen;
+			int trample = worlds.get(key).trample;
+			int monsters = worlds.get(key).monsters;
+			int animals = worlds.get(key).animals;
+			String queryString = "INSERT INTO worlds (World, Coords, Pitch, PvP, Claimable, "
+					+ "FireSpread, Explosions, Endermen, Trample, Monsters, Animals) "
+					+ "VALUES ('" + world + "', '" + coords + "', '" + pitch + "', '" + pvp + "', '"
+					+ claimable + "', '" + firespread + "', '" + explosions + "', '" + endermen + "', '"
+					+ trample + "', '" + monsters + "', '" + animals + "') "
+					+ "ON DUPLICATE KEY UPDATE Coords='" + coords + "', Pitch='" + pitch + "', "
+					+ "PvP='" + pvp + "', Claimable='" + claimable + "', FireSpread='" + firespread + "', "
+					+ "Explosions='" + explosions + "', Endermen='" + endermen + "', "
+					+ "Trample='" + trample + "', Monsters='" + monsters + "', Animals='" + animals + "';";
+			try {
 				conn.createStatement().executeUpdate(queryString);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 }
