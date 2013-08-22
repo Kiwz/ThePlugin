@@ -24,11 +24,6 @@ public class ConnectToMySQL {
      */
     public ConnectToMySQL() {
     	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
-        this.hostname = "109.247.37.74";
-        this.port = "3306";
-        this.database = "theplugin";
-        this.user = "kiwz";
-        this.password = "test";
         this.connection = null;
     }
 
