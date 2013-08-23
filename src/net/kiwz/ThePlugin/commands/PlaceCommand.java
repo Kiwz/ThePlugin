@@ -23,8 +23,15 @@ public class PlaceCommand {
 		int id;
 		
 		if (!(sender instanceof Player)) {
-			if (args.length != 1) {
-				sender.sendMessage(red + "Consolen kan bare bruke /plass liste og /plass <navn>");
+			int check = 0;
+			if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("spiller")) {
+				check = 1;
+			}
+			if (args.length == 1 && !args[0].equalsIgnoreCase("her")) {
+				check = 1;
+			}
+			if (check == 0) {
+				sender.sendMessage(red + "Consolen kan bare bruke /plass liste, /plass spiller <navn> og /plass <navn>");
 				return true;
 			}
 		}
@@ -45,48 +52,97 @@ public class PlaceCommand {
 		
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("liste")) {
-				sender.sendMessage("Dette er en liste over alle plasser");
+				hPlaces.sendPlaceList(sender);
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("her")) {
+				int locX = (int) player.getLocation().getX();
+				int locZ = (int) player.getLocation().getZ();
+				hPlaces.sendPlaceHere(sender, locX, locZ);
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("spiller")) {
+				hPlaces.sendPlayersPlaceList(sender);
 				return true;
 			}
 			else {
-				sender.sendMessage("Dette er info om plassen du skrev navnet på");
-				sender.sendMessage("Hvis plassen ikke finnes får du beskjed om dette");
-				return true;
+				id = hPlaces.getID(args[0]);
+				if (id != 0) {
+					hPlaces.sendPlace(id, sender);
+					return true;
+				}
+				else {
+					sender.sendMessage(red + args[0] + " finnes ikke");
+					return true;
+				}
 			}
 		}
 		
 		if (args.length == 2) {
 			if (args[1].equalsIgnoreCase("ny")) {
-				sender.sendMessage(hPlaces.addPlace(args[1], player, "50"));
+				sender.sendMessage(hPlaces.addPlace(args[0], player, "50"));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("flytt")) {
+				// IKKE FERDIG!!!!
 				sender.sendMessage("Flytter plassen til hit du står med standard strl");
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("spawn")) {
-				sender.sendMessage("Teleporterer deg til spawn i plassen du skrev");
-				return true;
+				id = hPlaces.getID(args[0]);
+				if (id != 0) {
+					if (!player.teleport(hPlaces.getSpawn(id))) {
+						sender.sendMessage(red + "Beklager, det skjedde en feil");
+						return true;
+					}
+					return true;
+				}
 			}
 			else if (args[1].equalsIgnoreCase("setspawn")) {
-				sender.sendMessage("Setter spawnen der du står i plassen du skrev");
+				id = hPlaces.getID(args[0]);
+				if (id != 0) {
+					sender.sendMessage(hPlaces.setSpawn(player, id));
+					return true;
+				}
+				else {
+					sender.sendMessage(red + args[0] + " finnes ikke");
+					return true;
+				}
+			}
+			else if (args[1].equalsIgnoreCase("slett")) {
+				id = hPlaces.getID(args[0]);
+				if (id != 0) {
+					sender.sendMessage(hPlaces.remPlace(id, player));
+					return true;
+				}
+				else {
+					sender.sendMessage(red + args[0] + " finnes ikke");
+					return true;
+				}
+			}
+			else if (args[0].equalsIgnoreCase("spiller")) {
+				sender.sendMessage(hPlaces.getOwned(args[1]));
+				sender.sendMessage(hPlaces.getMembered(args[1]));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("navn")) {
-				sender.sendMessage("Du må skrive hvilket navn du vil bytte til");
+				sender.sendMessage(red + "/plass <navn> navn <nytt-navn>");
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("sett")) {
-				sender.sendMessage("Du må skrive pvp/monstre/dyr");
+				sender.sendMessage(red + "/plass <navn> sett <[pvp] [monstre] [dyr]>");
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("inviter") || args[1].equalsIgnoreCase("fjern") || args[1].equalsIgnoreCase("eier")) {
-				sender.sendMessage("Du må skrive navnet på en spiller");
+			else if (args[1].equalsIgnoreCase("inviter")) {
+				sender.sendMessage("/plass <navn> inviter <spiller-navn>");
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("spiller")) {
-				sender.sendMessage("Viser hvilke plasser den oppgitte spiller eier");
-				sender.sendMessage("Viser hvilke plasser den oppgitte spiller er medlem av");
+			else if (args[1].equalsIgnoreCase("fjern")) {
+				sender.sendMessage("/plass <navn> fjern <spiller-navn>");
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("eier")) {
+				sender.sendMessage("/plass <navn> eier <spiller-navn>");
 				return true;
 			}
 			else {
@@ -107,6 +163,7 @@ public class PlaceCommand {
 			}
 			else if (args[1].equalsIgnoreCase("flytt")) {
 				if (args[2].matches("[0-9]")) {
+					// IKKE FERDIG!!!!
 					sender.sendMessage("Flytter plassen til hit du står med oppgitte strl");
 					return true;
 				}
@@ -122,7 +179,7 @@ public class PlaceCommand {
 					return true;
 				}
 				else {
-					sender.sendMessage(red + "Oppgitte plass finnes ikke");
+					sender.sendMessage(red + args[0] + " finnes ikke");
 					return true;
 				}
 			}
@@ -134,34 +191,69 @@ public class PlaceCommand {
 						return true;
 					}
 					else {
-						sender.sendMessage(red + "Oppgitte plass finnes ikke");
+						sender.sendMessage(red + args[0] + " finnes ikke");
 						return true;
 					}
 				}
 				if (args[2].equalsIgnoreCase("monstre")) {
-					sender.sendMessage("Toggler monstre");
-					return true;
+					id = hPlaces.getID(args[0]);
+					if (id != 0) {
+						sender.sendMessage(hPlaces.setMonsters(player, id));
+						return true;
+					}
+					else {
+						sender.sendMessage(red + args[0] + " finnes ikke");
+						return true;
+					}
 				}
 				if (args[2].equalsIgnoreCase("dyr")) {
-					sender.sendMessage("Toggler dyr");
-					return true;
+					id = hPlaces.getID(args[0]);
+					if (id != 0) {
+						sender.sendMessage(hPlaces.setAnimals(player, id));
+						return true;
+					}
+					else {
+						sender.sendMessage(red + args[0] + " finnes ikke");
+						return true;
+					}
 				}
 				else {
-					sender.sendMessage("pvp, monstre, dyr");
+					sender.sendMessage("Du må skrive pvp/monstre/dyr");
 					return true;
 				}
 			}
 			else if (args[1].equalsIgnoreCase("inviter")) {
-				sender.sendMessage("Legger til den oppgitte spiller som medlem av din plass");
-				return true;
+				id = hPlaces.getID(args[0]);
+				if (id != 0) {
+					sender.sendMessage(hPlaces.addMember(player, id, args[2]));
+					return true;
+				}
+				else {
+					sender.sendMessage(red + args[0] + " finnes ikke");
+					return true;
+				}
 			}
 			else if (args[1].equalsIgnoreCase("fjern")) {
-				sender.sendMessage("Fjerner det oppgitte medlem fra din by");
-				return true;
+				id = hPlaces.getID(args[0]);
+				if (id != 0) {
+					sender.sendMessage(hPlaces.remMember(player, id, args[2]));
+					return true;
+				}
+				else {
+					sender.sendMessage(red + args[0] + " finnes ikke");
+					return true;
+				}
 			}
 			else if (args[1].equalsIgnoreCase("eier")) {
-				sender.sendMessage("Du gir bort eier-statusen til den oppgitte spilleren");
-				return true;
+				id = hPlaces.getID(args[0]);
+				if (id != 0) {
+					sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
+					return true;
+				}
+				else {
+					sender.sendMessage(red + args[0] + " finnes ikke");
+					return true;
+				}
 			}
 			else {
 				sender.sendMessage("Viser hjelpe menyen til /plass");

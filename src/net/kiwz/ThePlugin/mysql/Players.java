@@ -25,7 +25,7 @@ public class Players {
 				player.mute = res.getInt("Mute");
 				player.ip = res.getString("IP");
 				
-				players.put(player.player, player);
+				players.put(player.player.toUpperCase(), player);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

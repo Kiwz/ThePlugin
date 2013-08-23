@@ -17,7 +17,17 @@ public class HandlePlayers {
 	 * or {@code false} if given player has not played before.
 	 */
 	public boolean hasPlayedBefore(String playerName) {
-		return players.containsKey(playerName);
+		return players.containsKey(playerName.toUpperCase());
+	}
+	
+	/**
+	 * 
+	 * @param playerName
+	 * @return {@code int} time played for given player in seconds,
+	 * or {@code null} if given player has not played before.
+	 */
+	public String getPlayerName(String playerName) {
+		return players.get(playerName.toUpperCase()).player;
 	}
 	
 	/**
@@ -43,7 +53,7 @@ public class HandlePlayers {
 		player.timePlayed = 0;
 		player.mute = 0;
 		player.ip = Bukkit.getPlayer(playerName).getAddress().toString();
-		players.put(playerName, player);
+		players.put(playerName.toUpperCase(), player);
 	}
 	
 	/**
@@ -58,7 +68,7 @@ public class HandlePlayers {
 		player.timePlayed = players.get(playerName).timePlayed;
 		player.mute = players.get(playerName).mute;
 		player.ip = players.get(playerName).ip;
-		players.put(playerName, player);
+		players.put(playerName.toUpperCase(), player);
 	}
 	
 	/**
@@ -73,7 +83,7 @@ public class HandlePlayers {
 		player.timePlayed = (int) (System.currentTimeMillis() / 1000) - players.get(playerName).lastLogin + players.get(playerName).timePlayed;
 		player.mute = players.get(playerName).mute;
 		player.ip = players.get(playerName).ip;
-		players.put(playerName, player);
+		players.put(playerName.toUpperCase(), player);
 	}
 	
 	/**
@@ -88,7 +98,7 @@ public class HandlePlayers {
 		player.timePlayed = players.get(playerName).timePlayed;
 		player.mute = mute;
 		player.ip = players.get(playerName).ip;
-		players.put(playerName, player);
+		players.put(playerName.toUpperCase(), player);
 	}
 	
 	/**
@@ -103,6 +113,6 @@ public class HandlePlayers {
 		player.timePlayed = players.get(playerName).timePlayed;
 		player.mute = players.get(playerName).mute;
 		player.ip = Bukkit.getPlayer(playerName).getAddress().toString();
-		players.put(playerName, player);
+		players.put(playerName.toUpperCase(), player);
 	}
 }

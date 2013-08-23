@@ -36,6 +36,7 @@ public class ThePlugin extends JavaPlugin {
 	public static HashMap<String, Homes> getHomes;
 	private Places places = new Places();
 	public static HashMap<Integer, Places> getPlaces;
+	public static HashMap<String, Integer> remPlaces = new HashMap<String, Integer>();
 	private Players players = new Players();
 	public static HashMap<String, Players> getPlayers;
 	private Worlds worlds = new Worlds();

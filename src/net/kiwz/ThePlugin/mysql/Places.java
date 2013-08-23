@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import net.kiwz.ThePlugin.ThePlugin;
+
 public class Places {
 
 	public int id;
@@ -95,6 +97,10 @@ public class Places {
 					+ "PvP='" + pvp + "', Monsters='" + monsters + "', Animals='" + animals + "';";
 			try {
 				conn.createStatement().executeUpdate(queryString);
+				for (String placeName : ThePlugin.remPlaces.keySet()) {
+					conn.createStatement().executeUpdate("DELETE FROM places WHERE PlaceID='" + ThePlugin.remPlaces.get(placeName) + "';");
+					ThePlugin.remPlaces.remove(placeName);
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

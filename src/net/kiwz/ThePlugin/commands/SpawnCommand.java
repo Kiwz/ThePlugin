@@ -18,7 +18,9 @@ public class SpawnCommand {
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
 		
 		if (sender instanceof Player) {
-			player.teleport(hWorlds.getSpawn(player.getWorld().getName()));
+			if (!player.teleport(hWorlds.getSpawn(player.getWorld().getName()))) {
+				sender.sendMessage(red + "Beklager, det skjedde en feil");
+			}
 			return true;
 		}
 		else {

@@ -1,5 +1,10 @@
 package net.kiwz.ThePlugin.mysql;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -23,7 +28,27 @@ public class ConnectToMySQL {
      * 
      */
     public ConnectToMySQL() {
+    	String hName = null;
+    	String uName = null;
+    	String pass = null;
+		try {
+	    	FileInputStream fs = new FileInputStream("mysql.txt");
+			@SuppressWarnings("resource")
+			BufferedReader br = new BufferedReader(new InputStreamReader(fs));
+			hName = br.readLine();
+			uName = br.readLine();
+			pass = br.readLine();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
+        this.hostname = hName;
+        this.port = "3306";
+        this.database = "theplugin";
+        this.user = uName;
+        this.password = pass;
         this.connection = null;
     }
 
