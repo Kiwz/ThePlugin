@@ -19,7 +19,7 @@ public class Commands implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		// feed er ferdig "formatert"
+		
 		if (cmd.getName().equalsIgnoreCase("feed")) {
 			FeedCommand feed = new FeedCommand();
 			if (!feed.feed(sender, cmd, args)) {
@@ -29,27 +29,37 @@ public class Commands implements CommandExecutor {
 		
 		if (cmd.getName().equalsIgnoreCase("fly")) {
 			FlyCommand fly = new FlyCommand();
-			fly.fly(sender, cmd, args);
+			if (!fly.fly(sender, cmd, args)) {
+				return false;
+			}
 		}
 	    
 	    if (cmd.getName().equalsIgnoreCase("give")) {
 	    	GiveCommand give = new GiveCommand();
-    		give.giveItem(sender, cmd, args);
+	    	if (!give.giveItem(sender, cmd, args)) {
+				return false;
+			}
 	    }
 		
 		if (cmd.getName().equalsIgnoreCase("gm")) {
 			GameModeCommand gm = new GameModeCommand();
-			gm.gameMode(sender, cmd, args);
+			if (!gm.gameMode(sender, cmd, args)) {
+				return false;
+			}
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("heal")) {
 			HealCommand heal = new HealCommand();
-			heal.heal(sender, cmd, args);
+			if (!heal.heal(sender, cmd, args)) {
+				return false;
+			}
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("hjelp")) {
 			HelpCommand help = new HelpCommand();
-			help.help(sender, cmd, args);
+			if (!help.help(sender, cmd, args)) {
+				return false;
+			}
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("home")) {
@@ -65,7 +75,7 @@ public class Commands implements CommandExecutor {
 				return false;
 			}
 		}
-		// openinv er ferdig "formatert"
+		
 	    if (cmd.getName().equalsIgnoreCase("openinv")) {
 			OpenInvCommand openinv = new OpenInvCommand();
 			if (!openinv.openInv(sender, cmd, args)) {
@@ -96,7 +106,9 @@ public class Commands implements CommandExecutor {
 		
 	    if (cmd.getName().equalsIgnoreCase("teleport")) {
 			TeleportCommand tp = new TeleportCommand();
-			tp.tp(sender, cmd, args);
+			if (!tp.tp(sender, cmd, args)) {
+				return false;
+			}
 	    }
 	    
 		if (cmd.getName().equalsIgnoreCase("test")) {

@@ -1,82 +1,54 @@
 package net.kiwz.ThePlugin.commands;
 
+import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.utils.OnlinePlayer;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TeleportCommand {
 	
-	public void tp(CommandSender sender, Command cmd, String[] args) {
-		ChatColor dgreen = ChatColor.DARK_GREEN;
-		ChatColor red = ChatColor.RED;
-		Player playerSender = Bukkit.getServer().getPlayer(sender.getName());
-		Player traveler = null;
-		Player destination = null;
+	public boolean tp(CommandSender sender, Command cmd, String[] args) {
+		OnlinePlayer onlinePlayer = new OnlinePlayer();
+		Player player = Bukkit.getServer().getPlayer(sender.getName());
 		
-		if (args.length == 0) {
-			
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(red + "Spesifiser to spillere, hvem som skal bli teleportert til hvem!");
-			}
-			
-			else {
-				sender.sendMessage(red + "Spesifiser en spiller!");
-			}
+		if (!(sender instanceof Player) || args.length != 2) {
+			sender.sendMessage(ThePlugin.c2 + "Spesifiser to spillere, hvem som skal bli teleportert til hvem");
+			return true;
 		}
-		
-		if (args.length == 1) {
-			
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(red + "Spesifiser hvem spilleren skal bli teleportert til!");
-			}
-			
-			else {
-				
-				for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
-					
-					if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-						destination = Bukkit.getServer().getPlayer(playername.getName());
-					}
-				}
-				
-				if (destination != null) {
-					playerSender.teleport(destination);
-					playerSender.sendMessage(dgreen + "Du ble teleportert til " + destination.getName());
-				}
-				
-				else {
-					sender.sendMessage(red + "Fant ingen spiller som passet dette navnet!");
-				}
-			}
+		else if (args.length == 0) {
+			sender.sendMessage(ThePlugin.c2 + "Spesifiser en spiller!");
+			return true;
 		}
-		
-		if (args.length == 2) {
-			
-			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
-				
-				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					traveler = Bukkit.getServer().getPlayer(playername.getName());
-				}
+		else if (args.length == 1) {
+			if (onlinePlayer.getPlayer(args[0]) != null) {
+				Player target = onlinePlayer.getPlayer(args[0]);
+				player.teleport(target);
+				sender.sendMessage(ThePlugin.c1 + "Du ble teleportert til " + target.getName());
 			}
-			
-			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
-				
-				if (playername.getName().toLowerCase().startsWith(args[1].toLowerCase())) {
-					destination = Bukkit.getServer().getPlayer(playername.getName());
-				}
-			}
-		
-			if ((traveler != null) || (destination != null)) {
-				traveler.teleport(destination);
-				sender.sendMessage(dgreen + "Du teleporterte " + traveler.getName() + " til " + destination.getName());
-				traveler.sendMessage(dgreen + "Du ble teleportert til " + destination.getName() + " av " + sender.getName());
-			}
-			
 			else {
-				sender.sendMessage(red + "Fant ingen spiller som passet en eller begge navnene!");
+				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet dette navnet");
 			}
+			return true;
+		}
+		else if (args.length == 2) {
+			if ((onlinePlayer.getPlayer(args[0]) != null) || (onlinePlayer.getPlayer(args[1]) != null)) {
+				player = onlinePlayer.getPlayer(args[0]);
+				Player target = onlinePlayer.getPlayer(args[1]);
+				player.teleport(target);
+				player.sendMessage(ThePlugin.c1 + "Du ble teleportert til " + target.getName() + " av " + sender.getName());
+				sender.sendMessage(ThePlugin.c1 + "Du teleporterte " + player.getName() + " til " + target.getName());
+			}
+			else {
+				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet en eller begge navnene!");
+			}
+			return true;
+		}
+		else {
+			sender.sendMessage("koordinat-teleportering komme her");
+			return true;
 		}
 	}
 }

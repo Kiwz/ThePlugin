@@ -24,11 +24,15 @@ import net.kiwz.ThePlugin.utils.HandleWorlds;
 import net.kiwz.ThePlugin.utils.ServerManagement;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ThePlugin extends JavaPlugin {
+	public static ChatColor c1 = ChatColor.GOLD;
+	public static ChatColor c2 = ChatColor.RED;
+	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
 	
@@ -41,8 +45,6 @@ public class ThePlugin extends JavaPlugin {
 	public static HashMap<String, Players> getPlayers;
 	private Worlds worlds = new Worlds();
 	public static HashMap<String, Worlds> getWorlds;
-	
-	private ServerManagement sm = new ServerManagement();
 	
 	@Override
 	public void onLoad() {
@@ -127,7 +129,8 @@ public class ThePlugin extends JavaPlugin {
 	    
 	    BlockListener blockL = new BlockListener();
 	    pm.registerEvents(blockL, this);
-	    
+
+		ServerManagement sm = new ServerManagement();
 	    sm.autoStop();
 	    sm.save(12000L);
 	}

@@ -20,7 +20,7 @@ public class OfflinePlayer {
 	 * 
 	 * @return Player as long as the player has played here before, otherwise null
 	 */
-    public Player getOfflinePlayer(String name) {
+    public Player getPlayer(String name) {
     	File playerfolder = null;
         Player player = null;
         Player onlinePlayer = Bukkit.getServer().getPlayer(name);

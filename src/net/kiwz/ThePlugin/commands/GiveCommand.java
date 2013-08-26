@@ -1,8 +1,10 @@
 package net.kiwz.ThePlugin.commands;
 
+import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.utils.Items;
+import net.kiwz.ThePlugin.utils.OnlinePlayer;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,165 +12,116 @@ import org.bukkit.inventory.ItemStack;
 
 public class GiveCommand {
 	
-	public void giveItem(CommandSender sender, Command cmd, String[] args) {
-		ChatColor dgreen = ChatColor.DARK_GREEN;
-		ChatColor red = ChatColor.RED;
+	public boolean giveItem(CommandSender sender, Command cmd, String[] args) {
+		OnlinePlayer onlinePlayer = new OnlinePlayer();
+		Items item = new Items();
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
-		Player receivingPlayer = null;
-		int id = 0;
 		
-		if (args.length == 0) {
-			
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(red + "Spesifiser en spiller og ett item!");
+		if (args.length == 0 || (args.length == 1 && !(sender instanceof Player)) ||
+				(args.length == 2 && args[0].matches("[0-9]+") && !(sender instanceof Player)) ||
+				(args.length == 3 && args[0].matches("[0-9]+") && !(sender instanceof Player))) {
+			return false;
+		}
+		else if (args.length == 1) {
+			ItemStack itemStack = item.getItem(args[0]);
+			if (itemStack != null) {
+				player.getInventory().addItem(itemStack);
+				String itemName = itemStack.getType().toString();
+				sender.sendMessage(ThePlugin.c1 + "Du fikk 1 " + itemName);
 			}
-			
 			else {
-				sender.sendMessage(red + "Spesifiser ett item!");
+				sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
 			}
+			return true;
 		}
-		
-		if (args.length == 1) {
-
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(red + "Spesifiser en spiller og ett item!");
+		else if (args.length == 2 && args[0].matches("[0-9]+")) {
+			ItemStack itemStack = item.getItem(args[1], args[0]);
+			if (itemStack != null) {
+				player.getInventory().addItem(itemStack);
+				String itemName = itemStack.getType().toString();
+				sender.sendMessage(ThePlugin.c1 + "Du fikk " + args[0] + " " + itemName);
 			}
-			
 			else {
-				for (Material mat : Material.values()) {
-					int matId = mat.getId();
-					String matName = Material.getMaterial(matId).toString();
-					
-					if (matName.startsWith(args[0].toUpperCase())) {
-						id = matId;
-						break;
-					}
-				}
-				
-				if (id > 0) {
-					String material = Material.getMaterial(id).toString();
-					ItemStack item = new ItemStack(id, 1, (short) 0);
-					player.getInventory().addItem(new ItemStack[] { item });
-					sender.sendMessage(dgreen + "Du fikk 1 " + material);
-				}
+				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 			}
+			return true;
 		}
-		
-		if (args.length == 2 && args[0].toString().matches("[0-9]+")) {
-
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(red + "Spesifiser en spiller!");
+		else if (args.length == 2) {
+			Player target = onlinePlayer.getPlayer(args[0]);
+			ItemStack itemStack = item.getItem(args[1]);
+			if (target != null) {
+				if (itemStack != null) {
+					target.getInventory().addItem(itemStack);
+					String itemName = itemStack.getType().toString();
+					target.sendMessage(ThePlugin.c1 + "Du fikk 1 " + itemName + " av " + sender.getName());
+					sender.sendMessage(ThePlugin.c1 + "Du ga 1 " + itemName + " til " + target.getName());
+				}
+				else {
+					sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
+				}
+				return true;
 			}
-			
 			else {
-				for (Material mat : Material.values()) {
-					int matId = mat.getId();
-					String matName = Material.getMaterial(matId).toString();
-					
-					if (matName.startsWith(args[1].toUpperCase())) {
-						id = matId;
-						break;
-					}
-				}
-				
-				if (id > 0) {
-					int amount = Integer.parseInt(args[0]);
-					String material = Material.getMaterial(id).toString();
-					ItemStack item = new ItemStack(id, amount, (short) 0);
-					player.getInventory().addItem(new ItemStack[] { item });
-					sender.sendMessage(dgreen + "Du fikk " + args[0] + " " + material);
-				}
+				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet dette navnet");
+				return true;
 			}
 		}
-		
-		if (args.length == 2 && !args[0].toString().matches("[0-9]+")) {
-			
-			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
-				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					receivingPlayer = Bukkit.getServer().getPlayer(playername.getName());
-				}
+		else if (args.length == 3 && args[0].matches("[0-9]+") && args[2].matches("[0-9]+")) {
+			ItemStack itemStack = item.getItem(args[1], args[0], args[2]);
+			if (itemStack != null) {
+				player.getInventory().addItem(itemStack);
+				String itemName = itemStack.getType().toString();
+				String itemDamage = Short.toString(itemStack.getDurability());
+				sender.sendMessage(ThePlugin.c1 + "Du fikk " + args[0] + " " + itemName + ":" + itemDamage);
 			}
-			
-			if (receivingPlayer != null) {
-				for (Material mat : Material.values()) {
-					int matId = mat.getId();
-					String matName = Material.getMaterial(matId).toString();
-					
-					if (matName.startsWith(args[1].toUpperCase())) {
-						id = matId;
-						break;
-					}
+			else {
+				sender.sendMessage(ThePlugin.c2 + args[1] + ":" + args[2] + " finnes ikke");
+			}
+			return true;
+		}
+		else if (args.length == 3 && args[1].matches("[0-9]+")) {
+			Player target = onlinePlayer.getPlayer(args[0]);
+			ItemStack itemStack = item.getItem(args[2], args[1]);
+			if (target != null) {
+				if (itemStack != null) {
+					target.getInventory().addItem(itemStack);
+					String itemName = itemStack.getType().toString();
+					target.sendMessage(ThePlugin.c1 + "Du fikk " + args[1] + " " + itemName + " av " + sender.getName());
+					sender.sendMessage(ThePlugin.c1 + "Du ga " + args[1] + " " + itemName + " til " + target.getName());
 				}
-				
-				if (id > 0) {
-					String material = Material.getMaterial(id).toString();
-					ItemStack item = new ItemStack(id, 1, (short) 0);
-					receivingPlayer.getInventory().addItem(new ItemStack[] { item });
-					sender.sendMessage(dgreen + "Du ga 1 " + material + " til " + receivingPlayer.getName());
-					receivingPlayer.sendMessage(dgreen + "Du fikk 1 " + material + " av " + sender.getName());
+				else {
+					sender.sendMessage(ThePlugin.c2 + args[2] + " finnes ikke");
 				}
+				return true;
+			}
+			else {
+				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet dette navnet");
+				return true;
 			}
 		}
-		
-		if (args.length == 3 && args[1].toString().matches("[0-9]+")) {
-			
-			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
-				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					receivingPlayer = Bukkit.getServer().getPlayer(playername.getName());
+		else if (args.length == 4 && args[1].matches("[0-9]+") && args[3].matches("[0-9]+")) {
+			Player target = onlinePlayer.getPlayer(args[0]);
+			ItemStack itemStack = item.getItem(args[2], args[1], args[3]);
+			if (target != null) {
+				if (itemStack != null) {
+					target.getInventory().addItem(itemStack);
+					String itemName = itemStack.getType().toString();
+					String itemDamage = Short.toString(itemStack.getDurability());
+					target.sendMessage(ThePlugin.c1 + "Du fikk " + args[1] + " " + itemName + ":" + itemDamage + " av " + sender.getName());
+					sender.sendMessage(ThePlugin.c1 + "Du ga " + args[1] + " " + itemName + ":" + itemDamage + " til " + target.getName());
 				}
+				else {
+					sender.sendMessage(ThePlugin.c2 + args[2] + ":" + args[3] + " finnes ikke");
+				}
+				return true;
 			}
-			
-			if (receivingPlayer != null) {
-				for (Material mat : Material.values()) {
-					int matId = mat.getId();
-					String matName = Material.getMaterial(matId).toString();
-					
-					if (matName.startsWith(args[2].toUpperCase())) {
-						id = matId;
-						break;
-					}
-				}
-				
-				if (id > 0) {
-					int amount = Integer.parseInt(args[1]);
-					String material = Material.getMaterial(id).toString();
-					ItemStack item = new ItemStack(id, amount, (short) 0);
-					receivingPlayer.getInventory().addItem(new ItemStack[] { item });
-					sender.sendMessage(dgreen + "Du ga " + args[1] + " " + material + " til " + receivingPlayer.getName());
-					receivingPlayer.sendMessage(dgreen + "Du fikk " + args[1] + " " + material + " av " + sender.getName());
-				}
+			else {
+				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet dette navnet");
+				return true;
 			}
 		}
-		
-		if (args.length == 4 && args[1].toString().matches("[0-9]+") && args[3].toString().matches("[0-9]+")) {
-			
-			for (Player playername : Bukkit.getServer().getOnlinePlayers()) {
-				if (playername.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					receivingPlayer = Bukkit.getServer().getPlayer(playername.getName());
-				}
-			}
-			
-			if (receivingPlayer != null) {
-				for (Material mat : Material.values()) {
-					int matId = mat.getId();
-					String matName = Material.getMaterial(matId).toString();
-					
-					if (matName.startsWith(args[2].toUpperCase())) {
-						id = matId;
-						break;
-					}
-				}
-				
-				if (id > 0) {
-					int amount = Integer.parseInt(args[1]);
-					short dmg = (short) Integer.parseInt(args[3]);
-					String material = Material.getMaterial(id).toString();
-					ItemStack item = new ItemStack(id, amount, dmg);
-					receivingPlayer.getInventory().addItem(new ItemStack[] { item });
-					sender.sendMessage(dgreen + "Du ga " + args[1] + " " + material + " til " + receivingPlayer.getName());
-					receivingPlayer.sendMessage(dgreen + "Du fikk " + args[1] + " " + material + " av " + sender.getName());
-				}
-			}
+		else {
+			return false;
 		}
 	}
 }

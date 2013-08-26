@@ -20,7 +20,7 @@ public class InventoryListener implements Listener{
 			if (!holder.isOnline()) {
 				ItemStack[] content = inv.getHolder().getInventory().getContents();
 				OfflinePlayer offlinePlayer = new OfflinePlayer();
-				Player player = offlinePlayer.getOfflinePlayer(holder.getName());
+				Player player = offlinePlayer.getPlayer(holder.getName());
 				player.getInventory().setContents(content);
 				player.saveData();
 			}
