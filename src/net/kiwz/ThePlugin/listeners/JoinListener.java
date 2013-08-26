@@ -51,7 +51,7 @@ public class JoinListener implements Listener {
         	players.addPlayer(playerName);
 	        log = playerName + " [" + ip + "] logget inn for første gang ([" + worldName + "] " + coords + ")";
 			loginMsg = ChatColor.GREEN + playerName + " logget inn for første gang";
-			Location loc = spawn.getSpawn(event.getPlayer().getWorld().getName());
+			Location loc = spawn.getSpawn(player, player.getWorld().getName());
 			player.teleport(loc);
         }
         

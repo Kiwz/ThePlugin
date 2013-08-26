@@ -37,7 +37,7 @@ public class HandlePlayers {
 	 * or {@code null} if given player has not played before.
 	 */
 	public int getPlayerTimePlayed(String playerName) {
-		return players.get(playerName).timePlayed;
+		return players.get(playerName.toUpperCase()).timePlayed;
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class HandlePlayers {
 		player.lastLogin = (int) (System.currentTimeMillis() / 1000);
 		player.timePlayed = 0;
 		player.mute = 0;
-		player.ip = Bukkit.getPlayer(playerName).getAddress().toString();
+		player.ip = Bukkit.getPlayer(playerName.toUpperCase()).getAddress().toString();
 		players.put(playerName.toUpperCase(), player);
 	}
 	
@@ -61,14 +61,7 @@ public class HandlePlayers {
 	 * @param playerName
 	 */
 	public void setLastLogin(String playerName) {
-		
-		Players player = new Players();
-		player.player = playerName;
-		player.lastLogin = (int) (System.currentTimeMillis() / 1000);
-		player.timePlayed = players.get(playerName).timePlayed;
-		player.mute = players.get(playerName).mute;
-		player.ip = players.get(playerName).ip;
-		players.put(playerName.toUpperCase(), player);
+		players.get(playerName.toUpperCase()).lastLogin = (int) (System.currentTimeMillis() / 1000);
 	}
 	
 	/**
@@ -76,14 +69,8 @@ public class HandlePlayers {
 	 * @param playerName
 	 */
 	public void setTimePlayed(String playerName) {
-		
-		Players player = new Players();
-		player.player = playerName;
-		player.lastLogin = players.get(playerName).lastLogin;
-		player.timePlayed = (int) (System.currentTimeMillis() / 1000) - players.get(playerName).lastLogin + players.get(playerName).timePlayed;
-		player.mute = players.get(playerName).mute;
-		player.ip = players.get(playerName).ip;
-		players.put(playerName.toUpperCase(), player);
+		players.get(playerName.toUpperCase()).timePlayed = (int) (System.currentTimeMillis() / 1000)
+				- players.get(playerName.toUpperCase()).lastLogin+ players.get(playerName.toUpperCase()).timePlayed;
 	}
 	
 	/**
@@ -91,14 +78,7 @@ public class HandlePlayers {
 	 * @param playerName
 	 */
 	public void setMute(String playerName, int mute) {
-		
-		Players player = new Players();
-		player.player = playerName;
-		player.lastLogin = players.get(playerName).lastLogin;
-		player.timePlayed = players.get(playerName).timePlayed;
-		player.mute = mute;
-		player.ip = players.get(playerName).ip;
-		players.put(playerName.toUpperCase(), player);
+		players.get(playerName.toUpperCase()).mute = mute;
 	}
 	
 	/**
@@ -106,13 +86,6 @@ public class HandlePlayers {
 	 * @param playerName
 	 */
 	public void setIP(String playerName) {
-		
-		Players player = new Players();
-		player.player = playerName;
-		player.lastLogin = players.get(playerName).lastLogin;
-		player.timePlayed = players.get(playerName).timePlayed;
-		player.mute = players.get(playerName).mute;
-		player.ip = Bukkit.getPlayer(playerName).getAddress().toString();
-		players.put(playerName.toUpperCase(), player);
+		players.get(playerName.toUpperCase()).ip = Bukkit.getPlayer(playerName).getAddress().toString();
 	}
 }

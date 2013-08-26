@@ -15,31 +15,14 @@ public class Places {
 	public String owner;
 	public String members;
 	public String world;
-	public int x = 999999999;
-	public int z = 999999999;
-	public int size = 999999999;
+	public int x;
+	public int z;
+	public int size;
 	public String spawnCoords;
 	public String spawnPitch;
-	public int pvp = 2;
-	public int monsters = 2;
-	public int animals = 2;
-	
-	public void getRemainingValues(int id, HashMap<Integer, Places> places) {
-		this.id = id;
-		if (time == 0) time = places.get(id).time;
-		if (name == null) name = places.get(id).name;
-		if (owner == null) owner = places.get(id).owner;
-		if (members == null) members = places.get(id).members;
-		if (world == null) world = places.get(id).world;
-		if (x == 999999999) x = places.get(id).x;
-		if (z == 999999999) z = places.get(id).z;
-		if (size == 999999999) size = places.get(id).size;
-		if (spawnCoords == null) spawnCoords = places.get(id).spawnCoords;
-		if (spawnPitch == null) spawnPitch = places.get(id).spawnPitch;
-		if (pvp == 2) pvp = places.get(id).pvp;
-		if (monsters == 2) monsters = places.get(id).monsters;
-		if (animals == 2) animals = places.get(id).animals;
-	}
+	public int pvp;
+	public int monsters;
+	public int animals;
 	
 	public HashMap<Integer, Places> getTablePlaces(Connection conn) {
 		HashMap<Integer, Places> places = new HashMap<Integer, Places>();

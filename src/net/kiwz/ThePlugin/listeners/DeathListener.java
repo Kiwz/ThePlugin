@@ -32,11 +32,10 @@ public class DeathListener implements Listener {
 	
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent event) {
-		
 		Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
 		HandleWorlds spawn = new HandleWorlds();
-		final Location loc = spawn.getSpawn(event.getPlayer().getWorld().getName());
 		final Player player = event.getPlayer();
+		final Location loc = spawn.getSpawn(player, player.getWorld().getName());
 		
 		if (player.getBedSpawnLocation() == null) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {

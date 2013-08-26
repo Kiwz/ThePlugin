@@ -17,29 +17,37 @@ public class SpawnCommand {
 	public boolean spawn(CommandSender sender, Command cmd, String[] args) {
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
 		
-		if (sender instanceof Player) {
-			if (!player.teleport(hWorlds.getSpawn(player.getWorld().getName()))) {
-				sender.sendMessage(red + "Beklager, det skjedde en feil");
-			}
+		if (!(sender instanceof Player)) {
+			sender.sendMessage(red + "/spawn kan bare brukes av spillere");
 			return true;
 		}
 		else {
-			sender.sendMessage(red + "/spawn kan bare brukes av spillere");
+			Location loc;
+			if (args.length > 0) {
+				loc = hWorlds.getSpawn(player, args[0]);
+			}
+			else {
+				String worldName = player.getWorld().getName();
+				loc = hWorlds.getSpawn(player, worldName);
+			}
+			if (loc != null) {
+				player.teleport(loc);
+				return true;
+			}
 			return true;
 		}
 	}
 	
 	public boolean spawnSet(CommandSender sender, Command cmd, String[] args) {
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
-		Location loc = player.getLocation();
 		
-		if (sender instanceof Player) {
-			hWorlds.setSpawn(loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
-			sender.sendMessage(gold + "Du har satt spawnen her");
+		if (!(sender instanceof Player)) {
+			sender.sendMessage(red + "/setspawn kan bare brukes av spillere");
 			return true;
 		}
 		else {
-			sender.sendMessage(red + "/setspawn kan bare brukes av spillere");
+			hWorlds.setSpawn(player.getLocation());
+			sender.sendMessage(gold + "Du har satt spawnen her");
 			return true;
 		}
 	}

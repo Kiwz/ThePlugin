@@ -341,10 +341,7 @@ public class HandlePlaces {
 			if (name.equalsIgnoreCase("liste") || name.equalsIgnoreCase("her") || name.equalsIgnoreCase("spiller")) {
 				return red + name + " er reservert og kan ikke brukes";
 			}
-			Places place = new Places();
-			place.name = name;
-			place.getRemainingValues(id, places);
-			places.put(id, place);
+			places.get(id).name = name;
 			for (String placeName : ThePlugin.remPlaces.keySet()) {
 				if (ThePlugin.remPlaces.get(placeName) == id) {
 					ThePlugin.remPlaces.remove(placeName);
@@ -363,10 +360,7 @@ public class HandlePlaces {
 				return red + owner + " er ikke en spiller her";
 			}
 			owner = hPlayers.getPlayerName(owner);
-			Places place = new Places();
-			place.owner = owner;
-			place.getRemainingValues(id, places);
-			places.put(id, place);
+			places.get(id).owner = owner;
 			return gold + owner + " er nå den nye eieren av " + getName(id);
 		}
 		else {
@@ -383,10 +377,7 @@ public class HandlePlaces {
 				return red + member + " er allerede medlem";
 			}
 			member = hPlayers.getPlayerName(member);
-			Places place = new Places();
-			place.members = places.get(id).members + member + " ";
-			place.getRemainingValues(id, places);
-			places.put(id, place);
+			places.get(id).members = places.get(id).members + member + " ";
 			return gold + member + " er nå medlem av " + getName(id);
 		}
 		else {
@@ -400,10 +391,7 @@ public class HandlePlaces {
 				return red + member + " er ikke ett medlem";
 			}
 			member = hPlayers.getPlayerName(member);
-			Places place = new Places();
-			place.members = places.get(id).members.replaceAll(member + " ", "");
-			place.getRemainingValues(id, places);
-			places.put(id, place);
+			places.get(id).members = places.get(id).members.replaceAll(member + " ", "");
 			return gold + member + " er nå fjernet som medlem av " + getName(id);
 		}
 		else {
@@ -424,11 +412,8 @@ public class HandlePlaces {
 					(placeZ + placeSize) >= locZ && (placeZ - placeSize) <= locZ) {
 				String spawnCoords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
 				String spawnPitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
-				Places place = new Places();
-				place.spawnCoords = spawnCoords;
-				place.spawnPitch = spawnPitch;
-				place.getRemainingValues(id, places);
-				places.put(id, place);
+				places.get(id).spawnCoords = spawnCoords;
+				places.get(id).spawnPitch = spawnPitch;
 				return gold + "Du har satt ny spawn i denne plassen";
 			}
 			else {
@@ -443,17 +428,14 @@ public class HandlePlaces {
 	public String setPvP(Player player, int id) {
 		if (isOwner(id, player.getName())) {
 			String returnString;
-			Places place = new Places();
 			if (getPvP(id) == 0) {
-				place.pvp = 1;
+				places.get(id).pvp = 1;
 				returnString = gold + "PvP er AKTIVERT";
 			}
 			else {
-				place.pvp = 0;
+				places.get(id).pvp = 0;
 				returnString = gold + "PvP er DEAKTIVERT";
 			}
-			place.getRemainingValues(id, places);
-			places.put(id, place);
 			return returnString;
 		}
 		else {
@@ -464,17 +446,14 @@ public class HandlePlaces {
 	public String setMonsters(Player player, int id) {
 		if (isOwner(id, player.getName())) {
 			String returnString;
-			Places place = new Places();
 			if (getMonsters(id) == 0) {
-				place.monsters = 1;
+				places.get(id).monsters = 1;
 				returnString = gold + "Monstre er AKTIVERT";
 			}
 			else {
-				place.monsters = 0;
+				places.get(id).monsters = 0;
 				returnString = gold + "Monstre er DEAKTIVERT";
 			}
-			place.getRemainingValues(id, places);
-			places.put(id, place);
 			return returnString;
 		}
 		else {
@@ -485,17 +464,14 @@ public class HandlePlaces {
 	public String setAnimals(Player player, int id) {
 		if (isOwner(id, player.getName())) {
 			String returnString;
-			Places place = new Places();
 			if (getPvP(id) == 0) {
-				place.animals = 1;
+				places.get(id).animals = 1;
 				returnString = gold + "Dyr er AKTIVERT";
 			}
 			else {
-				place.animals = 0;
+				places.get(id).animals = 0;
 				returnString = gold + "Dyr er DEAKTIVERT";
 			}
-			place.getRemainingValues(id, places);
-			places.put(id, place);
 			return returnString;
 		}
 		else {

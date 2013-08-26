@@ -36,7 +36,6 @@ public class Worlds {
 				world.trample = res.getInt("Trample");
 				world.monsters = res.getInt("Monsters");
 				world.animals = res.getInt("Animals");
-				
 				worlds.put(world.world, world);
 			}
 		} catch (SQLException e) {

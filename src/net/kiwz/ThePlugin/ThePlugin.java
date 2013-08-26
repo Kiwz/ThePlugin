@@ -33,7 +33,7 @@ public class ThePlugin extends JavaPlugin {
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
 	
 	private Homes homes = new Homes();
-	public static HashMap<String, Homes> getHomes;
+	public static HashMap<Integer, Homes> getHomes;
 	private Places places = new Places();
 	public static HashMap<Integer, Places> getPlaces;
 	public static HashMap<String, Integer> remPlaces = new HashMap<String, Integer>();
@@ -54,10 +54,10 @@ public class ThePlugin extends JavaPlugin {
 		BuildTables buildTables = new BuildTables();
 		buildTables.createTables(conn);
 		
-		ThePlugin.getHomes = homes.getTableHomes(conn);
-		ThePlugin.getPlaces = places.getTablePlaces(conn);
-		ThePlugin.getPlayers = players.getTablePlayers(conn);
-		ThePlugin.getWorlds = worlds.getTableWorlds(conn);
+		getHomes = homes.getTableHomes(conn);
+		getPlaces = places.getTablePlaces(conn);
+		getPlayers = players.getTablePlayers(conn);
+		getWorlds = worlds.getTableWorlds(conn);
 		
 		try {
 			conn.close();
@@ -68,10 +68,23 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		HandleWorlds hWorlds = new HandleWorlds();
+		
+		boolean newWorld = false;
 		for (World world : Bukkit.getServer().getWorlds()) {
 			if (!getWorlds.containsKey(world.getName())) {
-				hWorlds.addWorld(Bukkit.getServer().getWorld("world"));
+				HandleWorlds hWorlds = new HandleWorlds();
+				hWorlds.addWorld(world);
+				newWorld = true;
+			}
+		}
+		if (newWorld) {
+			ConnectToMySQL MySQL = new ConnectToMySQL();
+			Connection conn = MySQL.openConnection();
+			worlds.setTableWorlds(conn, getWorlds);
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 		
