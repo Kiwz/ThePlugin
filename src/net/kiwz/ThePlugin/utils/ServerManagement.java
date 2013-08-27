@@ -21,6 +21,9 @@ import org.bukkit.plugin.Plugin;
 public class ServerManagement {
 	static boolean warning = false;
 	
+	/**
+	 * <p>This will run forever and checking if it is time for a restart</p>
+	 */
 	public void autoStop() {
 		final Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(pl, new Runnable() {
@@ -47,15 +50,20 @@ public class ServerManagement {
 		}, 28800L, 10L);
 	}
 	
+	/**
+	 * 
+	 * @param period as long
+	 * 
+	 * <p>This will run forever and save world, players and update MySQL tables</p>
+	 */
 	public void save(long period) {
 		final Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(pl, new Runnable() {
 				@Override
                 public void run() {
 					Logger log = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin").getLogger();
-					ChatColor red = ChatColor.RED;
-					long time = System.currentTimeMillis();
 					ChatColor pink = ChatColor.LIGHT_PURPLE;
+					long time = System.currentTimeMillis();
 					Bukkit.getServer().broadcastMessage(pink + "Lagrer serveren");
 					
 					ConnectToMySQL MySQL = new ConnectToMySQL();
@@ -69,19 +77,19 @@ public class ServerManagement {
 					time = System.currentTimeMillis();
 					homes.setTableHomes(conn, ThePlugin.getHomes);
 					time = System.currentTimeMillis() - time;
-					log.info(red + "Lagring av Homes (" + time + "ms)");
+					log.info(ThePlugin.c2 + "Lagring av Homes (" + time + "ms)");
 					time = System.currentTimeMillis();
 					places.setTablePlaces(conn, ThePlugin.getPlaces);
 					time = System.currentTimeMillis() - time;
-					log.info(red + "Lagring av Places (" + time + "ms)");
+					log.info(ThePlugin.c2 + "Lagring av Places (" + time + "ms)");
 					time = System.currentTimeMillis();
 					players.setTablePlayers(conn, ThePlugin.getPlayers);
 					time = System.currentTimeMillis() - time;
-					log.info(red + "Lagring av Players (" + time + "ms)");
+					log.info(ThePlugin.c2 + "Lagring av Players (" + time + "ms)");
 					time = System.currentTimeMillis();
 					worlds.setTableWorlds(conn, ThePlugin.getWorlds);
 					time = System.currentTimeMillis() - time;
-					log.info(red + "Lagring av Worlds (" + time + "ms)");
+					log.info(ThePlugin.c2 + "Lagring av Worlds (" + time + "ms)");
 					time = System.currentTimeMillis();
 					
 					try {

@@ -8,26 +8,37 @@ import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.Places;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class HandlePlaces {
-	private ChatColor gold = ChatColor.GOLD;
-	private ChatColor red = ChatColor.RED;
 	private HandlePlayers hPlayers = new HandlePlayers();
 	private HashMap<Integer, Places> places = ThePlugin.getPlaces;
 	
-	public boolean isOwner(int id, String player) {
+	/**
+	 * 
+	 * @param player name as String ignoring case
+	 * @param id as int
+	 * @return true if this player is an owner of the place with given id
+	 */
+	public boolean isOwner(String player, int id) {
 		if (getOwner(id).equalsIgnoreCase(player)) {
+			return true;
+		}
+		if (Bukkit.getServer().getPlayer(player).isOp()) {
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean isMember(int id, String player) {
+
+	/**
+	 * 
+	 * @param player name as String ignoring case
+	 * @param id as int
+	 * @return true if this player is a member of the place with given id
+	 */
+	public boolean isMember(String player, int id) {
 		for (String member : getMembers(id)) {
 			if (member.equalsIgnoreCase(player)) {
 				return true;
@@ -35,7 +46,13 @@ public class HandlePlaces {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * 
+	 * @param player Object
+	 * @param loc as Location
+	 * @return true if this player has access to do stuff at given location
+	 */
 	public boolean hasAccess(Player player, Location loc) {
 		int locX = (int) loc.getX();
 		int locY = (int) loc.getY();
@@ -43,16 +60,47 @@ public class HandlePlaces {
 		if (locX < 0) locX = locX + 1;
 		if (locZ < 0) locZ = locZ + 1;
 		int id = getIDWithCoords(locX, locZ);
-		
 		if (id != 0) {
-			if (isOwner(id, player.getName()) || isMember(id, player.getName()) || player.isOp()) return true;
-			else return false;
+			if (isOwner(player.getName(), id) || isMember(player.getName(), id)) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
-		else if (locY < 40) return true;
-		else if (player.isOp()) return true;
-		else return false;
+		else if (locY < 40) {
+			return true;
+		}
+		return false;
 	}
 	
+	/**
+	 * 
+	 * @param loc as Location
+	 * @param size as int
+	 * @return true if parts of given location + size isn't inside another place
+	 */
+	public boolean isAvailable(Location loc, int size) {
+		int x = (int) loc.getX();
+		int z = (int) loc.getZ();
+		for (int key : places.keySet()) {
+			int otherX = places.get(key).x;
+			int otherZ = places.get(key).z;
+			int otherSize = places.get(key).size;
+			if (x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
+					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
+				return false;
+	    	}
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param locX as int
+	 * @param locZ as int
+	 * @return id of the place that this x and z is within as int, if no place was found id = 0
+	 */
 	public int getIDWithCoords(int locX, int locZ) {
 		for (int key : places.keySet()) {
 			int placeX = places.get(key).x;
@@ -66,6 +114,11 @@ public class HandlePlaces {
 		return 0;
 	}
 	
+	/**
+	 * 
+	 * @param owner as String
+	 * @return id's that given owner ownes as an ArrayList<Integer>
+	 */
 	public ArrayList<Integer> getIDsWithOwner(String owner) {
 		owner = hPlayers.getPlayerName(owner);
 		ArrayList<Integer> ids = new ArrayList<Integer>();
@@ -76,7 +129,12 @@ public class HandlePlaces {
 		}
 		return ids;
 	}
-	
+
+	/**
+	 * 
+	 * @param member as String
+	 * @return id's that given member is member of as an ArrayList<Integer>
+	 */
 	public ArrayList<Integer> getIDsWithMember(String member) {
 		member = hPlayers.getPlayerName(member);
 		ArrayList<Integer> ids = new ArrayList<Integer>();
@@ -90,6 +148,11 @@ public class HandlePlaces {
 		return ids;
 	}
 	
+	/**
+	 * 
+	 * @param name the Name of a place as String
+	 * @return id of the given place-name as int, if no place where found id = 0
+	 */
 	public int getID(String name) {
 		int id = 0;
 		for (int key : places.keySet()) {
@@ -100,21 +163,41 @@ public class HandlePlaces {
 		return id;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return unix timestamp as int for when this id was added
+	 */
 	public int getTime(int id) {
 		return places.get(id).time;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return the name of a place with given id as String
+	 */
 	public String getName(int id) {
 		return places.get(id).name;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return the name of an owner for given id as String
+	 */
 	public String getOwner(int id) {
 		return places.get(id).owner;
 	}
 	
+	/**
+	 * 
+	 * @param owner as String
+	 * @return a String explaining wich places given owner ownes
+	 */
 	public String getOwned(String owner) {
 		if (!hPlayers.hasPlayedBefore(owner)) {
-			return red + owner + " er ikke en spiller her";
+			return ThePlugin.c2 + owner + " er ikke en spiller her";
 		}
 		owner = hPlayers.getPlayerName(owner);
 		String owned = "";
@@ -122,19 +205,29 @@ public class HandlePlaces {
 			owned = owned + "[" + places.get(id).name + "] ";
 		}
 		if (owned == "") {
-			return red + owner + " eier ingen plasser";
+			return ThePlugin.c2 + owner + " eier ingen plasser";
 		}
-		owned = gold + owner + " eier følgende plasser: " + owned;
+		owned = ThePlugin.c1 + owner + " eier følgende plasser: " + owned;
 		return owned;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return members of given id as String[]
+	 */
 	public String[] getMembers(int id) {
 		return places.get(id).members.split(" ");
 	}
-	
+
+	/**
+	 * 
+	 * @param member as String
+	 * @return a String explaining witch places given member is member of
+	 */
 	public String getMembered(String member) {
 		if (!hPlayers.hasPlayedBefore(member)) {
-			return red + member + " er ikke en spiller her";
+			return ThePlugin.c2 + member + " er ikke en spiller her";
 		}
 		member = hPlayers.getPlayerName(member);
 		String membered = "";
@@ -142,33 +235,63 @@ public class HandlePlaces {
 			membered = membered + "[" + places.get(id).name + "] ";
 		}
 		if (membered == "") {
-			return red + member + " er ikke medlem av noen plasser";
+			return ThePlugin.c2 + member + " er ikke medlem av noen plasser";
 		}
-		membered = gold + member + " er medlem i følgende plasser: " + membered;
+		membered = ThePlugin.c1 + member + " er medlem i følgende plasser: " + membered;
 		return membered;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return name of the world given id is in as String
+	 */
 	public String getWorld(int id) {
 		return places.get(id).world;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return a String explaining x and z coords for given id
+	 */
 	public String getCoords(int id) {
 		return "Plassen befinner seg på X:" + places.get(id).x + " Z:" + places.get(id).z;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return a String explaining the size of given id
+	 */
 	public String getSize(int id) {
 		int size = (places.get(id).size * 2) + 1;
 		return "Plassen er " + size + " x " + size + " blokker stor";
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return spawn coordinates of give id as a String
+	 */
 	public String getSpawnCoords(int id) {
 		return places.get(id).spawnCoords;
 	}
-	
+
+	/**
+	 * 
+	 * @param id as int
+	 * @return spawn pitch and yaw of give id as a String
+	 */
 	public String getSpawnPitch(int id) {
 		return places.get(id).spawnPitch;
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return spawn location of given id as Location
+	 */
 	public Location getSpawn(int id) {
 		String world = getWorld(id);
 		String[] stringCoords = getSpawnCoords(id).split(" ");
@@ -184,19 +307,50 @@ public class HandlePlaces {
 		return loc;
 	}
 	
-	public int getPvP(int id) {
-		return places.get(id).pvp;
+	/**
+	 * 
+	 * @param id as int
+	 * @return String "DEAKTIVERT" if pvp is not allowed, else "AKTIVERT"
+	 */
+	public String getPvP(int id) {
+		if (places.get(id).pvp == 0) {
+			return "DEAKTIVERT";
+		}
+		return "AKTIVERT";
+	}
+
+	/**
+	 * 
+	 * @param id as int
+	 * @return String "DEAKTIVERT" if monsters is not allowed, else "AKTIVERT"
+	 */
+	public String getMonsters(int id) {
+		if (places.get(id).monsters == 0) {
+			return "DEAKTIVERT";
+		}
+		return "AKTIVERT";
+	}
+
+	/**
+	 * 
+	 * @param id as int
+	 * @return String "DEAKTIVERT" if animals is not allowed, else "AKTIVERT"
+	 */
+	public String getAnimals(int id) {
+		if (places.get(id).animals == 0) {
+			return "DEAKTIVERT";
+		}
+		return "AKTIVERT";
 	}
 	
-	public int getMonsters(int id) {
-		return places.get(id).monsters;
-	}
-	
-	public int getAnimals(int id) {
-		return places.get(id).animals;
-	}
-	
-	public void sendPlace(int id, CommandSender sender) {
+	/**
+	 * 
+	 * @param sender that issued the command
+	 * @param id as int
+	 * 
+	 * This will send messages to sender containing information of given id
+	 */
+	public void sendPlace(CommandSender sender, int id) {
 		String members = "";
 		for (String member : getMembers(id)) {
 			members = members + member + ", ";
@@ -212,7 +366,15 @@ public class HandlePlaces {
 		sender.sendMessage("Dyr: " + getAnimals(id));
 	}
 	
-	public void sendPlaceHere(CommandSender sender, int locX, int locZ) {
+	/**
+	 * 
+	 * @param sender that issued the command
+	 * 
+	 * This will send messages to sender containing information of place where sender stands
+	 */
+	public void sendPlaceHere(CommandSender sender) {
+		int locX = (int) Bukkit.getServer().getPlayer(sender.getName()).getLocation().getX();
+		int locZ = (int) Bukkit.getServer().getPlayer(sender.getName()).getLocation().getZ();
 		int id = getIDWithCoords(locX, locZ);
 		if (id != 0) {
 			String members = "";
@@ -229,21 +391,33 @@ public class HandlePlaces {
 			sender.sendMessage("Monstre: " + getMonsters(id));
 			sender.sendMessage("Dyr: " + getAnimals(id));
 		}
-		else sender.sendMessage(red + "Ingen plass funnet");
+		else sender.sendMessage(ThePlugin.c2 + "Ingen plass funnet");
 	}
 	
+	/**
+	 * 
+	 * @param sender that issued the command
+	 * 
+	 * This will send messages to sender contaning place-names and owners
+	 */
 	public void sendPlaceList(CommandSender sender) {
 		ArrayList<String> placeList = new ArrayList<String>();
 		for (int key : places.keySet()) {
-			placeList.add(gold + places.get(key).name + " [" + places.get(key).owner + "] ");
+			placeList.add(ThePlugin.c1 + places.get(key).name + " [" + places.get(key).owner + "] ");
 		}
 		Collections.sort(placeList, String.CASE_INSENSITIVE_ORDER);
-		sender.sendMessage(gold + "Plass-Navn [Eier]");
+		sender.sendMessage(ThePlugin.c1 + "Plass-Navn [Eier]");
 		for (String place : placeList) {
 			sender.sendMessage(place);
 		}
 	}
-	
+
+	/**
+	 * 
+	 * @param sender that issued the command
+	 * 
+	 * This will send messages to sender contaning owners and place-names
+	 */
 	public void sendPlayersPlaceList(CommandSender sender) {
 		HashMap<String, String> playersPlaceList = new HashMap<String, String>();
 		ArrayList<String> playersPlacesList = new ArrayList<String>();
@@ -260,48 +434,38 @@ public class HandlePlaces {
 			playersPlacesList.add(key + ": " + playersPlaceList.get(key));
 		}
 		Collections.sort(playersPlacesList, String.CASE_INSENSITIVE_ORDER);
-		sender.sendMessage(gold + "Eier [Plass-navn]");
+		sender.sendMessage(ThePlugin.c1 + "Eier [Plass-navn]");
 		for (String playerPlaces : playersPlacesList) {
-			sender.sendMessage(gold + playerPlaces);
+			sender.sendMessage(ThePlugin.c1 + playerPlaces);
 		}
 	}
 	
-	public String addPlace(String name, Player player, String radius) {
-		String playerName = player.getName();
-		World world = player.getWorld();
-		String worldName = world.getName();
-		
-		Location loc = player.getLocation();
-		int x = (int) loc.getX();
-		int z = (int) loc.getZ();
+	/**
+	 * 
+	 * @param player as Object
+	 * @param name of the new place as String
+	 * @param radius of the new place as int
+	 * @return String describing the result
+	 */
+	public String addPlace(Player player, String name, String radius) {
 		int size = Integer.parseInt(radius);
-		String spawnCoords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
-		String spawnPitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
-		
-		if(getIDsWithOwner(playerName).size() >= 3) {
-			//return red + "Du eier 3 plasser og kan ikke lage flere";
+		Location loc = player.getLocation();
+		String spawnCoords = loc.getX() + " " + loc.getY() + " " + loc.getZ();
+		String spawnPitch = loc.getPitch() + " " + loc.getYaw();
+		if(!player.isOp() && getIDsWithOwner(player.getName()).size() >= 3) {
+			//return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
-		
 		if (name.equalsIgnoreCase("liste") || name.equalsIgnoreCase("her") || name.equalsIgnoreCase("spiller")) {
-			return red + name + " er reservert og kan ikke brukes";
+			return ThePlugin.c2 + name + " er reservert og kan ikke brukes";
 		}
-		
 		for (int key : places.keySet()) {
 			if (getName(key).equalsIgnoreCase(name)) {
-				return red + "Dette navnet finnes fra før";
+				return ThePlugin.c2 + "Dette navnet finnes fra før";
 			}
 		}
-		
-		for (int key : places.keySet()) {
-			int otherX = places.get(key).x;
-			int otherZ = places.get(key).z;
-			int otherSize = places.get(key).size;
-			if (x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
-					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
-				return red + "Du er for nærme en annen plass (" + places.get(key).name + ")";
-	    	}
-		}
-		
+		if (!isAvailable(loc, size)) {
+			return ThePlugin.c2 + "Du er for nærme en annen plass";
+    	}
 		int id = 1;
 		while (places.containsKey(id)) {
 			id++;
@@ -310,11 +474,11 @@ public class HandlePlaces {
 		place.id = id;
 		place.time = (int) (System.currentTimeMillis() / 1000);
 		place.name = name;
-		place.owner = playerName;
+		place.owner = player.getName();
 		place.members = "";
-		place.world = worldName;
-		place.x = x;
-		place.z = z;
+		place.world = loc.getWorld().getName();
+		place.x = (int) loc.getX();
+		place.z = (int) loc.getZ();
 		place.size = size;
 		place.spawnCoords = spawnCoords;
 		place.spawnPitch = spawnPitch;
@@ -328,164 +492,212 @@ public class HandlePlaces {
 			}
 		}
 		int totSize = (Integer.parseInt(radius) * 2) + 1;
-		return gold + "Din nye plass heter \"" + name + "\" og er " + totSize + " x " + size + " blokker stor";
+		return ThePlugin.c1 + "Din nye plass heter \"" + name + "\" og er " + totSize + " x " + size + " blokker stor";
 	}
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @param radius as String
+	 * @return String describing the result
+	 */
+	public String setPlace(Player player, int id, String radius) {
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
+		}
+		int size = Integer.parseInt(radius);
+		Location loc = player.getLocation();
+		String spawnCoords = loc.getX() + " " + loc.getY() + " " + loc.getZ();
+		String spawnPitch = loc.getPitch() + " " + loc.getYaw();
+		if (!isAvailable(loc, size)) {
+			return ThePlugin.c2 + "Du er for nærme en annen plass";
+    	}
+		places.get(id).x = (int) loc.getX();
+		places.get(id).z = (int) loc.getZ();
+		places.get(id).size = size;
+		places.get(id).spawnCoords = spawnCoords;
+		places.get(id).spawnPitch = spawnPitch;
+		return ThePlugin.c1 + "Du har flyttet plassen din hit";
+	}
+	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @param name as String (the new name)
+	 * @return String describing the result
+	 */
 	public String setName(Player player, int id, String name) {
-		if (isOwner(id, player.getName())) {
-			for (int key : places.keySet()) {
-				if (getName(key).equalsIgnoreCase(name)) {
-					return red + "Dette navnet finnes fra før";
-				}
-			}
-			if (name.equalsIgnoreCase("liste") || name.equalsIgnoreCase("her") || name.equalsIgnoreCase("spiller")) {
-				return red + name + " er reservert og kan ikke brukes";
-			}
-			places.get(id).name = name;
-			for (String placeName : ThePlugin.remPlaces.keySet()) {
-				if (ThePlugin.remPlaces.get(placeName) == id) {
-					ThePlugin.remPlaces.remove(placeName);
-				}
-			}
-			return gold + "Du har byttet navn på plassen din til: " + name;
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		else {
-			return red + getName(id) + " er ikke din plass";
+		for (int key : places.keySet()) {
+			if (getName(key).equalsIgnoreCase(name)) {
+				return ThePlugin.c2 + "Dette navnet finnes fra før";
+			}
 		}
+		if (name.equalsIgnoreCase("liste") || name.equalsIgnoreCase("her") || name.equalsIgnoreCase("spiller")) {
+			return ThePlugin.c2 + name + " er reservert og kan ikke brukes";
+		}
+		places.get(id).name = name;
+		for (String placeName : ThePlugin.remPlaces.keySet()) {
+			if (ThePlugin.remPlaces.get(placeName) == id) {
+				ThePlugin.remPlaces.remove(placeName);
+			}
+		}
+		return ThePlugin.c1 + "Du har byttet navn på plassen din til: " + name;
 	}
 	
 	public String setOwner(Player player, int id, String owner) {
-		if (isOwner(id, player.getName())) {
-			if (!hPlayers.hasPlayedBefore(owner)) {
-				return red + owner + " er ikke en spiller her";
-			}
-			owner = hPlayers.getPlayerName(owner);
-			places.get(id).owner = owner;
-			return gold + owner + " er nå den nye eieren av " + getName(id);
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		else {
-			return red + getName(id) + " er ikke din plass";
+		if (!hPlayers.hasPlayedBefore(owner)) {
+			return ThePlugin.c2 + owner + " er ikke en spiller her";
 		}
+		owner = hPlayers.getPlayerName(owner);
+		places.get(id).owner = owner;
+		return ThePlugin.c1 + owner + " er nå den nye eieren av " + getName(id);
 	}
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @param member as String (new member)
+	 * @return String describing the result
+	 */
 	public String addMember(Player player, int id, String member) {
-		if (isOwner(id, player.getName())) {
-			if (!hPlayers.hasPlayedBefore(member)) {
-				return red + member + " er ikke en spiller her";
-			}
-			if (isMember(id, member)) {
-				return red + member + " er allerede medlem";
-			}
-			member = hPlayers.getPlayerName(member);
-			places.get(id).members = places.get(id).members + member + " ";
-			return gold + member + " er nå medlem av " + getName(id);
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		else {
-			return red + getName(id) + " er ikke din plass";
+		if (!hPlayers.hasPlayedBefore(member)) {
+			return ThePlugin.c2 + member + " er ikke en spiller her";
 		}
+		if (isMember(member, id)) {
+			return ThePlugin.c2 + member + " er allerede medlem";
+		}
+		member = hPlayers.getPlayerName(member);
+		places.get(id).members = places.get(id).members + member + " ";
+		return ThePlugin.c1 + member + " er nå medlem av " + getName(id);
 	}
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @param member as String (member to remove)
+	 * @return String describing the result
+	 */
 	public String remMember(Player player, int id, String member) {
-		if (isOwner(id, player.getName())) {
-			if (!isMember(id, member)) {
-				return red + member + " er ikke ett medlem";
-			}
-			member = hPlayers.getPlayerName(member);
-			places.get(id).members = places.get(id).members.replaceAll(member + " ", "");
-			return gold + member + " er nå fjernet som medlem av " + getName(id);
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		else {
-			return red + getName(id) + " er ikke din plass";
+		if (!isMember(member, id)) {
+			return ThePlugin.c2 + member + " er ikke ett medlem";
 		}
+		member = hPlayers.getPlayerName(member);
+		places.get(id).members = places.get(id).members.replaceAll(member + " ", "");
+		return ThePlugin.c1 + member + " er nå fjernet som medlem av " + getName(id);
 	}
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @return String describing the result
+	 */
 	public String setSpawn(Player player, int id) {
-		if (isOwner(id, player.getName())) {
-			Location loc = player.getLocation();
-
-			int locX = (int) loc.getX();
-			int locZ = (int) loc.getZ();
-			int placeX = places.get(id).x;
-			int placeZ = places.get(id).z;
-			int placeSize = places.get(id).size;
-			if ((placeX + placeSize) >= locX && (placeX - placeSize) <= locX &&
-					(placeZ + placeSize) >= locZ && (placeZ - placeSize) <= locZ) {
-				String spawnCoords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
-				String spawnPitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
-				places.get(id).spawnCoords = spawnCoords;
-				places.get(id).spawnPitch = spawnPitch;
-				return gold + "Du har satt ny spawn i denne plassen";
-			}
-			else {
-				return red + "Du må stå i " + places.get(id).name;
-			}
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
+		}
+		Location loc = player.getLocation();
+		int locX = (int) loc.getX();
+		int locZ = (int) loc.getZ();
+		int placeX = places.get(id).x;
+		int placeZ = places.get(id).z;
+		int placeSize = places.get(id).size;
+		if ((placeX + placeSize) >= locX && (placeX - placeSize) <= locX &&
+				(placeZ + placeSize) >= locZ && (placeZ - placeSize) <= locZ) {
+			String spawnCoords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
+			String spawnPitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
+			places.get(id).spawnCoords = spawnCoords;
+			places.get(id).spawnPitch = spawnPitch;
+			return ThePlugin.c1 + "Du har satt ny spawn i denne plassen";
 		}
 		else {
-			return red + getName(id) + " er ikke din plass";
+			return ThePlugin.c2 + "Du må stå i " + places.get(id).name;
 		}
 	}
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @return String describing the result
+	 */
 	public String setPvP(Player player, int id) {
-		if (isOwner(id, player.getName())) {
-			String returnString;
-			if (getPvP(id) == 0) {
-				places.get(id).pvp = 1;
-				returnString = gold + "PvP er AKTIVERT";
-			}
-			else {
-				places.get(id).pvp = 0;
-				returnString = gold + "PvP er DEAKTIVERT";
-			}
-			return returnString;
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		else {
-			return red + getName(id) + " er ikke din plass";
+		if (getPvP(id).equals("DEAKTIVERT")) {
+			places.get(id).pvp = 1;
+			return ThePlugin.c1 + "PvP er AKTIVERT";
 		}
+		places.get(id).pvp = 0;
+		return ThePlugin.c1 + "PvP er DEAKTIVERT";
 	}
-	
+
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @return String describing the result
+	 */
 	public String setMonsters(Player player, int id) {
-		if (isOwner(id, player.getName())) {
-			String returnString;
-			if (getMonsters(id) == 0) {
-				places.get(id).monsters = 1;
-				returnString = gold + "Monstre er AKTIVERT";
-			}
-			else {
-				places.get(id).monsters = 0;
-				returnString = gold + "Monstre er DEAKTIVERT";
-			}
-			return returnString;
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		else {
-			return red + getName(id) + " er ikke din plass";
+		if (getMonsters(id).equals("DEAKTIVERT")) {
+			places.get(id).monsters = 1;
+			return ThePlugin.c1 + "Monstre er AKTIVERT";
 		}
+		places.get(id).monsters = 0;
+		return ThePlugin.c1 + "Monstre er DEAKTIVERT";
 	}
-	
+
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @return String describing the result
+	 */
 	public String setAnimals(Player player, int id) {
-		if (isOwner(id, player.getName())) {
-			String returnString;
-			if (getPvP(id) == 0) {
-				places.get(id).animals = 1;
-				returnString = gold + "Dyr er AKTIVERT";
-			}
-			else {
-				places.get(id).animals = 0;
-				returnString = gold + "Dyr er DEAKTIVERT";
-			}
-			return returnString;
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		else {
-			return red + getName(id) + " er ikke din plass";
+		if (getAnimals(id).equals("DEAKTIVERT")) {
+			places.get(id).animals = 1;
+			return ThePlugin.c1 + "Dyr er AKTIVERT";
 		}
+		places.get(id).animals = 0;
+		return ThePlugin.c1 + "Dyr er DEAKTIVERT";
 	}
-	
-	public String remPlace(int id, Player player) {
-		if (isOwner(id, player.getName())) {
-			String placeName = places.get(id).name;
-			places.remove(id);
-			ThePlugin.remPlaces.put(placeName, id);
-			return gold + placeName + " er slettet";
+
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @return String describing the result
+	 */
+	public String remPlace(Player player, int id) {
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		return red + places.get(id).name + " er ikke din plass";
+		String placeName = places.get(id).name;
+		places.remove(id);
+		ThePlugin.remPlaces.put(placeName, id);
+		return ThePlugin.c1 + placeName + " er slettet";
 	}
 }

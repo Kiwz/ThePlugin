@@ -5,17 +5,21 @@ import org.bukkit.entity.Player;
 
 public class Tablist {
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * 
+	 * <p>This will set the tabcolor for given player</p>
+	 */
 	public void setColor(Player player) {
 		String playerName = player.getName();
-
+		
     	if (playerName.length() + 4 > 16) {
     		playerName = playerName.substring(0, 12);
     	}
-		
         if (player.isOp()) {
             player.setPlayerListName(ChatColor.RED + playerName + ChatColor.WHITE);
         }
-        
         else {
         	int roll = (int) (Math.random() * 5);
         	if (roll == 0) player.setPlayerListName(ChatColor.DARK_BLUE + playerName + ChatColor.WHITE);

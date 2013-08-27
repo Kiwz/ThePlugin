@@ -1,5 +1,6 @@
 package net.kiwz.ThePlugin.commands;
 
+import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 
 import org.bukkit.Bukkit;
@@ -10,11 +11,17 @@ import org.bukkit.entity.Player;
 
 public class PlaceCommand {
 	
+	/**
+	 * 
+	 * @param sender player who issued the command
+	 * @param cmd command that was issued
+	 * @param args as String[] describing what we want to do with given place
+	 * @return true no matter what
+	 */
 	public boolean place(CommandSender sender, Command cmd, String[] args) {
-		ChatColor gold = ChatColor.GOLD;
 		ChatColor yellow = ChatColor.YELLOW;
 		ChatColor white = ChatColor.WHITE;
-		ChatColor red = ChatColor.RED;
+		ChatColor gold = ChatColor.GOLD;
 		String hjelp1 = yellow + "--------- " + white + "Hjelp for /plass kommandoer " + yellow + "---------";
 		String hjelp2 = gold + "/plass: " + white + "Viser denne denne hjelp menyen";
 		String hjelp3 = gold + "/plass liste: " + white + "Viser en liste over alle plasser";
@@ -31,14 +38,14 @@ public class PlaceCommand {
 				check = 1;
 			}
 			if (check == 0) {
-				sender.sendMessage(red + "Consolen kan bare bruke /plass liste, /plass spiller <navn> og /plass <navn>");
+				sender.sendMessage(ThePlugin.c2 + "Consolen kan bare bruke /plass liste, /plass spiller <navn> og /plass <navn>");
 				return true;
 			}
 		}
 		
 		for (String arg : args) {
 			if (!arg.matches("[a-zA-Z_0-9]+")) {
-				sender.sendMessage(red + "Tillatte tegn er a-z A-Z 0-9 _");
+				sender.sendMessage(ThePlugin.c2 + "Tillatte tegn er a-z A-Z 0-9 _");
 				return true;
 			}
 		}
@@ -55,70 +62,50 @@ public class PlaceCommand {
 				hPlaces.sendPlaceList(sender);
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("her")) {
-				int locX = (int) player.getLocation().getX();
-				int locZ = (int) player.getLocation().getZ();
-				hPlaces.sendPlaceHere(sender, locX, locZ);
-				return true;
-			}
 			else if (args[0].equalsIgnoreCase("spiller")) {
 				hPlaces.sendPlayersPlaceList(sender);
 				return true;
 			}
+			else if (args[0].equalsIgnoreCase("her")) {
+				hPlaces.sendPlaceHere(sender);
+				return true;
+			}
 			else {
 				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					hPlaces.sendPlace(id, sender);
+				if (id == 0) {
+					sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
 					return true;
 				}
-				else {
-					sender.sendMessage(red + args[0] + " finnes ikke");
-					return true;
-				}
+				hPlaces.sendPlace(sender, id);
+				return true;
 			}
 		}
 		
 		if (args.length == 2) {
 			if (args[1].equalsIgnoreCase("ny")) {
-				sender.sendMessage(hPlaces.addPlace(args[0], player, "50"));
+				sender.sendMessage(hPlaces.addPlace(player, args[0], "50"));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("flytt")) {
-				// IKKE FERDIG!!!!
-				sender.sendMessage("Flytter plassen til hit du står med standard strl");
+			id = hPlaces.getID(args[0]);
+			if (id == 0) {
+				sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
+				return true;
+			}
+			if (args[1].equalsIgnoreCase("flytt")) {
+				sender.sendMessage(hPlaces.setPlace(player, id, "50"));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("spawn")) {
-				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					if (!player.teleport(hPlaces.getSpawn(id))) {
-						sender.sendMessage(red + "Beklager, det skjedde en feil");
-						return true;
-					}
-					return true;
-				}
+				player.teleport(hPlaces.getSpawn(id));
+				return true;
 			}
 			else if (args[1].equalsIgnoreCase("setspawn")) {
-				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					sender.sendMessage(hPlaces.setSpawn(player, id));
-					return true;
-				}
-				else {
-					sender.sendMessage(red + args[0] + " finnes ikke");
-					return true;
-				}
+				sender.sendMessage(hPlaces.setSpawn(player, id));
+				return true;
 			}
 			else if (args[1].equalsIgnoreCase("slett")) {
-				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					sender.sendMessage(hPlaces.remPlace(id, player));
-					return true;
-				}
-				else {
-					sender.sendMessage(red + args[0] + " finnes ikke");
-					return true;
-				}
+				sender.sendMessage(hPlaces.remPlace(player, id));
+				return true;
 			}
 			else if (args[0].equalsIgnoreCase("spiller")) {
 				sender.sendMessage(hPlaces.getOwned(args[1]));
@@ -126,134 +113,86 @@ public class PlaceCommand {
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("navn")) {
-				sender.sendMessage(red + "/plass <navn> navn <nytt-navn>");
+				sender.sendMessage(ThePlugin.c2 + "/plass <navn> navn <nytt-navn>");
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("sett")) {
-				sender.sendMessage(red + "/plass <navn> sett <[pvp] [monstre] [dyr]>");
+				sender.sendMessage(ThePlugin.c2 + "/plass <navn> sett <[pvp] [monstre] [dyr]>");
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("inviter")) {
-				sender.sendMessage("/plass <navn> inviter <spiller-navn>");
+				sender.sendMessage(ThePlugin.c2 + "/plass <navn> inviter <spiller-navn>");
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("fjern")) {
-				sender.sendMessage("/plass <navn> fjern <spiller-navn>");
+				sender.sendMessage(ThePlugin.c2 + "/plass <navn> fjern <spiller-navn>");
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("eier")) {
-				sender.sendMessage("/plass <navn> eier <spiller-navn>");
+				sender.sendMessage(ThePlugin.c2 + "/plass <navn> eier <spiller-navn>");
 				return true;
 			}
 			else {
 				sender.sendMessage("Viser hjelpe menyen til /plass");
+				return true;
 			}
 		}
 		
 		if (args.length == 3) {
 			if (args[1].equalsIgnoreCase("ny")) {
-				if (args[2].matches("[0-9]")) {
-					sender.sendMessage(hPlaces.addPlace(args[0], player, args[2]));
+				if (!args[2].matches("[0-9]")) {
+					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
-				else {
-					sender.sendMessage("Størrelsen må defineres med tall");
-					return true;
-				}
+				sender.sendMessage(hPlaces.addPlace(player, args[0], args[2]));
+				return true;
 			}
-			else if (args[1].equalsIgnoreCase("flytt")) {
-				if (args[2].matches("[0-9]")) {
-					// IKKE FERDIG!!!!
-					sender.sendMessage("Flytter plassen til hit du står med oppgitte strl");
+			id = hPlaces.getID(args[0]);
+			if (id == 0) {
+				sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
+				return true;
+			}
+			if (args[1].equalsIgnoreCase("flytt")) {
+				if (!args[2].matches("[0-9]")) {
+					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
-				else {
-					sender.sendMessage("Størrelsen må defineres med tall");
-					return true;
-				}
+				sender.sendMessage(hPlaces.setPlace(player, id, "50"));
+				return true;
 			}
 			else if (args[1].equalsIgnoreCase("navn")) {
-				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					sender.sendMessage(hPlaces.setName(player, id, args[2]));
-					return true;
-				}
-				else {
-					sender.sendMessage(red + args[0] + " finnes ikke");
-					return true;
-				}
+				sender.sendMessage(hPlaces.setName(player, id, args[2]));
+				return true;
 			}
 			else if (args[1].equalsIgnoreCase("sett")) {
 				if (args[2].equalsIgnoreCase("pvp")) {
-					id = hPlaces.getID(args[0]);
-					if (id != 0) {
-						sender.sendMessage(hPlaces.setPvP(player, id));
-						return true;
-					}
-					else {
-						sender.sendMessage(red + args[0] + " finnes ikke");
-						return true;
-					}
+					sender.sendMessage(hPlaces.setPvP(player, id));
+					return true;
 				}
-				if (args[2].equalsIgnoreCase("monstre")) {
-					id = hPlaces.getID(args[0]);
-					if (id != 0) {
-						sender.sendMessage(hPlaces.setMonsters(player, id));
-						return true;
-					}
-					else {
-						sender.sendMessage(red + args[0] + " finnes ikke");
-						return true;
-					}
+				else if (args[2].equalsIgnoreCase("monstre")) {
+					sender.sendMessage(hPlaces.setMonsters(player, id));
+					return true;
 				}
-				if (args[2].equalsIgnoreCase("dyr")) {
-					id = hPlaces.getID(args[0]);
-					if (id != 0) {
-						sender.sendMessage(hPlaces.setAnimals(player, id));
-						return true;
-					}
-					else {
-						sender.sendMessage(red + args[0] + " finnes ikke");
-						return true;
-					}
+				else if (args[2].equalsIgnoreCase("dyr")) {
+					sender.sendMessage(hPlaces.setAnimals(player, id));
+					return true;
 				}
 				else {
-					sender.sendMessage("Du må skrive pvp/monstre/dyr");
+					sender.sendMessage(ThePlugin.c2 + "Du må skrive pvp/monstre/dyr");
 					return true;
 				}
 			}
 			else if (args[1].equalsIgnoreCase("inviter")) {
-				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					sender.sendMessage(hPlaces.addMember(player, id, args[2]));
-					return true;
-				}
-				else {
-					sender.sendMessage(red + args[0] + " finnes ikke");
-					return true;
-				}
+				sender.sendMessage(hPlaces.addMember(player, id, args[2]));
+				return true;
 			}
 			else if (args[1].equalsIgnoreCase("fjern")) {
-				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					sender.sendMessage(hPlaces.remMember(player, id, args[2]));
-					return true;
-				}
-				else {
-					sender.sendMessage(red + args[0] + " finnes ikke");
-					return true;
-				}
+				sender.sendMessage(hPlaces.remMember(player, id, args[2]));
+				return true;
 			}
 			else if (args[1].equalsIgnoreCase("eier")) {
-				id = hPlaces.getID(args[0]);
-				if (id != 0) {
-					sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
-					return true;
-				}
-				else {
-					sender.sendMessage(red + args[0] + " finnes ikke");
-					return true;
-				}
+				sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
+				return true;
 			}
 			else {
 				sender.sendMessage("Viser hjelpe menyen til /plass");

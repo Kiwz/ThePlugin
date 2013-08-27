@@ -120,6 +120,6 @@ public class Commands implements CommandExecutor {
 			// Test slutter!
 			
 		}
-	    return true;
+	    return false;
 	}
 }

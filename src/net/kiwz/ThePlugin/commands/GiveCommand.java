@@ -59,12 +59,11 @@ public class GiveCommand {
 				else {
 					sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				}
-				return true;
 			}
 			else {
 				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet dette navnet");
-				return true;
 			}
+			return true;
 		}
 		else if (args.length == 3 && args[0].matches("[0-9]+") && args[2].matches("[0-9]+")) {
 			ItemStack itemStack = item.getItem(args[1], args[0], args[2]);
@@ -92,12 +91,11 @@ public class GiveCommand {
 				else {
 					sender.sendMessage(ThePlugin.c2 + args[2] + " finnes ikke");
 				}
-				return true;
 			}
 			else {
 				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet dette navnet");
-				return true;
 			}
+			return true;
 		}
 		else if (args.length == 4 && args[1].matches("[0-9]+") && args[3].matches("[0-9]+")) {
 			Player target = onlinePlayer.getPlayer(args[0]);
@@ -113,12 +111,11 @@ public class GiveCommand {
 				else {
 					sender.sendMessage(ThePlugin.c2 + args[2] + ":" + args[3] + " finnes ikke");
 				}
-				return true;
 			}
 			else {
 				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet dette navnet");
-				return true;
 			}
+			return true;
 		}
 		else {
 			return false;

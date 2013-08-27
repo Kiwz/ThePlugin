@@ -1,8 +1,8 @@
 package net.kiwz.ThePlugin.listeners;
 
+import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +12,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlockListener implements Listener {
 	
-	private String denyString = ChatColor.RED + "Du har ingen tilgang her";
+	private String denyString = ThePlugin.c2 + "Du har ingen tilgang her";
 	private HandlePlaces hPlaces = new HandlePlaces();
 	
 	@EventHandler

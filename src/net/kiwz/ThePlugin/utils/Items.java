@@ -5,6 +5,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class Items {
 	
+	/**
+	 * 
+	 * @param type as String
+	 * @return ItemStack with given item type
+	 */
 	public ItemStack getItem(String type) {
 		int id = search(type);
 		if (id == 0) {
@@ -13,6 +18,12 @@ public class Items {
 		return new ItemStack(id);
 	}
 	
+	/**
+	 * 
+	 * @param type as String
+	 * @param amount as String
+	 * @return ItemStack with given item type and amount
+	 */
 	public ItemStack getItem(String type, String amount) {
 		int id = search(type);
 		int x = toInt(amount);
@@ -25,6 +36,13 @@ public class Items {
 		return new ItemStack(id, x);
 	}
 	
+	/**
+	 * 
+	 * @param type as String
+	 * @param amount as String
+	 * @param damage as String
+	 * @return ItemStack with given item type, amount and damage
+	 */
 	public ItemStack getItem(String type, String amount, String damage) {
 		int id = search(type);
 		int x = toInt(amount);
@@ -41,6 +59,11 @@ public class Items {
 		return new ItemStack(id, x, dmg);
 	}
 	
+	/**
+	 * 
+	 * @param type as String to search for an item id
+	 * @return item id as int, if not found int = 0
+	 */
 	private int search(String type) {
 		int id = 0;
 		if (type.length() < 5 && type.matches("[0-9]+")) {
@@ -69,6 +92,11 @@ public class Items {
 		return id;
 	}
 	
+	/**
+	 * 
+	 * @param amount as String
+	 * @return int if String contained 0-9
+	 */
 	private int toInt(String amount) {
 		int i = 0;
 		if (amount.length() < 8 && amount.matches("[0-9]+")) {
@@ -77,6 +105,11 @@ public class Items {
 		return i;
 	}
 	
+	/**
+	 * 
+	 * @param damage as String
+	 * @return short if String contained 0-9
+	 */
 	private short toShort(String damage) {
 		short i = 0;
 		if (damage.length() < 5 && damage.matches("[0-9]+")) {

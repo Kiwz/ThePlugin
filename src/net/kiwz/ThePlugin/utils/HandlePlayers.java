@@ -23,8 +23,8 @@ public class HandlePlayers {
 	/**
 	 * 
 	 * @param playerName
-	 * @return {@code int} time played for given player in seconds,
-	 * or {@code null} if given player has not played before.
+	 * @return int time played for given player in seconds,
+	 * or null if given player has not played before.
 	 */
 	public String getPlayerName(String playerName) {
 		return players.get(playerName.toUpperCase()).player;
@@ -33,17 +33,19 @@ public class HandlePlayers {
 	/**
 	 * 
 	 * @param playerName
-	 * @return {@code int} time played for given player in seconds,
-	 * or {@code null} if given player has not played before.
+	 * @return int time played for given player in seconds,
+	 * or null if given player has not played before.
 	 */
 	public int getPlayerTimePlayed(String playerName) {
 		return players.get(playerName.toUpperCase()).timePlayed;
 	}
 	
 	/**
+	 * 
+	 * @param playerName as String
+	 * 
 	 * <p>This method will add a given player to the Players HashMap. Should
 	 * only be used once per player.</p>
-	 * @param playerName
 	 */
 	public void addPlayer(String playerName) {
 		
@@ -57,16 +59,20 @@ public class HandlePlayers {
 	}
 	
 	/**
-	 * <p>This method will set <b>this</b> time (in seconds) as the Last Login time for given player.
-	 * @param playerName
+	 * 
+	 * @param playerName as String
+	 * 
+	 * <p>This method will set this time (in seconds) as the Last Login time for given player.</p>
 	 */
 	public void setLastLogin(String playerName) {
 		players.get(playerName.toUpperCase()).lastLogin = (int) (System.currentTimeMillis() / 1000);
 	}
 	
 	/**
-	 * <p>This method will set the time played (in seconds) for given player.
-	 * @param playerName
+	 * 
+	 * @param playerName as String
+	 * 
+	 * <p>This method will set the time played (in seconds) for given player.</p>
 	 */
 	public void setTimePlayed(String playerName) {
 		players.get(playerName.toUpperCase()).timePlayed = (int) (System.currentTimeMillis() / 1000)
@@ -74,16 +80,19 @@ public class HandlePlayers {
 	}
 	
 	/**
-	 * <p>This method will set the "mute" status for given player.
-	 * @param playerName
+	 * 
+	 * @param playerName as String
+	 * 
+	 * <p>This method will set the "mute" status for given player.</p>
 	 */
 	public void setMute(String playerName, int mute) {
 		players.get(playerName.toUpperCase()).mute = mute;
 	}
 	
 	/**
-	 * <p>This method will set the IP-adress for given player.
 	 * @param playerName
+	 * 
+	 * <p>This method will set the IP-adress for given player.</p>
 	 */
 	public void setIP(String playerName) {
 		players.get(playerName.toUpperCase()).ip = Bukkit.getPlayer(playerName).getAddress().toString();

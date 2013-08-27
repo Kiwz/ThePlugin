@@ -6,16 +6,19 @@ import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.Homes;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class HandleHomes {
-	private ChatColor gold = ChatColor.GOLD;
-	private ChatColor red = ChatColor.RED;
 	private HashMap<Integer, Homes> homes = ThePlugin.getHomes;
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param worldName as String
+	 * @return Location for given player in given world
+	 */
 	public Location getHome(Player player, String worldName) {
 		World world = null;
 		Location loc = null;
@@ -35,7 +38,7 @@ public class HandleHomes {
 		}
 		
 		if (world == null) {
-			player.sendMessage(red + "Denne verdenen finnes ikke lengre");
+			player.sendMessage(ThePlugin.c2 + "Denne verdenen finnes ikke");
 			return loc;
 		}
 		
@@ -60,11 +63,16 @@ public class HandleHomes {
 			}
 		}
 		if (loc == null) {
-			player.sendMessage(red + "Du har ikke satt ett hjem i denne verdenen, bruk /setthjem");
+			player.sendMessage(ThePlugin.c2 + "Du har ikke satt ett hjem i denne verdenen, bruk /setthjem");
 		}
 		return loc;
 	}
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @return String describing the result
+	 */
 	public String setHome(Player player) {
 		String playerName = player.getName();
 		String worldName = player.getWorld().getName();
@@ -80,7 +88,7 @@ public class HandleHomes {
 			if (homePlayer.equals(playerName) && homeWorld.equals(worldName)) {
 				homes.get(key).coords = coords;
 				homes.get(key).pitch = pitch;
-				return gold + "Du har flyttet ditt hjem hit";
+				return ThePlugin.c1 + "Du har flyttet ditt hjem hit";
 			}
 		}
 		
@@ -95,6 +103,6 @@ public class HandleHomes {
 		home.coords = coords;
 		home.pitch = pitch;
 		homes.put(key, home);
-		return "Du har satt nytt hjem her";
+		return ThePlugin.c1 + "Du har satt nytt hjem her";
 	}
 }

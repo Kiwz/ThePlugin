@@ -43,8 +43,7 @@ public class SpawnCommand {
 			return true;
 		}
 		else {
-			worlds.setSpawn(player.getLocation());
-			sender.sendMessage(ThePlugin.c1 + "Du har satt spawnen her");
+			sender.sendMessage(worlds.setSpawn(player.getLocation()));
 			return true;
 		}
 	}

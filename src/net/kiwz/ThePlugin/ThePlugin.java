@@ -7,12 +7,7 @@ import java.util.logging.Logger;
 
 import net.kiwz.ThePlugin.Commands;
 import net.kiwz.ThePlugin.listeners.BlockListener;
-import net.kiwz.ThePlugin.listeners.ChatListener;
-import net.kiwz.ThePlugin.listeners.DeathListener;
-import net.kiwz.ThePlugin.listeners.CommandListener;
-import net.kiwz.ThePlugin.listeners.InventoryListener;
-import net.kiwz.ThePlugin.listeners.JoinListener;
-import net.kiwz.ThePlugin.listeners.QuitListener;
+import net.kiwz.ThePlugin.listeners.PlayerListener;
 import net.kiwz.ThePlugin.mysql.Homes;
 import net.kiwz.ThePlugin.mysql.BuildTables;
 import net.kiwz.ThePlugin.mysql.ConnectToMySQL;
@@ -32,6 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ThePlugin extends JavaPlugin {
 	public static ChatColor c1 = ChatColor.GOLD;
 	public static ChatColor c2 = ChatColor.RED;
+	public static ChatColor c3 = ChatColor.YELLOW;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
@@ -70,7 +66,6 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		
 		boolean newWorld = false;
 		for (World world : Bukkit.getServer().getWorlds()) {
 			if (!getWorlds.containsKey(world.getName())) {
@@ -106,30 +101,9 @@ public class ThePlugin extends JavaPlugin {
 	    getCommand("teleport").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 		
-	    JoinListener loginL = new JoinListener();
-	    pm.registerEvents(loginL, this);
-		
-	    QuitListener QuitL = new QuitListener();
-	    pm.registerEvents(QuitL, this);
-		
-	    DeathListener DeathL = new DeathListener();
-	    pm.registerEvents(DeathL, this);
-		
-	    ChatListener ChatL = new ChatListener();
-	    pm.registerEvents(ChatL, this);
+	    pm.registerEvents(new PlayerListener(), this);
+	    pm.registerEvents(new BlockListener(), this);
 	    
-	    CommandListener commandL = new CommandListener();
-	    pm.registerEvents(commandL, this);
-	    
-	    InventoryListener InventoryL = new InventoryListener();
-	    pm.registerEvents(InventoryL, this);
-	    
-	    //PlayerListener playerL = new PlayerListener();
-	    //pm.registerEvents(playerL, this);
-	    
-	    BlockListener blockL = new BlockListener();
-	    pm.registerEvents(blockL, this);
-
 		ServerManagement sm = new ServerManagement();
 	    sm.autoStop();
 	    sm.save(12000L);

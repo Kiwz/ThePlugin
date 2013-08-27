@@ -16,7 +16,6 @@ public class ConsoleFilter implements Filter {
 		}
 		if (msg.contains("§c")) {
 			record.setMessage(msg.replace("§c", ""));
-			return true;
 		}
 		return true;
 	}

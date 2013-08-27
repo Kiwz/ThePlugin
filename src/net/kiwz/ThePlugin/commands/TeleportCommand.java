@@ -19,8 +19,7 @@ public class TeleportCommand {
 			return true;
 		}
 		else if (args.length == 0) {
-			sender.sendMessage(ThePlugin.c2 + "Spesifiser en spiller!");
-			return true;
+			return false;
 		}
 		else if (args.length == 1) {
 			if (onlinePlayer.getPlayer(args[0]) != null) {
@@ -35,20 +34,23 @@ public class TeleportCommand {
 		}
 		else if (args.length == 2) {
 			if ((onlinePlayer.getPlayer(args[0]) != null) || (onlinePlayer.getPlayer(args[1]) != null)) {
-				player = onlinePlayer.getPlayer(args[0]);
-				Player target = onlinePlayer.getPlayer(args[1]);
-				player.teleport(target);
-				player.sendMessage(ThePlugin.c1 + "Du ble teleportert til " + target.getName() + " av " + sender.getName());
-				sender.sendMessage(ThePlugin.c1 + "Du teleporterte " + player.getName() + " til " + target.getName());
+				Player target = onlinePlayer.getPlayer(args[0]);
+				Player destination = onlinePlayer.getPlayer(args[1]);
+				target.teleport(destination);
+				target.sendMessage(ThePlugin.c1 + "Du ble teleportert til " + destination.getName() + " av " + sender.getName());
+				sender.sendMessage(ThePlugin.c1 + "Du teleporterte " + target.getName() + " til " + destination.getName());
 			}
 			else {
 				sender.sendMessage(ThePlugin.c2 + "Fant ingen spiller som passet en eller begge navnene!");
 			}
 			return true;
 		}
-		else {
-			sender.sendMessage("koordinat-teleportering komme her");
+		else if (args.length == 3) {
+			sender.sendMessage("koordinat-teleportering kommer snart");
 			return true;
+		}
+		else {
+			return false;
 		}
 	}
 }

@@ -6,7 +6,6 @@ import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.Worlds;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -15,8 +14,13 @@ public class HandleWorlds {
 	Worlds world = new Worlds();
 	private HashMap<String, Worlds> worlds = ThePlugin.getWorlds;
 	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param worldName as String
+	 * @return spawn location for given worldName as Location
+	 */
 	public Location getSpawn(Player player, String worldName) {
-		ChatColor red = ChatColor.RED;
 		World world = null;
 		Location loc = null;
 		
@@ -35,7 +39,7 @@ public class HandleWorlds {
 		}
 		
 		if (world == null) {
-			player.sendMessage(red + worldName + " finnes ikke");
+			player.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
 			return loc;
 		}
 		
@@ -58,6 +62,12 @@ public class HandleWorlds {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param newWorld
+	 * 
+	 * <p>Adds a new world with given newWorld
+	 */
 	public void addWorld(World newWorld) {
 		String coords = newWorld.getSpawnLocation().getX() + " " + newWorld.getSpawnLocation().getY() + " " + newWorld.getSpawnLocation().getZ();
 		String pitch = newWorld.getSpawnLocation().getPitch() + " " + newWorld.getSpawnLocation().getYaw();
@@ -85,7 +95,12 @@ public class HandleWorlds {
 		worlds.put(world.world, world);
 	}
 	
-	public void setSpawn(Location loc) {
+	/**
+	 * 
+	 * @param loc as Location where the new spawn will be
+	 * @return String describing the result
+	 */
+	public String setSpawn(Location loc) {
 		String worldName = loc.getWorld().getName();
 		Double x = loc.getX();
 		Double y = loc.getY();
@@ -96,5 +111,6 @@ public class HandleWorlds {
 		String stringPitch = pitch + " " + yaw;
 		worlds.get(worldName).coords = stringCoords;
 		worlds.get(worldName).pitch = stringPitch;
+		return ThePlugin.c1 + "Du har satt spawnen her";
 	}
 }
