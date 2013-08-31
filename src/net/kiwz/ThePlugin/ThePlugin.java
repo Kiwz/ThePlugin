@@ -88,17 +88,17 @@ public class ThePlugin extends JavaPlugin {
 		Commands cmds = new Commands();
 		getCommand("feed").setExecutor(cmds);
 		getCommand("fly").setExecutor(cmds);
-	    getCommand("give").setExecutor(cmds);
 		getCommand("gm").setExecutor(cmds);
 		getCommand("heal").setExecutor(cmds);
 		getCommand("hjelp").setExecutor(cmds);
 		getCommand("home").setExecutor(cmds);
-		getCommand("homeset").setExecutor(cmds);
-	    getCommand("openinv").setExecutor(cmds);
+		getCommand("sethome").setExecutor(cmds);
+	    getCommand("item").setExecutor(cmds);
+	    getCommand("oi").setExecutor(cmds);
 	    getCommand("plass").setExecutor(cmds);
 		getCommand("spawn").setExecutor(cmds);
-		getCommand("spawnset").setExecutor(cmds);
-	    getCommand("teleport").setExecutor(cmds);
+		getCommand("setspawn").setExecutor(cmds);
+	    getCommand("tp").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 		
 	    pm.registerEvents(new PlayerListener(), this);

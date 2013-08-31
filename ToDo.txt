@@ -25,6 +25,8 @@ Protection:
 /plass <navn> eier <ny-eier>
 /plass <navn> spawn (kan brukes av alle)
 /plass <navn> setspawn
+/plass <navn> entre [Velkomstmeldingen]
+/plass <navn> forlate [Forlatmeldingen]
 /plass <her>
 /plass <liste> (får en liste med plass-navn og eier navn)
 /plass <spiller> (får en liste med eiere og demmes plasser)

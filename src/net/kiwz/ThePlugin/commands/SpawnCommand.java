@@ -35,7 +35,7 @@ public class SpawnCommand {
 		}
 	}
 	
-	public boolean spawnSet(CommandSender sender, Command cmd, String[] args) {
+	public boolean setSpawn(CommandSender sender, Command cmd, String[] args) {
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
 		
 		if (!(sender instanceof Player)) {

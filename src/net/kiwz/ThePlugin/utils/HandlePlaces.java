@@ -204,9 +204,6 @@ public class HandlePlaces {
 		for (int id : getIDsWithOwner(owner)) {
 			owned = owned + "[" + places.get(id).name + "] ";
 		}
-		if (owned == "") {
-			return ThePlugin.c2 + owner + " eier ingen plasser";
-		}
 		owned = ThePlugin.c1 + owner + " eier følgende plasser: " + owned;
 		return owned;
 	}
@@ -233,9 +230,6 @@ public class HandlePlaces {
 		String membered = "";
 		for (int id : getIDsWithMember(member)) {
 			membered = membered + "[" + places.get(id).name + "] ";
-		}
-		if (membered == "") {
-			return ThePlugin.c2 + member + " er ikke medlem av noen plasser";
 		}
 		membered = ThePlugin.c1 + member + " er medlem i følgende plasser: " + membered;
 		return membered;
@@ -341,6 +335,30 @@ public class HandlePlaces {
 			return "DEAKTIVERT";
 		}
 		return "AKTIVERT";
+	}
+
+	/**
+	 * 
+	 * @param id as int
+	 * @return Enter message for given place id, null if message is empty
+	 */
+	public String getEnter(int id) {
+		if (places.get(id).enter.equals("")) {
+			return null;
+		}
+		return places.get(id).enter;
+	}
+
+	/**
+	 * 
+	 * @param id as int
+	 * @return Leave message for given place id, null if message is empty
+	 */
+	public String getLeave(int id) {
+		if (places.get(id).leave.equals("")) {
+			return null;
+		}
+		return places.get(id).leave;
 	}
 	
 	/**
@@ -455,6 +473,12 @@ public class HandlePlaces {
 		if(!player.isOp() && getIDsWithOwner(player.getName()).size() >= 3) {
 			//return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
+		if (size < 10 || size > 70 || !player.isOp()) {
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
+		}
+		if (name.length() < 2 || name.length() > 20) {
+			return ThePlugin.c2 + "Navnet må være 2 til 20 bokstaver langt";
+		}
 		if (name.equalsIgnoreCase("liste") || name.equalsIgnoreCase("her") || name.equalsIgnoreCase("spiller")) {
 			return ThePlugin.c2 + name + " er reservert og kan ikke brukes";
 		}
@@ -485,6 +509,8 @@ public class HandlePlaces {
 		place.pvp = 0;
 		place.monsters = 0;
 		place.animals = 1;
+		place.enter = "Velkommen til " + player.getName() + " sin plass";
+		place.leave = "Du forlater " + player.getName() + " sin plass";
 		places.put(id, place);
 		for (String placeName : ThePlugin.remPlaces.keySet()) {
 			if (ThePlugin.remPlaces.get(placeName) == id) {
@@ -510,6 +536,9 @@ public class HandlePlaces {
 		Location loc = player.getLocation();
 		String spawnCoords = loc.getX() + " " + loc.getY() + " " + loc.getZ();
 		String spawnPitch = loc.getPitch() + " " + loc.getYaw();
+		if (size < 10 || size > 70 || !player.isOp()) {
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
+		}
 		if (!isAvailable(loc, size)) {
 			return ThePlugin.c2 + "Du er for nærme en annen plass";
     	}
@@ -532,13 +561,16 @@ public class HandlePlaces {
 		if (!isOwner(player.getName(), id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
+		if (name.length() < 2 || name.length() > 20) {
+			return ThePlugin.c2 + "Navnet må være 2 til 20 bokstaver langt";
+		}
+		if (name.equalsIgnoreCase("liste") || name.equalsIgnoreCase("her") || name.equalsIgnoreCase("spiller")) {
+			return ThePlugin.c2 + name + " er reservert og kan ikke brukes";
+		}
 		for (int key : places.keySet()) {
 			if (getName(key).equalsIgnoreCase(name)) {
 				return ThePlugin.c2 + "Dette navnet finnes fra før";
 			}
-		}
-		if (name.equalsIgnoreCase("liste") || name.equalsIgnoreCase("her") || name.equalsIgnoreCase("spiller")) {
-			return ThePlugin.c2 + name + " er reservert og kan ikke brukes";
 		}
 		places.get(id).name = name;
 		for (String placeName : ThePlugin.remPlaces.keySet()) {
@@ -558,6 +590,8 @@ public class HandlePlaces {
 		}
 		owner = hPlayers.getPlayerName(owner);
 		places.get(id).owner = owner;
+		places.get(id).enter = "Velkommen til " + player.getName() + " sin plass";
+		places.get(id).leave = "Du forlater " + player.getName() + " sin plass";
 		return ThePlugin.c1 + owner + " er nå den nye eieren av " + getName(id);
 	}
 	
@@ -683,6 +717,42 @@ public class HandlePlaces {
 		}
 		places.get(id).animals = 0;
 		return ThePlugin.c1 + "Dyr er DEAKTIVERT";
+	}
+
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @param enter as String
+	 * @return String describing the result
+	 */
+	public String setEnter(Player player, int id, String enter) {
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
+		}
+		places.get(id).enter = enter;
+		if (enter.isEmpty()) {
+			return ThePlugin.c1 + "Entre meldingen er fjernet";
+		}
+		return ThePlugin.c1 + "Ny entre melding er satt";
+	}
+
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @param leave as String
+	 * @return String describing the result
+	 */
+	public String setLeave(Player player, int id, String leave) {
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
+		}
+		places.get(id).leave = leave;
+		if (leave.isEmpty()) {
+			return ThePlugin.c1 + "Forlate meldingen er fjernet";
+		}
+		return ThePlugin.c1 + "Ny entre melding er satt";
 	}
 
 	/**

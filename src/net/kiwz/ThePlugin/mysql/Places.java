@@ -23,6 +23,8 @@ public class Places {
 	public int pvp;
 	public int monsters;
 	public int animals;
+	public String enter;
+	public String leave;
 	
 	public HashMap<Integer, Places> getTablePlaces(Connection conn) {
 		HashMap<Integer, Places> places = new HashMap<Integer, Places>();
@@ -44,6 +46,8 @@ public class Places {
 				place.pvp = res.getInt("PvP");
 				place.monsters = res.getInt("Monsters");
 				place.animals = res.getInt("Animals");
+				place.enter = res.getString("Enter");
+				place.leave = res.getString("Leave_");
 				
 				places.put(place.id, place);
 			}
@@ -69,15 +73,17 @@ public class Places {
 			int pvp = places.get(key).pvp;
 			int monsters = places.get(key).monsters;
 			int animals = places.get(key).animals;
+			String enter = places.get(key).enter;
+			String leave = places.get(key).leave;
 			String queryString = "INSERT INTO places (PlaceID, Time, Name, Owner, Members, World, "
-					+ "X, Z, Size, SpawnCoords, SpawnPitch, PvP, Monsters, Animals) "
-					+ "VALUES ('" + id + "', '" + time + "', '" + name + "', '" + owner + "', '"
-					+ members + "', '" + world + "', '" + x + "', '" + z + "', '" + size + "', '"
-					+ spawnCoords + "', '" + spawnPitch + "', '" + pvp + "', '" + monsters + "', '" + animals + "') "
+					+ "X, Z, Size, SpawnCoords, SpawnPitch, PvP, Monsters, Animals, Enter, Leave_) "
+					+ "VALUES ('" + id + "', '" + time + "', '" + name + "', '" + owner + "', '" + members + "', '"
+					+ world + "', '" + x + "', '" + z + "', '" + size + "', '" + spawnCoords + "', '" + spawnPitch + "', '"
+					+ pvp + "', '" + monsters + "', '" + animals + "', '" + enter + "', '" + leave + "') "
 					+ "ON DUPLICATE KEY UPDATE Time='" + time + "', Name='" + name + "', Owner='" + owner + "', "
-					+ "Members='" + members + "', World='" + world + "', X='" + x + "', Z='" + z + "', "
-					+ "Size='" + size + "', SpawnCoords='" + spawnCoords + "', SpawnPitch='" + spawnPitch + "', "
-					+ "PvP='" + pvp + "', Monsters='" + monsters + "', Animals='" + animals + "';";
+					+ "Members='" + members + "', World='" + world + "', X='" + x + "', Z='" + z + "', " + "Size='"
+					+ size + "', SpawnCoords='" + spawnCoords + "', SpawnPitch='" + spawnPitch + "', PvP='" + pvp + "', "
+					+ "Monsters='" + monsters + "', Animals='" + animals + "', Enter='" + enter + "', Leave_='" + leave + "';";
 			try {
 				conn.createStatement().executeUpdate(queryString);
 				for (String placeName : ThePlugin.remPlaces.keySet()) {

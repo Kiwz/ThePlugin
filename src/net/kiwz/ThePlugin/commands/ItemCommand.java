@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class GiveCommand {
+public class ItemCommand {
 	
 	public boolean giveItem(CommandSender sender, Command cmd, String[] args) {
 		OnlinePlayer onlinePlayer = new OnlinePlayer();

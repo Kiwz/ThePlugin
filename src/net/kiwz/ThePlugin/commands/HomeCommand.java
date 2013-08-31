@@ -35,7 +35,7 @@ public class HomeCommand {
 		}
 	}
 	
-	public boolean homeSet(CommandSender sender, Command cmd, String[] args) {
+	public boolean setHome(CommandSender sender, Command cmd, String[] args) {
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
 		
 		if (!(sender instanceof Player)) {

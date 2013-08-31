@@ -8,7 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TeleportCommand {
+public class TPCommand {
 	
 	public boolean tp(CommandSender sender, Command cmd, String[] args) {
 		OnlinePlayer onlinePlayer = new OnlinePlayer();

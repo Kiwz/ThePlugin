@@ -5,115 +5,111 @@ author: Kiwz
 
 commands:
   feed:
-    description: Sett til mett
-    aliases: [mat]
+    description: Mater
+    aliases: []
     permission: ThePlugin.feed
-    permission-message: Du har ikke tilgang!
+    permission-message: §cDu har ikke tilgang!
     usage: |
-      §c/feed
-      §c/feed <player>
+      /feed
+      /feed <player>
   fly:
     description: Endre flymodus
     aliases: []
     permission: ThePlugin.fly
-    permission-message: Du har ikke tilgang!
+    permission-message: §cDu har ikke tilgang!
     usage: |
-      §c/fly
-      §c/fly <player>
-  give:
-    description: Gi ett item til deg eller en annen
-    aliases: [i, gi]
-    permission: ThePlugin.give
-    permission-message: Du har ikke tilgang!
-    usage: |
-      §c/give <item>
-      §c/give <amount> <item>
-      §c/give <amount> <item> <data>
-      §c/give <player> <item>
-      §c/give <player> <amount> <item>
-      §c/give <player> <amount> <item> <data>
+      /fly
+      /fly <player>
   gm:
     description: Endre GameMode
     aliases: []
     permission: ThePlugin.gm
-    permission-message: Du har ikke tilgang!
+    permission-message: §cDu har ikke tilgang!
     usage: |
-      §c/gm
-      §c/gm <player>
+      /gm
+      /gm <player>
   heal:
     description: Sett til full helse
     aliases: []
     permission: ThePlugin.heal
-    permission-message: Du har ikke tilgang!
+    permission-message: §cDu har ikke tilgang!
     usage: |
-      §c/heal
-      §c/heal <player>
+      /heal
+      /heal <player>
   hjelp:
-    description: Viser deg hjelp menyen
-    aliases: []
+    description: Viser deg hjelpe menyen
+    aliases: [help]
     permission: ThePlugin.hjelp
-    permission-message: Du har ikke tilgang!
+    permission-message: §cDu har ikke tilgang!
     usage: |
-      §c/hjelp
-      §c/hjelp <sideNummer>
-      §c/hjelp <emne>
-      §c/hjelp <emne> <sideNummer>
+      /hjelp
+      /hjelp <side-nummer>
+      /hjelp <emne>
+      /hjelp <emne> <side-nummer>
   home:
-    description: Teleporterer deg hjem, husk å sette ett hjem først
+    description: Teleporterer deg hjem
     aliases: [hjem, h]
     permission: ThePlugin.home
-    permission-message: Du har ikke tilgang!
-    usage: §c/home
-  homeset:
+    permission-message: §cDu har ikke tilgang!
+    usage: /home
+  sethome:
     description: Setter ditt hjem der du står
-    aliases: [hs, sh, sethome, setthjem]
+    aliases: [setthjem, sh]
     permission: ThePlugin.sethome
-    permission-message: Du har ikke tilgang!
-    usage: §c/homeset
-  openinv:
-    description: Åpner inventaret til spilleren
-    aliases: [oi, oinv, openi, openinventory]
+    permission-message: §cDu har ikke tilgang!
+    usage: /homeset
+  item:
+    description: Gi item til deg eller en annen
+    aliases: [i]
+    permission: ThePlugin.item
+    permission-message: §cDu har ikke tilgang!
+    usage: |
+      /item <item>
+      /item <amount> <item>
+      /item <amount> <item> <data>
+      /item <player> <item>
+      /item <player> <amount> <item>
+      /item <player> <amount> <item> <data>
+  oi:
+    description: Åpner inventaret til en spiller
+    aliases: []
     permission: ThePlugin.openinv
-    permission-message: Du har ikke tilgang!
-    usage: §c/openinv <player>
+    permission-message: §cDu har ikke tilgang!
+    usage: /openinv <player>
   plass:
     description: Plass kommandoer
     aliases: []
     permission: ThePlugin.plass
-    permission-message: Du har ikke tilgang!
-    usage: |
-      §c/plass
-      §c/plass ny <navn> [radius]
-      §c/plass info <navn>
-      §c/plass <endre> <navn> [radius]
+    permission-message: §cDu har ikke tilgang!
+    usage: /plass
   spawn:
     description: Teleporterer deg til spawn
     aliases: []
     permission: ThePlugin.spawn
-    permission-message: Du har ikke tilgang!
-    usage: §c/spawn
-  spawnset:
-    description: Setter spawnen i verdenen du er i
-    aliases: [setspawn]
+    permission-message: §cDu har ikke tilgang!
+    usage: /spawn
+  setspawn:
+    description: Setter ny spawn
+    aliases: []
     permission: ThePlugin.setspawn
-    permission-message: Du har ikke tilgang!
-    usage: §c/spawnset
-  teleport:
-    description: Teleporter til en annen eller til koordinater
-    aliases: [tp]
-    permission: ThePlugin.teleport
-    permission-message: Du har ikke tilgang!
+    permission-message: §cDu har ikke tilgang!
+    usage: /spawnset
+  tp:
+    description: Teleportering
+    aliases: []
+    permission: ThePlugin.tp
+    permission-message: §cDu har ikke tilgang!
     usage: |
-      §c/teleport <player>
-      §c/teleport <x y z>
-      §c/teleport <player> <player>
-      §c/teleport <player> <x y z>
+      /tp <player>
+      /tp <x y z>
+      /tp <player player>
+      /tp <player x y z>
   test:
     description: Bare en test kommando
     aliases: []
     permission: ThePlugin.test
-    permission-message: Du har ikke tilgang!
-    usage: §c/test
+    permission-message: §cDu har ikke tilgang!
+    usage: /test
 
 permissions:
   ThePlugin.hjelp:
@@ -126,3 +122,13 @@ permissions:
     default: true
   ThePlugin.spawn:
     default: true
+  bukkit.command.kill:
+    default: op
+  bukkit.command.me:
+    default: op
+  bukkit.command.plugins:
+    default: op
+  bukkit.command.tell:
+    default: op
+  bukkit.command.version:
+    default: op

@@ -19,18 +19,16 @@ public class PlaceCommand {
 	 * @return true no matter what
 	 */
 	public boolean place(CommandSender sender, Command cmd, String[] args) {
-		ChatColor yellow = ChatColor.YELLOW;
-		ChatColor white = ChatColor.WHITE;
-		ChatColor gold = ChatColor.GOLD;
-		String hjelp1 = yellow + "--------- " + white + "Hjelp for /plass kommandoer " + yellow + "---------";
-		String hjelp2 = gold + "/plass: " + white + "Viser denne denne hjelp menyen";
-		String hjelp3 = gold + "/plass liste: " + white + "Viser en liste over alle plasser";
 		HandlePlaces hPlaces = new HandlePlaces();
+		HelpCommand help = new HelpCommand();
 		Player player = Bukkit.getPlayer(sender.getName());
 		int id;
 		
 		if (!(sender instanceof Player)) {
 			int check = 0;
+			if (args.length == 0) {
+				check = 1;
+			}
 			if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("spiller")) {
 				check = 1;
 			}
@@ -38,26 +36,24 @@ public class PlaceCommand {
 				check = 1;
 			}
 			if (check == 0) {
-				sender.sendMessage(ThePlugin.c2 + "Consolen kan bare bruke /plass liste, /plass spiller <navn> og /plass <navn>");
+				sender.sendMessage(ThePlugin.c2 + "Consolen kan bare bruke /plass, /plass liste, /plass spiller <navn> og /plass <navn>");
 				return true;
 			}
 		}
 		
 		for (String arg : args) {
-			if (!arg.matches("[a-zA-Z_0-9]+")) {
-				sender.sendMessage(ThePlugin.c2 + "Tillatte tegn er a-z A-Z 0-9 _");
+			if (!arg.matches("[a-zA-Z-_0-9æøåÆØÅ]+")) {
+				sender.sendMessage(ThePlugin.c2 + "Tillatte tegn er a-å A-Å 0-9 - _");
 				return true;
 			}
 		}
 		
 		if (args.length == 0) {
-			sender.sendMessage(hjelp1);
-			sender.sendMessage(hjelp2);
-			sender.sendMessage(hjelp3);
+			help.customHelp(sender, "1", help());
 			return true;
 		}
 		
-		if (args.length == 1) {
+		else if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("liste")) {
 				hPlaces.sendPlaceList(sender);
 				return true;
@@ -68,6 +64,10 @@ public class PlaceCommand {
 			}
 			else if (args[0].equalsIgnoreCase("her")) {
 				hPlaces.sendPlaceHere(sender);
+				return true;
+			}
+			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
 				return true;
 			}
 			else {
@@ -82,8 +82,13 @@ public class PlaceCommand {
 		}
 		
 		if (args.length == 2) {
+			if (args[0].equalsIgnoreCase("spiller")) {
+				sender.sendMessage(hPlaces.getOwned(args[1]));
+				sender.sendMessage(hPlaces.getMembered(args[1]));
+				return true;
+			}
 			if (args[1].equalsIgnoreCase("ny")) {
-				sender.sendMessage(hPlaces.addPlace(player, args[0], "50"));
+				sender.sendMessage(hPlaces.addPlace(player, args[0], "40"));
 				return true;
 			}
 			id = hPlaces.getID(args[0]);
@@ -92,7 +97,7 @@ public class PlaceCommand {
 				return true;
 			}
 			if (args[1].equalsIgnoreCase("flytt")) {
-				sender.sendMessage(hPlaces.setPlace(player, id, "50"));
+				sender.sendMessage(hPlaces.setPlace(player, id, "40"));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("spawn")) {
@@ -107,9 +112,12 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.remPlace(player, id));
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("spiller")) {
-				sender.sendMessage(hPlaces.getOwned(args[1]));
-				sender.sendMessage(hPlaces.getMembered(args[1]));
+			else if (args[1].equalsIgnoreCase("entre")) {
+				sender.sendMessage(hPlaces.setEnter(player, id, ""));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("forlate")) {
+				sender.sendMessage(hPlaces.setLeave(player, id, ""));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("navn")) {
@@ -132,13 +140,17 @@ public class PlaceCommand {
 				sender.sendMessage(ThePlugin.c2 + "/plass <navn> eier <spiller-navn>");
 				return true;
 			}
+			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
+				return true;
+			}
 			else {
-				sender.sendMessage("Viser hjelpe menyen til /plass");
+				help.customHelp(sender, "1", help());
 				return true;
 			}
 		}
 		
-		if (args.length == 3) {
+		else if (args.length == 3) {
 			if (args[1].equalsIgnoreCase("ny")) {
 				if (!args[2].matches("[0-9]")) {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
@@ -158,6 +170,14 @@ public class PlaceCommand {
 					return true;
 				}
 				sender.sendMessage(hPlaces.setPlace(player, id, "50"));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("entre")) {
+				sender.sendMessage(hPlaces.setEnter(player, id, args[2]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("forlate")) {
+				sender.sendMessage(hPlaces.setLeave(player, id, args[2]));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("navn")) {
@@ -194,15 +214,106 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
 				return true;
 			}
+			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
+				return true;
+			}
 			else {
-				sender.sendMessage("Viser hjelpe menyen til /plass");
+				help.customHelp(sender, "1", help());
 				return true;
 			}
 		}
 		
-		else {
-			sender.sendMessage("Viser hjelpe menyen til /plass");
+		else if (args.length > 3 && (args[1].equalsIgnoreCase("entre") || args[1].equalsIgnoreCase("forlate"))) {
+			id = hPlaces.getID(args[0]);
+			if (id == 0) {
+				sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
+				return true;
+			}
+			String arg = "";
+			for (int i = 2; i < args.length; i++) {
+				arg = arg + args[i] + " ";
+			}
+			arg = arg.trim();
+			if (args[1].equalsIgnoreCase("entre")) {
+				sender.sendMessage(hPlaces.setEnter(player, id, arg));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("forlate")) {
+				sender.sendMessage(hPlaces.setLeave(player, id, arg));
+				return true;
+			}
+			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
+				return true;
+			}
+			else {
+				help.customHelp(sender, "1", help());
+				return true;
+			}
+		}
+		else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+			help.customHelp(sender, args[0], help());
 			return true;
 		}
+		else {
+			help.customHelp(sender, "1", help());
+			return true;
+		}
+	}
+	
+	/**
+	 * 
+	 * @return Help entryes for /plass
+	 */
+	private String help() {
+		ChatColor white = ChatColor.WHITE;
+		ChatColor gold = ChatColor.GOLD;
+		StringBuilder help = new StringBuilder();
+		help.append(gold + "/plass\n");
+		help.append(white + "Viser denne hjelpe menyen\n");
+		help.append(gold + "/plass liste\n");
+		help.append(white + "Viser en liste over alle plasser\n");
+		help.append(gold + "/plass spiller\n");
+		help.append(white + "Viser en liste over spillere som har plasser\n");
+		help.append(gold + "/plass spiller <spiller-navn>\n");
+		help.append(white + "Viser hvilke plasser spilleren er eier og medlem av\n");
+		help.append(gold + "/plass her\n");
+		help.append(white + "Viser info om plassen du står på\n");
+		help.append(gold + "/plass <plass-navn>\n");
+		help.append(white + "Viser info om angitte plass\n");
+		help.append(gold + "/plass <plass-navn> ny\n");
+		help.append(white + "Lager ny plass der du står (størrelse blir 81x81)\n");
+		help.append(gold + "/plass <plass-navn> ny <størrelse>\n");
+		help.append(white + "Lager ny plass der du står med ønsket størrelse\n");
+		help.append(gold + "/plass <plass-navn> flytt\n");
+		help.append(white + "Flytter plassen din til der du står (størrelse blir 81x81)\n");
+		help.append(gold + "/plass <plass-navn> flytt <størrelse>\n");
+		help.append(white + "Flytter plassen din til der du står med ønsket størrelse\n");
+		help.append(gold + "/plass <plass-navn> spawn\n");
+		help.append(white + "Teleporterer deg til spawn i angitte plass\n");
+		help.append(gold + "/plass <plass-navn> setspawn\n");
+		help.append(white + "Setter ny spawn til der du står\n");
+		help.append(gold + "/plass <plass-navn> inviter <spiller-navn>\n");
+		help.append(white + "Inviterer spiller til å bli medlem av din plass\n");
+		help.append(gold + "/plass <plass-navn> fjern <spiller-navn>\n");
+		help.append(white + "Fjerner spiller som medlem av din plass\n");
+		help.append(gold + "/plass <plass-navn> eier <spiller-navn>\n");
+		help.append(white + "Setter ny eier av din plass, DU kan IKKE gjøre om dette\n");
+		help.append(gold + "/plass <plass-navn> navn <nytt plass-navn>\n");
+		help.append(white + "Bytter navn på angitte plass\n");
+		help.append(gold + "/plass <plass-navn> sett pvp, monstre, dyr\n");
+		help.append(white + "Skrur av/på pvp, monstre eller dyr\n");
+		help.append(gold + "/plass <plass-navn> entre <ny velkomst-melding>\n");
+		help.append(white + "Setter ny velkomst-melding for angitte plass\n");
+		help.append(gold + "/plass <plass-navn> entre\n");
+		help.append(white + "Fjerner velkomst-melding for angitte plass\n");
+		help.append(gold + "/plass <plass-navn> forlate <ny forlat-melding>\n");
+		help.append(white + "Setter ny forlat-melding for angitte plass\n");
+		help.append(gold + "/plass <plass-navn> forlate\n");
+		help.append(white + "Fjerner forlat-melding for angitte plass\n");
+		help.append(gold + "/plass <plass-navn> slett\n");
+		help.append(white + "Sletter angitte plass\n");
+		return help.toString();
 	}
 }
