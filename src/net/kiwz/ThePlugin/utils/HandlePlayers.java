@@ -23,8 +23,7 @@ public class HandlePlayers {
 	/**
 	 * 
 	 * @param playerName
-	 * @return int time played for given player in seconds,
-	 * or null if given player has not played before.
+	 * @return String CaseSensitive PlayerName, or null if given player has not played before.
 	 */
 	public String getPlayerName(String playerName) {
 		return players.get(playerName.toUpperCase()).player;

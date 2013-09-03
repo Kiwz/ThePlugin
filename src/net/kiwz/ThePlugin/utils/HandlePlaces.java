@@ -8,12 +8,15 @@ import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.Places;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.ChatPaginator;
 
 public class HandlePlaces {
 	private HandlePlayers hPlayers = new HandlePlayers();
+	private TimeFormat time = new TimeFormat();
 	private HashMap<Integer, Places> places = ThePlugin.getPlaces;
 	
 	/**
@@ -54,6 +57,9 @@ public class HandlePlaces {
 	 * @return true if this player has access to do stuff at given location
 	 */
 	public boolean hasAccess(Player player, Location loc) {
+		if (player.isOp()) {
+			return true;
+		}
 		int locX = (int) loc.getX();
 		int locY = (int) loc.getY();
 		int locZ = (int) loc.getZ();
@@ -71,7 +77,9 @@ public class HandlePlaces {
 		else if (locY < 40) {
 			return true;
 		}
-		return false;
+		else {
+			return false;
+		}
 	}
 	
 	/**
@@ -97,11 +105,11 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param locX as int
-	 * @param locZ as int
+	 * @param locX as double
+	 * @param locZ as double
 	 * @return id of the place that this x and z is within as int, if no place was found id = 0
 	 */
-	public int getIDWithCoords(int locX, int locZ) {
+	public int getIDWithCoords(double locX, double locZ) {
 		for (int key : places.keySet()) {
 			int placeX = places.get(key).x;
 			int placeZ = places.get(key).z;
@@ -250,7 +258,7 @@ public class HandlePlaces {
 	 * @return a String explaining x and z coords for given id
 	 */
 	public String getCoords(int id) {
-		return "Plassen befinner seg på X:" + places.get(id).x + " Z:" + places.get(id).z;
+		return "X: " + places.get(id).x + " Z: " + places.get(id).z;
 	}
 	
 	/**
@@ -260,7 +268,7 @@ public class HandlePlaces {
 	 */
 	public String getSize(int id) {
 		int size = (places.get(id).size * 2) + 1;
-		return "Plassen er " + size + " x " + size + " blokker stor";
+		return size + " x " + size + " Blokker";
 	}
 	
 	/**
@@ -343,9 +351,6 @@ public class HandlePlaces {
 	 * @return Enter message for given place id, null if message is empty
 	 */
 	public String getEnter(int id) {
-		if (places.get(id).enter.equals("")) {
-			return null;
-		}
 		return places.get(id).enter;
 	}
 
@@ -355,9 +360,6 @@ public class HandlePlaces {
 	 * @return Leave message for given place id, null if message is empty
 	 */
 	public String getLeave(int id) {
-		if (places.get(id).leave.equals("")) {
-			return null;
-		}
 		return places.get(id).leave;
 	}
 	
@@ -376,12 +378,31 @@ public class HandlePlaces {
 		if (members.length() > 0) {
 		members = members.substring(0, members.length()-2);
 		}
-		sender.sendMessage("Plass navn: " + getName(id));
-		sender.sendMessage("Eier: " + getOwner(id));
-		sender.sendMessage("Medlemmer: " + members);
-		sender.sendMessage("PvP: " + getPvP(id));
-		sender.sendMessage("Monstre: " + getMonsters(id));
-		sender.sendMessage("Dyr: " + getAnimals(id));
+		
+		StringBuilder header = new StringBuilder();
+		header.append(ChatColor.YELLOW);
+		header.append("----- ");
+		header.append(ChatColor.WHITE);
+		header.append("Plass: " + ThePlugin.c4 + getName(id));
+		header.append(ChatColor.YELLOW);
+		header.append(" --- ");
+		header.append(ChatColor.GRAY);
+		header.append(time.getDate(getTime(id)));
+		header.append(ChatColor.YELLOW);
+		header.append(" -----");
+		for (int i = header.length(); i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
+			header.append("-");
+		}
+		sender.sendMessage(header.toString());
+		sender.sendMessage(ThePlugin.c1 + "Eier: " + ThePlugin.c4 + getOwner(id));
+		sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members);
+		sender.sendMessage(ThePlugin.c1 + "Sentrum: " + ThePlugin.c4 + getCoords(id));
+		sender.sendMessage(ThePlugin.c1 + "Størrelse: " + ThePlugin.c4 + getSize(id));
+		sender.sendMessage(ThePlugin.c1 + "PvP: " + ThePlugin.c4 + getPvP(id));
+		sender.sendMessage(ThePlugin.c1 + "Monstre: " + ThePlugin.c4 + getMonsters(id));
+		sender.sendMessage(ThePlugin.c1 + "Dyr: " + ThePlugin.c4 + getAnimals(id));
+		sender.sendMessage(ThePlugin.c1 + "Entré melding: " + ThePlugin.c4 + getEnter(id));
+		sender.sendMessage(ThePlugin.c1 + "Forlate melding: " + ThePlugin.c4 + getLeave(id));
 	}
 	
 	/**
@@ -402,12 +423,31 @@ public class HandlePlaces {
 			if (members.length() > 0) {
 			members = members.substring(0, members.length()-2);
 			}
-			sender.sendMessage("Plass navn: " + getName(id));
-			sender.sendMessage("Eier: " + getOwner(id));
-			sender.sendMessage("Medlemmer: " + members);
-			sender.sendMessage("PvP: " + getPvP(id));
-			sender.sendMessage("Monstre: " + getMonsters(id));
-			sender.sendMessage("Dyr: " + getAnimals(id));
+			
+			StringBuilder header = new StringBuilder();
+			header.append(ChatColor.YELLOW);
+			header.append("----- ");
+			header.append(ChatColor.WHITE);
+			header.append("Plass: " + ThePlugin.c4 + getName(id));
+			header.append(ChatColor.YELLOW);
+			header.append(" --- ");
+			header.append(ChatColor.GRAY);
+			header.append(time.getDate(getTime(id)));
+			header.append(ChatColor.YELLOW);
+			header.append(" -----");
+			for (int i = header.length(); i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
+				header.append("-");
+			}
+			sender.sendMessage(header.toString());
+			sender.sendMessage(ThePlugin.c1 + "Eier: " + ThePlugin.c4 + getOwner(id));
+			sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members);
+			sender.sendMessage(ThePlugin.c1 + "Sentrum: " + ThePlugin.c4 + getCoords(id));
+			sender.sendMessage(ThePlugin.c1 + "Størrelse: " + ThePlugin.c4 + getSize(id));
+			sender.sendMessage(ThePlugin.c1 + "PvP: " + ThePlugin.c4 + getPvP(id));
+			sender.sendMessage(ThePlugin.c1 + "Monstre: " + ThePlugin.c4 + getMonsters(id));
+			sender.sendMessage(ThePlugin.c1 + "Dyr: " + ThePlugin.c4 + getAnimals(id));
+			sender.sendMessage(ThePlugin.c1 + "Entré melding: " + ThePlugin.c4 + getEnter(id));
+			sender.sendMessage(ThePlugin.c1 + "Forlate melding: " + ThePlugin.c4 + getLeave(id));
 		}
 		else sender.sendMessage(ThePlugin.c2 + "Ingen plass funnet");
 	}
@@ -471,9 +511,9 @@ public class HandlePlaces {
 		String spawnCoords = loc.getX() + " " + loc.getY() + " " + loc.getZ();
 		String spawnPitch = loc.getPitch() + " " + loc.getYaw();
 		if(!player.isOp() && getIDsWithOwner(player.getName()).size() >= 3) {
-			//return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
+			return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
-		if (size < 10 || size > 70 || !player.isOp()) {
+		if ((size < 10 || size > 70) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
 		if (name.length() < 2 || name.length() > 20) {
@@ -518,7 +558,7 @@ public class HandlePlaces {
 			}
 		}
 		int totSize = (Integer.parseInt(radius) * 2) + 1;
-		return ThePlugin.c1 + "Din nye plass heter \"" + name + "\" og er " + totSize + " x " + size + " blokker stor";
+		return ThePlugin.c1 + "Din nye plass heter \"" + name + "\" og er " + totSize + " x " + totSize + " blokker stor";
 	}
 	
 	/**
@@ -590,8 +630,8 @@ public class HandlePlaces {
 		}
 		owner = hPlayers.getPlayerName(owner);
 		places.get(id).owner = owner;
-		places.get(id).enter = "Velkommen til " + player.getName() + " sin plass";
-		places.get(id).leave = "Du forlater " + player.getName() + " sin plass";
+		places.get(id).enter = "Velkommen til " + owner + " sin plass";
+		places.get(id).leave = "Du forlater " + owner + " sin plass";
 		return ThePlugin.c1 + owner + " er nå den nye eieren av " + getName(id);
 	}
 	

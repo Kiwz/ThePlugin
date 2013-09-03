@@ -66,7 +66,7 @@ public class PlaceCommand {
 				hPlaces.sendPlaceHere(sender);
 				return true;
 			}
-			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
 				help.customHelp(sender, args[0], help());
 				return true;
 			}
@@ -140,7 +140,7 @@ public class PlaceCommand {
 				sender.sendMessage(ThePlugin.c2 + "/plass <navn> eier <spiller-navn>");
 				return true;
 			}
-			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
 				help.customHelp(sender, args[0], help());
 				return true;
 			}
@@ -152,7 +152,7 @@ public class PlaceCommand {
 		
 		else if (args.length == 3) {
 			if (args[1].equalsIgnoreCase("ny")) {
-				if (!args[2].matches("[0-9]")) {
+				if (!args[2].matches("[0-9]+")) {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
@@ -165,7 +165,7 @@ public class PlaceCommand {
 				return true;
 			}
 			if (args[1].equalsIgnoreCase("flytt")) {
-				if (!args[2].matches("[0-9]")) {
+				if (!args[2].matches("[0-9]+")) {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
@@ -214,7 +214,7 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
 				return true;
 			}
-			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
 				help.customHelp(sender, args[0], help());
 				return true;
 			}
@@ -243,7 +243,7 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.setLeave(player, id, arg));
 				return true;
 			}
-			else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
 				help.customHelp(sender, args[0], help());
 				return true;
 			}
@@ -252,7 +252,7 @@ public class PlaceCommand {
 				return true;
 			}
 		}
-		else if (args[0].matches("[0-9]") && args[0].length() == 1) {
+		else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
 			help.customHelp(sender, args[0], help());
 			return true;
 		}

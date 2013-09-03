@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import net.kiwz.ThePlugin.Commands;
 import net.kiwz.ThePlugin.listeners.BlockListener;
+import net.kiwz.ThePlugin.listeners.EntityListener;
+import net.kiwz.ThePlugin.listeners.MoveListener;
 import net.kiwz.ThePlugin.listeners.PlayerListener;
 import net.kiwz.ThePlugin.mysql.Homes;
 import net.kiwz.ThePlugin.mysql.BuildTables;
@@ -28,6 +30,7 @@ public class ThePlugin extends JavaPlugin {
 	public static ChatColor c1 = ChatColor.GOLD;
 	public static ChatColor c2 = ChatColor.RED;
 	public static ChatColor c3 = ChatColor.YELLOW;
+	public static ChatColor c4 = ChatColor.WHITE;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
@@ -100,9 +103,11 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("setspawn").setExecutor(cmds);
 	    getCommand("tp").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
-		
+
 	    pm.registerEvents(new PlayerListener(), this);
+	    pm.registerEvents(new EntityListener(), this);
 	    pm.registerEvents(new BlockListener(), this);
+	    pm.registerEvents(new MoveListener(), this);
 	    
 		ServerManagement sm = new ServerManagement();
 	    sm.autoStop();
