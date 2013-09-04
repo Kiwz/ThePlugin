@@ -19,9 +19,9 @@ public class BuildTables {
 			+ "(Player VARCHAR(255), LastLogin INT, TimePlayed INT, Mute BOOLEAN, IP VARCHAR(255), PRIMARY KEY (Player));";
 	
 	private String worlds = "CREATE TABLE IF NOT EXISTS worlds "
-			+ "(World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255), PvP BOOLEAN, Claimable BOOLEAN, "
-			+ "FireSpread BOOLEAN, Explosions BOOLEAN, Endermen BOOLEAN, Trample BOOLEAN, Monsters BOOLEAN, "
-			+ "Animals BOOLEAN, PRIMARY KEY (World));";
+			+ "(World VARCHAR(255), Coords VARCHAR(255), Pitch VARCHAR(255), Border INT, Claimable BOOLEAN, FireSpread BOOLEAN, "
+			+ "Explosions BOOLEAN, MonsterGrief BOOLEAN, Trample BOOLEAN, PvP BOOLEAN, Monsters BOOLEAN, Animals BOOLEAN, "
+			+ "KeepSpawn BOOLEAN, Environment VARCHAR(255), Type VARCHAR(255), Seed VARCHAR(255), PRIMARY KEY (World));";
 	
 	public void createTables(Connection conn) {
 		try {

@@ -11,6 +11,8 @@ import net.kiwz.ThePlugin.commands.OpenInvCommand;
 import net.kiwz.ThePlugin.commands.PlaceCommand;
 import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
+import net.kiwz.ThePlugin.commands.WorldCommand;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -98,13 +100,16 @@ public class Commands implements CommandExecutor {
 			tp.tp(sender, cmd, args);
 			return true;
 	    }
+		
+		else if (cmdName.equalsIgnoreCase("world")) {
+			WorldCommand world = new WorldCommand();
+			world.world(sender, cmd, args);
+			return true;
+	    }
 	    
 		else if (cmdName.equalsIgnoreCase("test")) {
-			sender.sendMessage("Du er OP og dette er test-kommandoen");
-			
 			
 			// Test her:
-			
 			// Test slutter!
 
 			return true;

@@ -21,11 +21,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.help.HelpTopic;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -75,6 +77,19 @@ public class PlayerListener implements Listener {
 				player.getInventory().setContents(content);
 				player.saveData();
 			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		if (!event.isCancelled()) {
+			Player player = event.getPlayer();
+			String cmd = event.getMessage().split(" ")[0];
+	    	HelpTopic topic = Bukkit.getServer().getHelpMap().getHelpTopic(cmd);
+	    	if (topic == null) {
+				player.sendMessage(ThePlugin.c2 + cmd + " finnes ikke, skriv \"/hjelp\" for hjelp");
+				event.setCancelled(true);
+	    	}
 		}
 	}
 

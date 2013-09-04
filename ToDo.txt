@@ -9,17 +9,11 @@ Teleport-skilt
 3: [y: 256]
 4: [z: -99999]
 
-Worlds end:
-Stop player at specified coords, world spesific
-
-
 Places:
 Stoppe monstre og dyr i å spawne/entre plasser som ikke skal ha dette
 Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm og trykk-knapp.
 
 
 MultiWorld:
-/verden <navn> (for å spawne i spawnen til den verdenen)
-/verden ny <navn> [normal, nether, end] [flat, etc, etc] [seed]
-/verden slett <navn>
-/verden endre <navn> [pvp, claimable, firespread, explosions, endermen, trample, monsters, animals, 
+en del ting igjen, som f.eks legge til ny verden (med alternativer som environment og type)
+samt å slette verdener

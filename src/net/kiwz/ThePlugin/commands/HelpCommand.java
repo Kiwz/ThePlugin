@@ -58,6 +58,7 @@ public class HelpCommand {
     	
     	if (topic == null || !topic.canSee(sender)) {
     		sender.sendMessage(ChatColor.RED + "Ingen hjelp for " + command);
+    		return;
     	}
     	
         ChatPaginator.ChatPage page = ChatPaginator.paginate(topic.getFullText(sender), pageNumber, pageWidth, pageHeight);
@@ -84,8 +85,14 @@ public class HelpCommand {
 		sender.sendMessage(page.getLines());
 	}
 	
-	public void customHelp(CommandSender sender, String pageN, String msg) {
-        int pageNumber = Integer.parseInt(pageN);
+	public void customHelp(CommandSender sender, String cmd, String pageN, String msg) {
+        int pageNumber;
+        try {
+        	pageNumber = Integer.parseInt(pageN);
+        }
+        catch (NumberFormatException e){
+        	pageNumber = 1;
+        }
         int pageHeight;
         int pageWidth;
         
@@ -104,7 +111,7 @@ public class HelpCommand {
 		header.append(ChatColor.YELLOW);
 		header.append("--------- ");
 		header.append(ChatColor.WHITE);
-		header.append("Help: /plass ");
+		header.append("Help: /" + cmd + " ");
 		if (page.getTotalPages() > 1) {
 			header.append("(");
 			header.append(page.getPageNumber());

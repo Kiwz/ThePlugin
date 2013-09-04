@@ -69,22 +69,10 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		boolean newWorld = false;
 		for (World world : Bukkit.getServer().getWorlds()) {
 			if (!getWorlds.containsKey(world.getName())) {
 				HandleWorlds hWorlds = new HandleWorlds();
 				hWorlds.addWorld(world);
-				newWorld = true;
-			}
-		}
-		if (newWorld) {
-			ConnectToMySQL MySQL = new ConnectToMySQL();
-			Connection conn = MySQL.openConnection();
-			worlds.setTableWorlds(conn, getWorlds);
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
 		}
 		
@@ -102,6 +90,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("spawn").setExecutor(cmds);
 		getCommand("setspawn").setExecutor(cmds);
 	    getCommand("tp").setExecutor(cmds);
+		getCommand("world").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
 
 	    pm.registerEvents(new PlayerListener(), this);

@@ -1,7 +1,7 @@
 package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.utils.HandlePlaces;
+import net.kiwz.ThePlugin.utils.HandleWorlds;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,19 +9,109 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PlaceCommand {
+public class WorldCommand {
 	
 	/**
 	 * 
 	 * @param sender player who issued the command
 	 * @param cmd command that was issued
-	 * @param args as String[] describing what we want to do with given place
+	 * @param args as String[] describing what we want to do with given world
 	 * @return true no matter what
 	 */
-	public boolean place(CommandSender sender, Command cmd, String[] args) {
-		HandlePlaces hPlaces = new HandlePlaces();
+	public boolean world(CommandSender sender, Command cmd, String[] args) {
+		HandleWorlds hWorlds = new HandleWorlds();
 		HelpCommand help = new HelpCommand();
 		Player player = Bukkit.getPlayer(sender.getName());
+
+		for (String arg : args) {
+			if (!arg.matches("[a-zA-Z_0-9]+")) {
+				sender.sendMessage(ThePlugin.c2 + "Tillatte tegn er a-z A-Z 0-9 _");
+				return true;
+			}
+		}
+		
+		if (args.length == 0) {
+			help.customHelp(sender, cmd.getName(), "1", help());
+			return true;
+		}
+		
+		else if (args.length == 1) {
+			if (args[0].equalsIgnoreCase("liste")) {
+				hWorlds.sendWorldList(sender);
+				return true;
+			}
+			else if (args[0].length() == 1 && args[0].matches("[0-9]+")){
+				help.customHelp(sender, cmd.getName(), args[0], help());
+				return true;
+			}
+			else {
+				hWorlds.sendWorld(sender, args[0]);
+				return true;
+			}
+		}
+		
+		else if (args.length == 2) {
+			if (args[1].equalsIgnoreCase("claimable")) {
+				sender.sendMessage(hWorlds.setClaimable(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("firespread")) {
+				sender.sendMessage(hWorlds.setFireSpread(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("explosions")) {
+				sender.sendMessage(hWorlds.setExplosions(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("monstergrief")) {
+				sender.sendMessage(hWorlds.setMonsterGrief(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("trample")) {
+				sender.sendMessage(hWorlds.setTrample(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("pvp")) {
+				sender.sendMessage(hWorlds.setPvP(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("monsters")) {
+				sender.sendMessage(hWorlds.setMonsters(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("animals")) {
+				sender.sendMessage(hWorlds.setAnimals(args[0]));
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("keepspawn")) {
+				sender.sendMessage(hWorlds.setKeepSpawnInMemory(args[0]));
+				return true;
+			}
+			else {
+				help.customHelp(sender, cmd.getName(), args[0], help());
+				return true;
+			}
+		}
+		
+		else if (args.length == 3) {
+			if (args[1].equalsIgnoreCase("border") && args[2].matches("[0-9]+")) {
+				player.sendMessage(hWorlds.setBorder(args[0], args[2]));
+				return true;
+			}
+			else {
+				help.customHelp(sender, cmd.getName(), args[0], help());
+				return true;
+			}
+		}
+		
+		else {
+			help.customHelp(sender, cmd.getName(), args[0], help());
+			return true;
+		}
+	}
+		
+		
+		/*
 		int id;
 		
 		if (!(sender instanceof Player)) {
@@ -49,7 +139,7 @@ public class PlaceCommand {
 		}
 		
 		if (args.length == 0) {
-			help.customHelp(sender, cmd.getName(), "1", help());
+			help.customHelp(sender, "1", help());
 			return true;
 		}
 		
@@ -66,8 +156,8 @@ public class PlaceCommand {
 				hPlaces.sendPlaceHere(sender);
 				return true;
 			}
-			else if (args[0].length() == 1) {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
 				return true;
 			}
 			else {
@@ -140,8 +230,12 @@ public class PlaceCommand {
 				sender.sendMessage(ThePlugin.c2 + "/plass <navn> eier <spiller-navn>");
 				return true;
 			}
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
+				return true;
+			}
 			else {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+				help.customHelp(sender, "1", help());
 				return true;
 			}
 		}
@@ -165,7 +259,7 @@ public class PlaceCommand {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
-				sender.sendMessage(hPlaces.setPlace(player, id, args[0]));
+				sender.sendMessage(hPlaces.setPlace(player, id, "50"));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("entre")) {
@@ -210,8 +304,12 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
 				return true;
 			}
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
+				return true;
+			}
 			else {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+				help.customHelp(sender, "1", help());
 				return true;
 			}
 		}
@@ -235,13 +333,21 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.setLeave(player, id, arg));
 				return true;
 			}
+			else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
+				help.customHelp(sender, args[0], help());
+				return true;
+			}
 			else {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+				help.customHelp(sender, "1", help());
 				return true;
 			}
 		}
+		else if (args[0].matches("[0-9]+") && args[0].length() == 1) {
+			help.customHelp(sender, args[0], help());
+			return true;
+		}
 		else {
-			help.customHelp(sender, cmd.getName(), args[0], help());
+			help.customHelp(sender, "1", help());
 			return true;
 		}
 	}
@@ -254,50 +360,32 @@ public class PlaceCommand {
 		ChatColor white = ChatColor.WHITE;
 		ChatColor gold = ChatColor.GOLD;
 		StringBuilder help = new StringBuilder();
-		help.append(gold + "/plass\n");
+		help.append(gold + "/world\n");
 		help.append(white + "Viser denne hjelpe menyen\n");
-		help.append(gold + "/plass liste\n");
-		help.append(white + "Viser en liste over alle plasser\n");
-		help.append(gold + "/plass spiller\n");
-		help.append(white + "Viser en liste over spillere som har plasser\n");
-		help.append(gold + "/plass spiller <spiller-navn>\n");
-		help.append(white + "Viser hvilke plasser spilleren er eier og medlem av\n");
-		help.append(gold + "/plass her\n");
-		help.append(white + "Viser info om plassen du står på\n");
-		help.append(gold + "/plass <plass-navn>\n");
-		help.append(white + "Viser info om angitte plass\n");
-		help.append(gold + "/plass <plass-navn> ny\n");
-		help.append(white + "Lager ny plass der du står (størrelse blir 81x81)\n");
-		help.append(gold + "/plass <plass-navn> ny <størrelse>\n");
-		help.append(white + "Lager ny plass der du står med ønsket størrelse\n");
-		help.append(gold + "/plass <plass-navn> flytt\n");
-		help.append(white + "Flytter plassen din til der du står (størrelse blir 81x81)\n");
-		help.append(gold + "/plass <plass-navn> flytt <størrelse>\n");
-		help.append(white + "Flytter plassen din til der du står med ønsket størrelse\n");
-		help.append(gold + "/plass <plass-navn> spawn\n");
-		help.append(white + "Teleporterer deg til spawn i angitte plass\n");
-		help.append(gold + "/plass <plass-navn> setspawn\n");
-		help.append(white + "Setter ny spawn til der du står\n");
-		help.append(gold + "/plass <plass-navn> inviter <spiller-navn>\n");
-		help.append(white + "Inviterer spiller til å bli medlem av din plass\n");
-		help.append(gold + "/plass <plass-navn> fjern <spiller-navn>\n");
-		help.append(white + "Fjerner spiller som medlem av din plass\n");
-		help.append(gold + "/plass <plass-navn> eier <spiller-navn>\n");
-		help.append(white + "Setter ny eier av din plass, DU kan IKKE gjøre om dette\n");
-		help.append(gold + "/plass <plass-navn> navn <nytt plass-navn>\n");
-		help.append(white + "Bytter navn på angitte plass\n");
-		help.append(gold + "/plass <plass-navn> sett pvp, monstre, dyr\n");
-		help.append(white + "Skrur på/av pvp, monstre eller dyr\n");
-		help.append(gold + "/plass <plass-navn> entre <ny velkomst-melding>\n");
-		help.append(white + "Setter ny velkomst-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> entre\n");
-		help.append(white + "Fjerner velkomst-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> forlate <ny forlat-melding>\n");
-		help.append(white + "Setter ny forlat-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> forlate\n");
-		help.append(white + "Fjerner forlat-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> slett\n");
-		help.append(white + "Sletter angitte plass\n");
+		help.append(gold + "/world liste\n");
+		help.append(white + "Viser liste over alle verdener\n");
+		help.append(gold + "/world <verden-navn>\n");
+		help.append(white + "Viser info om oppgitte verden\n");
+		help.append(gold + "/world <verden-navn> border <radius>\n");
+		help.append(white + "Setter ny grense for oppgitte verden\n");
+		help.append(gold + "/world <verden-navn> claimable\n");
+		help.append(white + "Skrur på/av mulighet for å lage plasser\n");
+		help.append(gold + "/world <verden-navn> firespread\n");
+		help.append(white + "Skrur på/av ill spredning\n");
+		help.append(gold + "/world <verden-navn> explosions\n");
+		help.append(white + "Skrur på/av eksplosjoner\n");
+		help.append(gold + "/world <verden-navn> monstergrief\n");
+		help.append(white + "Skrur på/av Monster grifing\n");
+		help.append(gold + "/world <verden-navn> trample\n");
+		help.append(white + "Skrur på/av tråkking\n");
+		help.append(gold + "/world <verden-navn> pvp\n");
+		help.append(white + "Skrur på/av PvP\n");
+		help.append(gold + "/world <verden-navn> monsters\n");
+		help.append(white + "Skrur på/av monstre\n");
+		help.append(gold + "/world <verden-navn> animals\n");
+		help.append(white + "Skrur på/av dyr\n");
+		help.append(gold + "/world <verden-navn> keepspawn\n");
+		help.append(white + "Skrur på/av beholde spawn i minne\n");
 		return help.toString();
 	}
 }

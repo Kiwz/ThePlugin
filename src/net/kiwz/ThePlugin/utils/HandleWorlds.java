@@ -1,14 +1,19 @@
 package net.kiwz.ThePlugin.utils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.Worlds;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.ChatPaginator;
 
 public class HandleWorlds {
 	Worlds world = new Worlds();
@@ -16,13 +21,52 @@ public class HandleWorlds {
 	
 	/**
 	 * 
-	 * @param player as Object
-	 * @param worldName as String
-	 * @return spawn location for given worldName as Location
+	 * @param newWorld
+	 * 
+	 * <p>Adds a new world with given newWorld</p>
 	 */
-	public Location getSpawn(Player player, String worldName) {
+	public void addWorld(World newWorld) {
+		String coords = newWorld.getSpawnLocation().getX() + " " + newWorld.getSpawnLocation().getY() + " " + newWorld.getSpawnLocation().getZ();
+		String pitch = newWorld.getSpawnLocation().getPitch() + " " + newWorld.getSpawnLocation().getYaw();
+		int border = 1000;
+		int pvp = 0;
+		if (newWorld.getPVP()) pvp = 1;
+		int monsters = 0;
+		if (newWorld.getAllowMonsters()) monsters = 1;
+		int animals = 0;
+		if (newWorld.getAllowAnimals()) animals = 1;
+		int keepSpawn = 0;
+		if (newWorld.getKeepSpawnInMemory()) keepSpawn = 1;
+		String environment = newWorld.getEnvironment().toString();
+		String type = newWorld.getWorldType().getName();
+		String seed = "" + newWorld.getSeed();
+		
+		world.world = newWorld.getName();
+		world.coords = coords;
+		world.pitch = pitch;
+		world.border = border;
+		world.claimable = 0;
+		world.fireSpread = 0;
+		world.explosions = 0;
+		world.monsterGrief = 0;
+		world.trample = 0;
+		world.pvp = pvp;
+		world.monsters = monsters;
+		world.animals = animals;
+		world.keepSpawn = keepSpawn;
+		world.environment = environment; // Kan ikke endres senere
+		world.type = type; // Kan ikke endres senere
+		world.seed = seed; // Kan ikke endres senere
+		worlds.put(world.world, world);
+	}
+	
+	/**
+	 * 
+	 * @param worldName to search for
+	 * @return World with the given name, or null if none exists
+	 */
+	public World getWorld(String worldName) {
 		World world = null;
-		Location loc = null;
 		
 		for (World worlds : Bukkit.getServer().getWorlds()) {
 			if (worlds.getName().toUpperCase().contains(worldName.toUpperCase())) {
@@ -37,6 +81,18 @@ public class HandleWorlds {
 				break;
 			}
 		}
+		return world;
+	}
+	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param worldName as String
+	 * @return spawn location for given worldName as Location
+	 */
+	public Location getSpawn(Player player, String worldName) {
+		Location loc = null;
+		World world = getWorld(worldName);
 		
 		if (world == null) {
 			player.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
@@ -64,35 +120,73 @@ public class HandleWorlds {
 	
 	/**
 	 * 
-	 * @param newWorld
-	 * 
-	 * <p>Adds a new world with given newWorld
+	 * @param world
 	 */
-	public void addWorld(World newWorld) {
-		String coords = newWorld.getSpawnLocation().getX() + " " + newWorld.getSpawnLocation().getY() + " " + newWorld.getSpawnLocation().getZ();
-		String pitch = newWorld.getSpawnLocation().getPitch() + " " + newWorld.getSpawnLocation().getYaw();
-		int pvp;
-		int monsters;
-		int animals;
-		
-		if (newWorld.getPVP()) pvp = 1;
-		else pvp = 0;
-		if (newWorld.getAllowMonsters()) monsters = 1;
-		else monsters = 0;
-		if (newWorld.getAllowAnimals()) animals = 1;
-		else animals = 0;
-		world.world = newWorld.getName();
-		world.coords = coords;
-		world.pitch = pitch;
-		world.pvp = pvp;
-		world.claimable = 0;
-		world.firespread = 0;
-		world.explosions = 0;
-		world.endermen = 0;
-		world.trample = 0;
-		world.monsters = monsters;
-		world.animals = animals;
-		worlds.put(world.world, world);
+	
+	public int getBorder(World world) {
+		return worlds.get(world.getName()).border;
+	}
+	
+	/**
+	 * 
+	 * @param world
+	 * @return true if world is claimable
+	 */
+	public boolean isClaimable(World world) {
+		if (worlds.get(world.getName()).claimable == 0) return false;
+		return true;
+	}
+	
+	public boolean isFireSpread(World world) {
+		if (worlds.get(world.getName()).fireSpread == 0) return false;
+		return true;
+	}
+	
+	public boolean isExplosions(World world) {
+		if (worlds.get(world.getName()).explosions == 0) return false;
+		return true;
+	}
+	
+	public boolean isMonsterGrief(World world) {
+		if (worlds.get(world.getName()).monsterGrief == 0) return false;
+		return true;
+	}
+	
+	public boolean isTrample(World world) {
+		if (worlds.get(world.getName()).trample == 0) return false;
+		return true;
+	}
+	
+	public boolean isPvP(World world) {
+		if (worlds.get(world.getName()).pvp == 0) return false;
+		return true;
+	}
+	
+	public boolean isMonsters(World world) {
+		if (worlds.get(world.getName()).monsters == 0) return false;
+		return true;
+	}
+	
+	public boolean isAnimals(World world) {
+		if (worlds.get(world.getName()).animals == 0) return false;
+		return true;
+	}
+	
+	public boolean isKeepSpawnInMemory(World world) {
+		if (worlds.get(world.getName()).keepSpawn == 0) return false;
+		return true;
+	}
+	
+	public String getEnvironment(World world) {
+		return worlds.get(world.getName()).environment;
+	}
+	
+	public String getType(World world) {
+		return worlds.get(world.getName()).type;
+	}
+	
+	public String getSeed(World world) {
+		return worlds.get(world.getName()).seed;
 	}
 	
 	/**
@@ -111,6 +205,224 @@ public class HandleWorlds {
 		String stringPitch = pitch + " " + yaw;
 		worlds.get(worldName).coords = stringCoords;
 		worlds.get(worldName).pitch = stringPitch;
+		Bukkit.getWorld("world").setSpawnLocation(x.intValue(), y.intValue(), z.intValue());
 		return ThePlugin.c1 + "Du har satt spawnen her";
+	}
+	
+	/**
+	 * 
+	 * @param border as int
+	 * @return String describing the result
+	 */
+	public String setBorder(String worldName, String size) {
+		int border = Integer.parseInt(size);
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		worldName = world.getName();
+		worlds.get(worldName).border = border;
+		return ThePlugin.c1 + "Ny grense for " + worldName + " er: " + border;
+	}
+	
+	public String setClaimable(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isClaimable(world)) {
+			worlds.get(world.getName()).claimable = 0;
+			return ThePlugin.c1 + "Plasser er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).claimable = 1;
+		return ThePlugin.c1 + "Plasser er aktivert for " + world.getName();
+	}
+	/*
+	 * TODO må lage en listener og sjekke om firespread er av å så sette evente til cancel
+	 */
+	public String setFireSpread(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isFireSpread(world)) {
+			worlds.get(world.getName()).fireSpread = 0;
+			return ThePlugin.c1 + "Ill spredning er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).fireSpread = 1;
+		return ThePlugin.c1 + "Ill spredning er aktivert for " + world.getName();
+	}
+
+	/*
+	 * TODO må lage en listener og sjekke om explosions er av å så sette evente til cancel
+	 */
+	public String setExplosions(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isExplosions(world)) {
+			worlds.get(world.getName()).explosions = 0;
+			return ThePlugin.c1 + "Eksplosjoner er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).explosions = 1;
+		return ThePlugin.c1 + "Eksplosjoner er aktivert for " + world.getName();
+	}
+
+	/*
+	 * TODO må lage en listener og sjekke om monstergrief er av å så sette evente til cancel
+	 */
+	public String setMonsterGrief(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isMonsterGrief(world)) {
+			worlds.get(world.getName()).monsterGrief = 0;
+			return ThePlugin.c1 + "Monster grifing er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).monsterGrief = 1;
+		return ThePlugin.c1 + "Monster grifing er aktivert for " + world.getName();
+	}
+
+	/*
+	 * TODO må lage en listener og sjekke om trample er av å så sette evente til cancel
+	 */
+	public String setTrample(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isTrample(world)) {
+			worlds.get(world.getName()).trample = 0;
+			return ThePlugin.c1 + "Tråkking er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).trample = 1;
+		return ThePlugin.c1 + "Tråkking er aktivert for " + world.getName();
+	}
+	
+	public String setPvP(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isPvP(world)) {
+			worlds.get(world.getName()).pvp = 0;
+			world.setPVP(false);
+			return ThePlugin.c1 + "PvP er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).pvp = 1;
+		world.setPVP(true);
+		return ThePlugin.c1 + "PvP er aktivert for " + world.getName();
+	}
+	
+	public String setMonsters(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isMonsters(world)) {
+			worlds.get(world.getName()).monsters = 0;
+			world.setSpawnFlags(false, isAnimals(world));
+			return ThePlugin.c1 + "Monstre er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).monsters = 1;
+		world.setSpawnFlags(true, isAnimals(world));
+		return ThePlugin.c1 + "Monstre er aktivert for " + world.getName();
+	}
+	
+	public String setAnimals(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isAnimals(world)) {
+			worlds.get(world.getName()).animals = 0;
+			world.setSpawnFlags(isMonsters(world), false);
+			return ThePlugin.c1 + "Dyr er deaktviert for " + world.getName();
+		}
+		worlds.get(world.getName()).animals = 1;
+		world.setSpawnFlags(isMonsters(world), true);
+		return ThePlugin.c1 + "Dyr er aktivert for " + world.getName();
+	}
+	
+	public String setKeepSpawnInMemory(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		if (isKeepSpawnInMemory(world)) {
+			worlds.get(world.getName()).keepSpawn = 0;
+			world.setKeepSpawnInMemory(false);
+			return ThePlugin.c1 + "Beholde spawn i minne er deaktivert for " + world.getName();
+		}
+		worlds.get(world.getName()).keepSpawn = 1;
+		world.setKeepSpawnInMemory(true);
+		return ThePlugin.c1 + "Beholde spawn i minne er aktivert for " + world.getName();
+	}
+	
+	public void sendWorld(CommandSender sender, String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
+			return;
+		}
+		String claimable = "Nei";
+		if (isClaimable(world)) claimable = "Ja";
+		String fireSpread = "Nei";
+		if (isFireSpread(world)) fireSpread = "Ja";
+		String explosions = "Nei";
+		if (isExplosions(world)) explosions = "Ja";
+		String monsterGrief = "Nei";
+		if (isMonsterGrief(world)) monsterGrief = "Ja";
+		String trample = "Nei";
+		if (isTrample(world)) trample = "Ja";
+		String pvp = "Nei";
+		if (isPvP(world)) pvp = "Ja";
+		String monsters = "Nei";
+		if (isMonsters(world)) monsters = "Ja";
+		String animals = "Nei";
+		if (isAnimals(world)) animals = "Ja";
+		String keepSpawn = "Nei";
+		if (isKeepSpawnInMemory(world)) keepSpawn = "Ja";
+		String environment = getEnvironment(world);
+		String type = getType(world);
+		String seed = getSeed(world);
+		
+		StringBuilder header = new StringBuilder();
+		header.append(ChatColor.YELLOW);
+		header.append("----- ");
+		header.append(ChatColor.WHITE);
+		header.append(world.getName().toUpperCase());
+		header.append(ChatColor.GRAY);
+		header.append(" (" + environment + ", " + type + ") ");
+		header.append(ChatColor.YELLOW);
+		header.append(" -----");
+		for (int i = header.length(); i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
+			header.append("-");
+		}
+		sender.sendMessage(header.toString());
+		sender.sendMessage(ThePlugin.c1 + "Størrelse: " + ThePlugin.c4 + getBorder(world) * 2);
+		sender.sendMessage(ThePlugin.c1 + "Plasser: " + ThePlugin.c4 + claimable);
+		sender.sendMessage(ThePlugin.c1 + "Ill spredning: " + ThePlugin.c4 + fireSpread);
+		sender.sendMessage(ThePlugin.c1 + "Eksplosjoner: " + ThePlugin.c4 + explosions);
+		sender.sendMessage(ThePlugin.c1 + "Monster grifing: " + ThePlugin.c4 + monsterGrief);
+		sender.sendMessage(ThePlugin.c1 + "Tråkking: " + ThePlugin.c4 + trample);
+		sender.sendMessage(ThePlugin.c1 + "PvP: " + ThePlugin.c4 + pvp);
+		sender.sendMessage(ThePlugin.c1 + "Monstre: " + ThePlugin.c4 + monsters);
+		sender.sendMessage(ThePlugin.c1 + "Dyr: " + ThePlugin.c4 + animals);
+		sender.sendMessage(ThePlugin.c1 + "Behold spawn i minne: " + ThePlugin.c4 + keepSpawn);
+		sender.sendMessage(ThePlugin.c1 + "Frø: " + ThePlugin.c4 + seed);
+	}
+	
+	public void sendWorldList(CommandSender sender) {
+		ArrayList<String> worldList = new ArrayList<String>();
+		for (World world : Bukkit.getWorlds()) {
+			worldList.add(ThePlugin.c1 + world.getName());
+		}
+		Collections.sort(worldList, String.CASE_INSENSITIVE_ORDER);
+		for (String worldName : worldList) {
+			sender.sendMessage(worldName);
+		}
 	}
 }

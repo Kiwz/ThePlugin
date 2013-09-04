@@ -78,22 +78,22 @@ commands:
     usage: /openinv <player>
   plass:
     description: Plass kommandoer
-    aliases: []
+    aliases: [p]
     permission: ThePlugin.plass
     permission-message: §cDu har ikke tilgang!
     usage: /plass
   spawn:
     description: Teleporterer deg til spawn
-    aliases: []
+    aliases: [s]
     permission: ThePlugin.spawn
     permission-message: §cDu har ikke tilgang!
-    usage: /spawn
+    usage: /spawn [verden]
   setspawn:
     description: Setter ny spawn
     aliases: []
     permission: ThePlugin.setspawn
     permission-message: §cDu har ikke tilgang!
-    usage: /spawnset
+    usage: /setspawn
   tp:
     description: Teleportering
     aliases: []
@@ -104,6 +104,12 @@ commands:
       /tp <x y z>
       /tp <player player>
       /tp <player x y z>
+  world:
+    description: World spesifikke kommandoer
+    aliases: [w]
+    permission: ThePlugin.world
+    permission-message: §cDu har ikke tilgang!
+    usage: /world
   test:
     description: Bare en test kommando
     aliases: []

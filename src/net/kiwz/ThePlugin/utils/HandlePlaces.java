@@ -16,6 +16,7 @@ import org.bukkit.util.ChatPaginator;
 
 public class HandlePlaces {
 	private HandlePlayers hPlayers = new HandlePlayers();
+	private HandleWorlds hWorlds = new HandleWorlds();
 	private TimeFormat time = new TimeFormat();
 	private HashMap<Integer, Places> places = ThePlugin.getPlaces;
 	
@@ -365,10 +366,58 @@ public class HandlePlaces {
 	
 	/**
 	 * 
+	 * @param player as Player
+	 * @param fromID as int
+	 * @param toID as int
+	 * 
+	 * <p>This will send Enter and Leave message to player as long as fromID not like toID</p>
+	 */
+	
+	public void sendEnterLeave(Player player, int fromID, int toID) {
+		if (fromID == toID) {
+			return;
+		}
+		if (toID == 0) {
+			if (getLeave(fromID).equals("")) {
+				player.sendMessage(ThePlugin.c1 + "Du forlater " + getName(fromID));
+			}
+			else {
+				player.sendMessage(ThePlugin.c1 + getLeave(fromID));
+			}
+		}
+		
+		else if (fromID == 0) {
+			if (getEnter(toID).equals("")) {
+				player.sendMessage(ThePlugin.c1 + "Velkommen til " + getName(toID));
+			}
+			else {
+				player.sendMessage(ThePlugin.c1 + getEnter(toID));
+			}
+		}
+		
+		else {
+			if (getLeave(fromID).equals("")) {
+				player.sendMessage(ThePlugin.c1 + "Du forlater " + getName(fromID));
+			}
+			else {
+				player.sendMessage(ThePlugin.c1 + getLeave(fromID));
+			}
+			
+			if (getEnter(toID).equals("")) {
+				player.sendMessage(ThePlugin.c1 + "Velkommen til " + getName(toID));
+			}
+			else {
+				player.sendMessage(ThePlugin.c1 + getEnter(toID));
+			}
+		}
+	}
+	
+	/**
+	 * 
 	 * @param sender that issued the command
 	 * @param id as int
 	 * 
-	 * This will send messages to sender containing information of given id
+	 * <p>This will send messages to sender containing information of given id</p>
 	 */
 	public void sendPlace(CommandSender sender, int id) {
 		String members = "";
@@ -383,7 +432,7 @@ public class HandlePlaces {
 		header.append(ChatColor.YELLOW);
 		header.append("----- ");
 		header.append(ChatColor.WHITE);
-		header.append("Plass: " + ThePlugin.c4 + getName(id));
+		header.append("Plass: " + getName(id));
 		header.append(ChatColor.YELLOW);
 		header.append(" --- ");
 		header.append(ChatColor.GRAY);
@@ -409,7 +458,7 @@ public class HandlePlaces {
 	 * 
 	 * @param sender that issued the command
 	 * 
-	 * This will send messages to sender containing information of place where sender stands
+	 * <p>This will send messages to sender containing information of place where sender stands</p>
 	 */
 	public void sendPlaceHere(CommandSender sender) {
 		int locX = (int) Bukkit.getServer().getPlayer(sender.getName()).getLocation().getX();
@@ -428,7 +477,7 @@ public class HandlePlaces {
 			header.append(ChatColor.YELLOW);
 			header.append("----- ");
 			header.append(ChatColor.WHITE);
-			header.append("Plass: " + ThePlugin.c4 + getName(id));
+			header.append("Plass: " + getName(id));
 			header.append(ChatColor.YELLOW);
 			header.append(" --- ");
 			header.append(ChatColor.GRAY);
@@ -456,7 +505,7 @@ public class HandlePlaces {
 	 * 
 	 * @param sender that issued the command
 	 * 
-	 * This will send messages to sender contaning place-names and owners
+	 * <p>This will send messages to sender contaning place-names and owners</p>
 	 */
 	public void sendPlaceList(CommandSender sender) {
 		ArrayList<String> placeList = new ArrayList<String>();
@@ -474,7 +523,7 @@ public class HandlePlaces {
 	 * 
 	 * @param sender that issued the command
 	 * 
-	 * This will send messages to sender contaning owners and place-names
+	 * <p>This will send messages to sender contaning owners and place-names</p>
 	 */
 	public void sendPlayersPlaceList(CommandSender sender) {
 		HashMap<String, String> playersPlaceList = new HashMap<String, String>();
@@ -510,6 +559,9 @@ public class HandlePlaces {
 		Location loc = player.getLocation();
 		String spawnCoords = loc.getX() + " " + loc.getY() + " " + loc.getZ();
 		String spawnPitch = loc.getPitch() + " " + loc.getYaw();
+		if(!player.isOp() && !hWorlds.isClaimable(player.getWorld())) {
+			return ThePlugin.c2 + "Det er ikke lov å lage plass i " + player.getWorld().getName();
+		}
 		if(!player.isOp() && getIDsWithOwner(player.getName()).size() >= 3) {
 			return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
@@ -576,6 +628,9 @@ public class HandlePlaces {
 		Location loc = player.getLocation();
 		String spawnCoords = loc.getX() + " " + loc.getY() + " " + loc.getZ();
 		String spawnPitch = loc.getPitch() + " " + loc.getYaw();
+		if(!player.isOp() && !hWorlds.isClaimable(player.getWorld())) {
+			return ThePlugin.c2 + "Det er ikke lov å lage plass i " + player.getWorld().getName();
+		}
 		if (size < 10 || size > 70 || !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
