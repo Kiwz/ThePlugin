@@ -88,8 +88,8 @@ public class Places {
 				conn.createStatement().executeUpdate(queryString);
 				for (String placeName : ThePlugin.remPlaces.keySet()) {
 					conn.createStatement().executeUpdate("DELETE FROM places WHERE PlaceID='" + ThePlugin.remPlaces.get(placeName) + "';");
-					ThePlugin.remPlaces.remove(placeName);
 				}
+				ThePlugin.remPlaces.clear();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

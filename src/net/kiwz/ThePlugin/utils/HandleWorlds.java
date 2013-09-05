@@ -11,6 +11,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
@@ -18,6 +21,55 @@ import org.bukkit.util.ChatPaginator;
 public class HandleWorlds {
 	Worlds world = new Worlds();
 	private HashMap<String, Worlds> worlds = ThePlugin.getWorlds;
+
+	public void loadWorlds() {
+		for (String worldName : getWorldNames()) {
+			Bukkit.getServer().createWorld(new WorldCreator(worldName));
+		}
+	}
+	
+	public String remWorld(String worldName) {
+		World world = getWorld(worldName);
+		if (world == null) {
+			return ThePlugin.c2 + worldName + " finnes ikke";
+		}
+		for (Player player : world.getPlayers()) {
+			player.teleport(getSpawn(player, "world"));
+			player.sendMessage(ThePlugin.c2 + "Verdenen du var i ble slettet, du er nå i hoved-spawnen");
+		}
+		if (!Bukkit.getServer().unloadWorld(world, true)) {
+			return ThePlugin.c2 + worldName + " kunne ikke bli slettet";
+		}
+		worldName = world.getName();
+		worlds.remove(worldName);
+		ThePlugin.remWorlds.add(worldName);
+		return ThePlugin.c1 + worldName + " er slettet (filene ligger i egen mappe)";
+	}
+	
+	public String createWorld(String worldName, String env, String type, String seed) {
+		if (!isWorldNameAvailable(worldName.toLowerCase())) return ThePlugin.c2 + worldName + " Er opptatt";
+		
+		WorldCreator wc = new WorldCreator(worldName.toLowerCase());
+		
+		if (env.equalsIgnoreCase("nether")) wc.environment(Environment.NETHER);
+		else if (env.equalsIgnoreCase("the_end")) wc.environment(Environment.THE_END);
+		else wc.environment(Environment.NORMAL);
+
+		if (type.equalsIgnoreCase("flat")) wc.type(WorldType.FLAT);
+		else if (type.equalsIgnoreCase("large")) wc.type(WorldType.LARGE_BIOMES);
+		else if (type.equalsIgnoreCase("version1")) wc.type(WorldType.VERSION_1_1);
+		else wc.type(WorldType.NORMAL);
+		
+		if (seed.matches("[0-9-]+")) wc.seed(Long.parseLong(seed));
+		
+		wc.createWorld();
+		World world = Bukkit.getServer().getWorld(worldName);
+		addWorld(world);
+		return ChatColor.GOLD + "World: " + ChatColor.WHITE + world.getName()
+				+ ChatColor.GOLD + " Environment: " + ChatColor.WHITE + world.getEnvironment()
+				+ ChatColor.GOLD + " Type: " + ChatColor.WHITE + world.getWorldType()
+				+ ChatColor.GOLD + " Seed: " + ChatColor.WHITE + world.getSeed();
+	}
 	
 	/**
 	 * 
@@ -58,6 +110,14 @@ public class HandleWorlds {
 		world.type = type; // Kan ikke endres senere
 		world.seed = seed; // Kan ikke endres senere
 		worlds.put(world.world, world);
+	}
+	
+	public ArrayList<String> getWorldNames() {
+		ArrayList<String> worldNames = new ArrayList<String>();
+		for (String worldName : worlds.keySet()) {
+			worldNames.add(worldName);
+		}
+		return worldNames;
 	}
 	
 	/**
@@ -125,6 +185,13 @@ public class HandleWorlds {
 	
 	public int getBorder(World world) {
 		return worlds.get(world.getName()).border;
+	}
+	
+	public boolean isWorldNameAvailable(String worldName) {
+		if (worlds.containsKey(worldName.toLowerCase())) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**

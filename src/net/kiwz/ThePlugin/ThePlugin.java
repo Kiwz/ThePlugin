@@ -2,6 +2,7 @@ package net.kiwz.ThePlugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -44,6 +45,7 @@ public class ThePlugin extends JavaPlugin {
 	public static HashMap<String, Players> getPlayers;
 	private Worlds worlds = new Worlds();
 	public static HashMap<String, Worlds> getWorlds;
+	public static ArrayList<String> remWorlds = new ArrayList<String>();
 	
 	@Override
 	public void onLoad() {
@@ -69,9 +71,10 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		HandleWorlds hWorlds = new HandleWorlds();
+		hWorlds.loadWorlds();
 		for (World world : Bukkit.getServer().getWorlds()) {
 			if (!getWorlds.containsKey(world.getName())) {
-				HandleWorlds hWorlds = new HandleWorlds();
 				hWorlds.addWorld(world);
 			}
 		}

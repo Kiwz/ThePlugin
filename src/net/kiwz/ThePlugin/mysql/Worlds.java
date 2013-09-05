@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import net.kiwz.ThePlugin.ThePlugin;
+
 public class Worlds {
 	
 	public String world;
@@ -84,6 +86,10 @@ public class Worlds {
 					+ "Type='" + type + "', Seed='" + seed + "';";
 			try {
 				conn.createStatement().executeUpdate(queryString);
+				for (String worldName : ThePlugin.remWorlds) {
+					conn.createStatement().executeUpdate("DELETE FROM worlds WHERE World='" + worldName + "';");
+				}
+				ThePlugin.remWorlds.clear();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

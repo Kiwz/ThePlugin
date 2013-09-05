@@ -1,6 +1,11 @@
+Bugs:
+Spiller dropper xp når han dør selvom han beholder xp'en
+
+
 Kommandoer:
 /tps <seconds>
 /mute <spillernavn>
+/whois <spillernavn>
 
 Specials:
 Teleport-skilt
@@ -15,5 +20,4 @@ Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm og trykk-knapp.
 
 
 MultiWorld:
-en del ting igjen, som f.eks legge til ny verden (med alternativer som environment og type)
-samt å slette verdener
+fikse tnt, monster grifing trample osv
