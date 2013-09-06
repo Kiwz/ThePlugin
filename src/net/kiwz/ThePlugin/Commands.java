@@ -13,9 +13,13 @@ import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
 import net.kiwz.ThePlugin.commands.WorldCommand;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
 
 public class Commands implements CommandExecutor {
 	
@@ -110,6 +114,30 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("test")) {
 			
 			// Test her:
+			if (args.length == 1) {
+				int i = 0;
+				for (Entity entity : Bukkit.getServer().getWorld("world").getEntities()) {
+					if (args[0].equalsIgnoreCase("a")) {
+						if (entity instanceof Animals) {
+							sender.sendMessage("" + entity.getLocation().distance(Bukkit.getServer().getPlayer(sender.getName()).getLocation()));
+							entity.remove();
+							i++;
+						}
+					}
+					if (args[0].equalsIgnoreCase("m")) {
+						if (entity instanceof Monster) {
+							double distance = entity.getLocation().distance(Bukkit.getServer().getPlayer(sender.getName()).getLocation());
+							int d = (int) distance;
+							if (d < 10) {
+								sender.sendMessage(d + ": " + entity.getType().toString());
+								entity.remove();
+								i++;
+							}
+						}
+					}
+				}
+				sender.sendMessage(i + "");
+			}
 			// Test slutter!
 
 			return true;

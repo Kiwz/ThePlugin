@@ -1,5 +1,6 @@
 package net.kiwz.ThePlugin.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,6 +44,14 @@ public class HandleWorlds {
 		worldName = world.getName();
 		worlds.remove(worldName);
 		ThePlugin.remWorlds.add(worldName);
+		try {
+			File folder = new File(worldName);
+			new File("plugins\\ThePlugin\\Old worlds\\").mkdirs();
+			folder.renameTo(new File("plugins\\ThePlugin\\Old Worlds\\" + folder.getName() + " (" + System.currentTimeMillis() / 1000 + ")"));
+		}
+		catch (Exception e) {
+			return ThePlugin.c1 + worldName + " er slettet (filene må slettes/flyttes manuelt)";
+		}
 		return ThePlugin.c1 + worldName + " er slettet (filene ligger i egen mappe)";
 	}
 	
@@ -484,8 +493,8 @@ public class HandleWorlds {
 	
 	public void sendWorldList(CommandSender sender) {
 		ArrayList<String> worldList = new ArrayList<String>();
-		for (World world : Bukkit.getWorlds()) {
-			worldList.add(ThePlugin.c1 + world.getName());
+		for (String worldName : getWorldNames()) {
+			worldList.add(ThePlugin.c1 + worldName);
 		}
 		Collections.sort(worldList, String.CASE_INSENSITIVE_ORDER);
 		for (String worldName : worldList) {

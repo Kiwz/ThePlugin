@@ -14,6 +14,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,6 +45,14 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
+		Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+
+		if (!worlds.isTrample(block.getWorld())) {
+			if ((block.getType() == Material.SOIL) || (block.getType() == Material.CROPS)) {
+				event.setCancelled(true);
+				return;
+			}
+		}
 		
 		if (event.getClickedBlock() != null) {
 			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {
