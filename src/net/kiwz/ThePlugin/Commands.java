@@ -8,10 +8,15 @@ import net.kiwz.ThePlugin.commands.ItemCommand;
 import net.kiwz.ThePlugin.commands.HealCommand;
 import net.kiwz.ThePlugin.commands.HelpCommand;
 import net.kiwz.ThePlugin.commands.HomeCommand;
+import net.kiwz.ThePlugin.commands.MemCommand;
+import net.kiwz.ThePlugin.commands.MuteCommand;
 import net.kiwz.ThePlugin.commands.OpenInvCommand;
 import net.kiwz.ThePlugin.commands.PlaceCommand;
 import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
+import net.kiwz.ThePlugin.commands.TPSCommand;
+import net.kiwz.ThePlugin.commands.TimeCommand;
+import net.kiwz.ThePlugin.commands.WhoisCommand;
 import net.kiwz.ThePlugin.commands.WorldCommand;
 
 import org.bukkit.command.Command;
@@ -30,7 +35,7 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 		
-		if (cmdName.equalsIgnoreCase("feed")) {
+		else if (cmdName.equalsIgnoreCase("feed")) {
 			FeedCommand feed = new FeedCommand();
 			feed.feed(sender, args);
 			return true;
@@ -78,6 +83,24 @@ public class Commands implements CommandExecutor {
 			return true;
 	    }
 		
+		else if (cmdName.equalsIgnoreCase("minne")) {
+			MemCommand mem = new MemCommand();
+			mem.mem(sender, args);
+			return true;
+	    }
+		
+		else if (cmdName.equalsIgnoreCase("mute")) {
+			MuteCommand mute = new MuteCommand();
+			mute.mute(sender, args);
+			return true;
+	    }
+		
+		else if (cmdName.equalsIgnoreCase("unmute")) {
+			MuteCommand mute = new MuteCommand();
+			mute.unMute(sender, args);
+			return true;
+	    }
+		
 		else if (cmdName.equalsIgnoreCase("openinv")) {
 			OpenInvCommand openinv = new OpenInvCommand();
 			openinv.openInv(sender, cmd, args);
@@ -102,9 +125,33 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 		
+		else if (cmdName.equalsIgnoreCase("tid")) {
+			TimeCommand time = new TimeCommand();
+			time.time(sender, args);
+			return true;
+	    }
+		
 		else if (cmdName.equalsIgnoreCase("tp")) {
 			TPCommand tp = new TPCommand();
 			tp.tp(sender, cmd, args);
+			return true;
+	    }
+		
+		else if (cmdName.equalsIgnoreCase("tps")) {
+			TPSCommand tps = new TPSCommand();
+			tps.tps(sender, args);
+			return true;
+	    }
+		
+		else if (cmdName.equalsIgnoreCase("who")) {
+			WhoisCommand whois = new WhoisCommand();
+			whois.whois(sender, args);
+			return true;
+	    }
+		
+		else if (cmdName.equalsIgnoreCase("whois")) {
+			WhoisCommand whois = new WhoisCommand();
+			whois.whois(sender, args);
 			return true;
 	    }
 		

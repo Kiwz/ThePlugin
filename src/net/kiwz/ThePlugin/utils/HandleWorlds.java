@@ -27,6 +27,20 @@ public class HandleWorlds {
 	public void loadWorlds() {
 		for (String worldName : getWorldNames()) {
 			Bukkit.getServer().createWorld(new WorldCreator(worldName));
+			World world = Bukkit.getServer().getWorld(worldName);
+			
+			boolean pvp = false;
+			if (worlds.get(worldName).pvp == 1) pvp = true;
+			boolean monsters = false;
+			if (worlds.get(worldName).monsters == 1) monsters = true;
+			boolean animals = false;
+			if (worlds.get(worldName).animals == 1) animals = true;
+			boolean keepSpawn = false;
+			if (worlds.get(worldName).keepSpawn == 1) keepSpawn = true;
+			
+			world.setPVP(pvp);
+			world.setSpawnFlags(monsters, animals);
+			world.setKeepSpawnInMemory(keepSpawn);
 		}
 	}
 	
@@ -496,8 +510,8 @@ public class HandleWorlds {
 	
 	public void sendWorldList(CommandSender sender) {
 		ArrayList<String> worldList = new ArrayList<String>();
-		for (String worldName : getWorldNames()) {
-			worldList.add(ThePlugin.c1 + worldName);
+		for (World world : Bukkit.getServer().getWorlds()) {
+			worldList.add(ThePlugin.c1 + world.getName());
 		}
 		Collections.sort(worldList, String.CASE_INSENSITIVE_ORDER);
 		for (String worldName : worldList) {

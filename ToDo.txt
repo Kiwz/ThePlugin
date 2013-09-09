@@ -1,12 +1,11 @@
 Tester som må utføres:
 Skyte en spiller som står i en IKKE pvp plass fra ett sted som har pvp
+Stoppe monstre fra å gi skade til spillere som er i en plass hvor monstre er deaktivert (feks tilfelle hvis skeleton skyter en spiller)
 
+Bugs:
 
 Kommandoer:
 /tp x y z
-/tps <seconds>
-/mute <spillernavn>
-/whois <spillernavn>
 
 Specials:
 Teleport-skilt
@@ -18,5 +17,4 @@ Teleport-skilt
 Places:
 Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
 Stoppe monstre og dyr i å spawne/entre plasser som ikke skal ha dette
-Stoppe monstre fra å gi skade til spillere som er i en plass hvor monstre er deaktivert (feks tilfelle hvis skeleton skyter en spiller)
 Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm og trykk-knapp.

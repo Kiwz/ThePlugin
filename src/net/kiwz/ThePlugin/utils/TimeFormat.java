@@ -25,4 +25,8 @@ public class TimeFormat {
 		String formattedDate = sdf.format(date);
 		return formattedDate;
 	}
+	
+	public int getHours(int unix) {
+		return unix / 3600;
+	}
 }

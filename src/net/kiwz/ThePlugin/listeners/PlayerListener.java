@@ -110,6 +110,11 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		String msg = player.getName() + ": " + event.getMessage();
 		
+		if (players.isMuted(player.getName())) {
+			player.sendMessage(ThePlugin.c2 + "En admin har bestemt at du ikke får snakke av gode grunner");
+			event.setCancelled(true);
+			return;
+		}
 		if (event.getPlayer().isOp()) {
 			//event.setFormat(ChatColor.RED + "%s: " + ChatColor.WHITE + "%s");
 			msg = ChatColor.RED + player.getName() + ": " + ChatColor.WHITE + event.getMessage();
