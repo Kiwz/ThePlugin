@@ -4,6 +4,19 @@ version: 0.01
 author: Kiwz
 
 commands:
+  entity:
+    description: a = animals, m = monsters, d = drops
+    aliases: [e]
+    permission: ThePlugin.entity
+    permission-message: §cDu har ikke tilgang!
+    usage: |
+      /entity a
+      /entity m
+      /entity d
+      /entity a <distance>
+      /entity m <distance>
+      /entity d <distance>
+  fly:
   feed:
     description: Mater
     aliases: []

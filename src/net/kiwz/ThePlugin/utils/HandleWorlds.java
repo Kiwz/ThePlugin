@@ -21,6 +21,7 @@ import org.bukkit.util.ChatPaginator;
 
 public class HandleWorlds {
 	Worlds world = new Worlds();
+	RemoveEntities e = new RemoveEntities();
 	private HashMap<String, Worlds> worlds = ThePlugin.getWorlds;
 
 	public void loadWorlds() {
@@ -400,6 +401,7 @@ public class HandleWorlds {
 		if (isMonsters(world)) {
 			worlds.get(world.getName()).monsters = 0;
 			world.setSpawnFlags(false, isAnimals(world));
+			e.killMonsters(world);
 			return ThePlugin.c1 + "Monstre er deaktviert for " + world.getName();
 		}
 		worlds.get(world.getName()).monsters = 1;
@@ -415,6 +417,7 @@ public class HandleWorlds {
 		if (isAnimals(world)) {
 			worlds.get(world.getName()).animals = 0;
 			world.setSpawnFlags(isMonsters(world), false);
+			e.killAnimals(world);
 			return ThePlugin.c1 + "Dyr er deaktviert for " + world.getName();
 		}
 		worlds.get(world.getName()).animals = 1;

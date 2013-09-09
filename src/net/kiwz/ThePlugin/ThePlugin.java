@@ -80,6 +80,7 @@ public class ThePlugin extends JavaPlugin {
 		}
 		
 		Commands cmds = new Commands();
+		getCommand("entity").setExecutor(cmds);
 		getCommand("feed").setExecutor(cmds);
 		getCommand("fly").setExecutor(cmds);
 		getCommand("gm").setExecutor(cmds);

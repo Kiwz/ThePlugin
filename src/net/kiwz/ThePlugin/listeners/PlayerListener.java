@@ -123,6 +123,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		event.setKeepLevel(true);
+		event.setDroppedExp(0);
 		event.setDeathMessage("");
 		Location loc = event.getEntity().getLocation();
 		String world = loc.getWorld().getName();
