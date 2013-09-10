@@ -1,20 +1,29 @@
 package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.utils.HandlePlayers;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class WhoCommand {
 	
-	public void whois(CommandSender sender, String[] args) {
-		HandlePlayers players = new HandlePlayers();
-		
-		if (args.length == 0) {
-			sender.sendMessage(ThePlugin.c2 + "Du må skrive navnet på en spiller");
+	public void who(CommandSender sender, String[] args) {
+		Player[] players = Bukkit.getServer().getOnlinePlayers();
+		sender.sendMessage(ThePlugin.c1 + "Det er " + players.length + "/" + Bukkit.getServer().getMaxPlayers() + " spillere online");
+		StringBuilder header = new StringBuilder();
+		boolean comma = false;
+		for (Player player : players) {
+			if (comma) {
+				header.append(", ");
+			}
+			header.append(player.getName());
+			comma = true;
 		}
-		
-		else {
-			players.sendPlayer(sender, args[0]);
+		try {
+			header.substring(2, 2);
+			sender.sendMessage(header.toString());
+		}
+		catch (StringIndexOutOfBoundsException e) {
 		}
 	}
 }

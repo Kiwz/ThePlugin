@@ -8,6 +8,7 @@ import net.kiwz.ThePlugin.utils.HandlePlayers;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
 import net.kiwz.ThePlugin.utils.MsgToOthers;
 import net.kiwz.ThePlugin.utils.OfflinePlayer;
+import net.kiwz.ThePlugin.utils.Permissions;
 import net.kiwz.ThePlugin.utils.Tablist;
 
 import org.bukkit.Bukkit;
@@ -40,6 +41,7 @@ public class PlayerListener implements Listener {
 	private HandlePlayers players = new HandlePlayers();
 	private HandleWorlds worlds = new HandleWorlds();
     private MsgToOthers msg = new MsgToOthers();
+    private Permissions perm = new Permissions();
 	private String denyString = ThePlugin.c2 + "Du har ingen tilgang her";
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -115,7 +117,7 @@ public class PlayerListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if (event.getPlayer().isOp()) {
+		if (player.isOp() || perm.isAdmin(player)) {
 			//event.setFormat(ChatColor.RED + "%s: " + ChatColor.WHITE + "%s");
 			msg = ChatColor.RED + player.getName() + ": " + ChatColor.WHITE + event.getMessage();
 		}
@@ -136,7 +138,7 @@ public class PlayerListener implements Listener {
 		String y = Double.toString(loc.getY()).replaceAll("\\..*","");
 		String z = Double.toString(loc.getZ()).replaceAll("\\..*","");
 		event.getEntity().getPlayer().sendMessage(ThePlugin.c2 + "Du døde i " + world
-				+ " x:" + x + " y:" + y + " z:" + z);
+				+ " X: " + x + " Y: " + y + " Z: " + z);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -165,6 +167,10 @@ public class PlayerListener implements Listener {
         String loginMsg = "Noen logget inn";
         event.setJoinMessage("");
         new Tablist().setColor(player);
+        
+    	if (perm.isAdmin(player)) {
+    		perm.setPermissions(player);
+    	}
     	
         if (!player.isOp()) {
         	player.setGameMode(GameMode.SURVIVAL);

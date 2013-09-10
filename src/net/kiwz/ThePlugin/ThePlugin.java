@@ -1,5 +1,6 @@
 package net.kiwz.ThePlugin;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import net.kiwz.ThePlugin.mysql.Players;
 import net.kiwz.ThePlugin.mysql.Worlds;
 import net.kiwz.ThePlugin.utils.ConsoleFilter;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
+import net.kiwz.ThePlugin.utils.Permissions;
 import net.kiwz.ThePlugin.utils.ServerManagement;
 
 import org.bukkit.Bukkit;
@@ -46,16 +48,17 @@ public class ThePlugin extends JavaPlugin {
 	private Worlds worlds = new Worlds();
 	public static HashMap<String, Worlds> getWorlds;
 	public static ArrayList<String> remWorlds = new ArrayList<String>();
+	public static ArrayList<String> admins = new ArrayList<String>();
 	
 	@Override
 	public void onLoad() {
+		new File("plugins\\ThePlugin\\").mkdirs();
+		
 		logServer.setFilter(new ConsoleFilter());
 		
-		ConnectToMySQL MySQL = new ConnectToMySQL();
-		Connection conn = MySQL.openConnection();
+		Connection conn = new ConnectToMySQL().openConnection();
 		
-		BuildTables buildTables = new BuildTables();
-		buildTables.createTables(conn);
+		new BuildTables().createTables(conn);
 		
 		getHomes = homes.getTableHomes(conn);
 		getPlaces = places.getTablePlaces(conn);
@@ -71,6 +74,8 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		admins = new Permissions().loadAdmins();
+		
 		HandleWorlds hWorlds = new HandleWorlds();
 		hWorlds.loadWorlds();
 		for (World world : Bukkit.getServer().getWorlds()) {
@@ -111,13 +116,12 @@ public class ThePlugin extends JavaPlugin {
 	    
 		ServerManagement sm = new ServerManagement();
 	    sm.autoStop();
-	    sm.save(12000L);
+	    sm.save(10L);
 	}
 	
 	@Override
 	public void onDisable() {
-		ConnectToMySQL MySQL = new ConnectToMySQL();
-		Connection conn = MySQL.openConnection();
+		Connection conn = new ConnectToMySQL().openConnection();
 		
 		homes.setTableHomes(conn, getHomes);
 		places.setTablePlaces(conn, getPlaces);

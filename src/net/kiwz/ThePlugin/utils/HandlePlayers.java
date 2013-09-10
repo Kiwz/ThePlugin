@@ -168,6 +168,7 @@ public class HandlePlayers {
 		sender.sendMessage(ThePlugin.c1 + "Muted: " + ThePlugin.c4 + muted);
 		sender.sendMessage(ThePlugin.c1 + "GameMode: " + ThePlugin.c4 + player.getGameMode());
 		sender.sendMessage(ThePlugin.c1 + "Experience: " + ThePlugin.c4 + player.getTotalExperience());
-		sender.sendMessage(ThePlugin.c1 + "Lokasjon: " + ThePlugin.c4 + "X:" + loc.getBlockX() + " Y:" + loc.getBlockY() + " Z:" + loc.getBlockZ() + " Verden: " + loc.getWorld().getName());
+		sender.sendMessage(ThePlugin.c1 + "Lokasjon: " + ThePlugin.c4 + loc.getWorld().getName() +
+				" X: " + loc.getBlockX() + " Y: " + loc.getBlockY() + " Z: " + loc.getBlockZ());
 	}
 }

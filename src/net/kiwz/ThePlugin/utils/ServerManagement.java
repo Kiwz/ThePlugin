@@ -3,8 +3,6 @@ package net.kiwz.ThePlugin.utils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.logging.Logger;
-
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.ConnectToMySQL;
 import net.kiwz.ThePlugin.mysql.Homes;
@@ -35,10 +33,14 @@ public class ServerManagement {
 					int sec = Calendar.getInstance().get(Calendar.SECOND);
 					if ((hour == 01 || hour == 13 || hour == 17) && (min == 55 && sec == 00 && !ServerManagement.warning)) {
 						ServerManagement.warning = true;
-						pl.getLogger().warning(pink + "*** Server restarter om 5 minutter ***");
+						for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+							onlinePlayer.sendMessage(pink + "*** Server restarter om 5 minutter ***");
+						}
 					}
 					if ((hour == 01 || hour == 13 || hour == 17) && (min == 59 && sec == 57 && ServerManagement.warning)) {
-						pl.getLogger().warning(pink + "*** Server restarter ***");
+						for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+							onlinePlayer.sendMessage(pink + "*** Server restarter ***");
+						}
 					}
 					if ((hour == 02 || hour == 14 || hour == 18) && (min == 00 && sec == 00 && ServerManagement.warning)) {
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -52,19 +54,21 @@ public class ServerManagement {
 	
 	/**
 	 * 
-	 * @param period as long
+	 * @param period in minutes
 	 * 
 	 * <p>This will run forever and save world, players and update MySQL tables</p>
 	 */
 	public void save(long period) {
+		period = period * 1200;
 		final Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(pl, new Runnable() {
 				@Override
                 public void run() {
-					Logger log = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin").getLogger();
 					ChatColor pink = ChatColor.LIGHT_PURPLE;
 					long time = System.currentTimeMillis();
-					Bukkit.getServer().broadcastMessage(pink + "Lagrer serveren");
+					for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+						onlinePlayer.sendMessage(pink + "Lagrer serveren");
+					}
 					
 					ConnectToMySQL MySQL = new ConnectToMySQL();
 					Connection conn = MySQL.openConnection();
@@ -73,24 +77,11 @@ public class ServerManagement {
 					Places places = new Places();
 					Players players = new Players();
 					Worlds worlds = new Worlds();
-
-					time = System.currentTimeMillis();
+					
 					homes.setTableHomes(conn, ThePlugin.getHomes);
-					time = System.currentTimeMillis() - time;
-					log.info(ThePlugin.c2 + "Lagring av Homes (" + time + "ms)");
-					time = System.currentTimeMillis();
 					places.setTablePlaces(conn, ThePlugin.getPlaces);
-					time = System.currentTimeMillis() - time;
-					log.info(ThePlugin.c2 + "Lagring av Places (" + time + "ms)");
-					time = System.currentTimeMillis();
 					players.setTablePlayers(conn, ThePlugin.getPlayers);
-					time = System.currentTimeMillis() - time;
-					log.info(ThePlugin.c2 + "Lagring av Players (" + time + "ms)");
-					time = System.currentTimeMillis();
 					worlds.setTableWorlds(conn, ThePlugin.getWorlds);
-					time = System.currentTimeMillis() - time;
-					log.info(ThePlugin.c2 + "Lagring av Worlds (" + time + "ms)");
-					time = System.currentTimeMillis();
 					
 					try {
 						conn.close();
@@ -104,7 +95,9 @@ public class ServerManagement {
 					}
 					
 					time = System.currentTimeMillis() - time;
-					Bukkit.getServer().broadcastMessage(pink + "Lagring fullført (" + time + "ms)");
+					for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+						onlinePlayer.sendMessage(pink + "Lagring fullført (" + time + "ms)");
+					}
 				}
 		}, period, period);
 	}

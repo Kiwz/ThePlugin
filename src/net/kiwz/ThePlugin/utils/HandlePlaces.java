@@ -106,6 +106,45 @@ public class HandlePlaces {
 	
 	/**
 	 * 
+	 * @param id as int
+	 * @param loc as Location
+	 * @param size as int
+	 * @return true if parts of given location + size isn't inside another place
+	 */
+	public boolean isAvailable(int id, Location loc, int size) {
+		int x = (int) loc.getX();
+		int z = (int) loc.getZ();
+		for (int key : places.keySet()) {
+			int otherX = places.get(key).x;
+			int otherZ = places.get(key).z;
+			int otherSize = places.get(key).size;
+			if (x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
+					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
+				if (places.get(key).id != id) {
+					return false;
+				}
+	    	}
+		}
+		return true;
+	}
+	
+	public boolean isNearSpawn(Player player) {
+		Location spawn = player.getWorld().getSpawnLocation();
+		int distance = 400;
+		int spawnX = spawn.getBlockX();
+		int spawnZ = spawn.getBlockZ();
+		int playerX = player.getLocation().getBlockX();
+		int playerZ = player.getLocation().getBlockZ();
+		
+		if (playerX >= spawnX + distance || playerX <= spawnX - distance ||
+				playerZ >= spawnZ + distance || playerZ <= spawnZ - distance) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
 	 * @param locX as double
 	 * @param locZ as double
 	 * @return id of the place that this x and z is within as int, if no place was found id = 0
@@ -565,6 +604,9 @@ public class HandlePlaces {
 		if(!player.isOp() && getIDsWithOwner(player.getName()).size() >= 3) {
 			return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
+		if (isNearSpawn(player) && (size < 10 || size > 15) && !player.isOp()) {
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 400 blokker fra spawnen";
+		}
 		if ((size < 10 || size > 70) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
@@ -634,7 +676,7 @@ public class HandlePlaces {
 		if (size < 10 || size > 70 || !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
-		if (!isAvailable(loc, size)) {
+		if (!isAvailable(id, loc, size)) {
 			return ThePlugin.c2 + "Du er for nærme en annen plass";
     	}
 		places.get(id).x = (int) loc.getX();
@@ -847,7 +889,7 @@ public class HandlePlaces {
 		if (leave.isEmpty()) {
 			return ThePlugin.c1 + "Forlate meldingen er fjernet";
 		}
-		return ThePlugin.c1 + "Ny entre melding er satt";
+		return ThePlugin.c1 + "Ny forlate melding er satt";
 	}
 
 	/**

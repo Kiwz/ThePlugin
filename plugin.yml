@@ -1,6 +1,6 @@
 name: ThePlugin
 main: net.kiwz.ThePlugin.ThePlugin
-version: 0.01
+version: 1.00
 author: Kiwz
 
 commands:
@@ -174,7 +174,7 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: /world
   test:
-    description: Bare en test kommando
+    description: IKKE RØR!!!
     aliases: []
     permission: ThePlugin.test
     permission-message: §cDu har ikke tilgang!

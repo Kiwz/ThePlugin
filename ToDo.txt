@@ -5,7 +5,6 @@ Stoppe monstre fra å gi skade til spillere som er i en plass hvor monstre er dea
 Bugs:
 
 Kommandoer:
-/tp x y z
 
 Specials:
 Teleport-skilt

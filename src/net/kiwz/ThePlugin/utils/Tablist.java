@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Tablist {
+    private Permissions perm = new Permissions();
 	
 	/**
 	 * 
@@ -17,7 +18,7 @@ public class Tablist {
     	if (playerName.length() + 4 > 16) {
     		playerName = playerName.substring(0, 12);
     	}
-        if (player.isOp()) {
+        if (player.isOp() || perm.isAdmin(player)) {
             player.setPlayerListName(ChatColor.RED + playerName + ChatColor.WHITE);
         }
         else {

@@ -1,13 +1,12 @@
 package net.kiwz.ThePlugin.mysql;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Scanner;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -32,15 +31,21 @@ public class ConnectToMySQL {
     	String uName = null;
     	String pass = null;
 		try {
-	    	FileInputStream fs = new FileInputStream("mysql.txt");
-			@SuppressWarnings("resource")
-			BufferedReader br = new BufferedReader(new InputStreamReader(fs));
-			hName = br.readLine();
-			uName = br.readLine();
-			pass = br.readLine();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			File file = new File("plugins\\ThePlugin\\mysql.txt");
+			if (file.createNewFile()) {
+				PrintWriter writer = new PrintWriter("plugins\\ThePlugin\\mysql.txt");
+				writer.println("127.0.0.1");
+				writer.println("rooty");
+				writer.println("booty");
+				writer.close();
+			}
+			Scanner sc = new Scanner(file);
+			hName = sc.nextLine();
+			uName = sc.nextLine();
+			pass = sc.nextLine();
+			sc.close();
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
     	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");

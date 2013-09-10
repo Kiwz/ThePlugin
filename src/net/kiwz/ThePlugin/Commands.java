@@ -16,12 +16,15 @@ import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
 import net.kiwz.ThePlugin.commands.TPSCommand;
 import net.kiwz.ThePlugin.commands.TimeCommand;
+import net.kiwz.ThePlugin.commands.WhoCommand;
 import net.kiwz.ThePlugin.commands.WhoisCommand;
 import net.kiwz.ThePlugin.commands.WorldCommand;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permissible;
 
 public class Commands implements CommandExecutor {
 	
@@ -101,7 +104,7 @@ public class Commands implements CommandExecutor {
 			return true;
 	    }
 		
-		else if (cmdName.equalsIgnoreCase("openinv")) {
+		else if (cmdName.equalsIgnoreCase("oi")) {
 			OpenInvCommand openinv = new OpenInvCommand();
 			openinv.openInv(sender, cmd, args);
 			return true;
@@ -144,8 +147,8 @@ public class Commands implements CommandExecutor {
 	    }
 		
 		else if (cmdName.equalsIgnoreCase("who")) {
-			WhoisCommand whois = new WhoisCommand();
-			whois.whois(sender, args);
+			WhoCommand who = new WhoCommand();
+			who.who(sender, args);
 			return true;
 	    }
 		
@@ -164,6 +167,8 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("test")) {
 			
 			// Test her:
+			((Permissible) Bukkit.getServer().getOfflinePlayer("Kiwz")).addAttachment(Bukkit.getPluginManager().getPlugin("ThePlugin")).
+			setPermission("bukkit.command.kill", true);
 			// Test slutter!
 
 			return true;

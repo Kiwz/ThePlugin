@@ -60,8 +60,8 @@ public class HandleWorlds {
 		worlds.remove(worldName);
 		ThePlugin.remWorlds.add(worldName);
 		try {
-			File folder = new File(worldName);
 			new File("plugins\\ThePlugin\\Old worlds\\").mkdirs();
+			File folder = new File(worldName);
 			folder.renameTo(new File("plugins\\ThePlugin\\Old Worlds\\" + folder.getName() + " (" + System.currentTimeMillis() / 1000 + ")"));
 		}
 		catch (Exception e) {
@@ -328,9 +328,7 @@ public class HandleWorlds {
 		worlds.get(world.getName()).claimable = 1;
 		return ThePlugin.c1 + "Plasser er aktivert for " + world.getName();
 	}
-	/*
-	 * TODO må lage en listener og sjekke om firespread er av å så sette evente til cancel
-	 */
+	
 	public String setFireSpread(String worldName) {
 		World world = getWorld(worldName);
 		if (world == null) {
@@ -343,10 +341,7 @@ public class HandleWorlds {
 		worlds.get(world.getName()).fireSpread = 1;
 		return ThePlugin.c1 + "Ill spredning er aktivert for " + world.getName();
 	}
-
-	/*
-	 * TODO må lage en listener og sjekke om explosions er av å så sette evente til cancel
-	 */
+	
 	public String setExplosions(String worldName) {
 		World world = getWorld(worldName);
 		if (world == null) {
@@ -359,10 +354,7 @@ public class HandleWorlds {
 		worlds.get(world.getName()).explosions = 1;
 		return ThePlugin.c1 + "Eksplosjoner er aktivert for " + world.getName();
 	}
-
-	/*
-	 * TODO må lage en listener og sjekke om monstergrief er av å så sette evente til cancel
-	 */
+	
 	public String setMonsterGrief(String worldName) {
 		World world = getWorld(worldName);
 		if (world == null) {
@@ -375,10 +367,7 @@ public class HandleWorlds {
 		worlds.get(world.getName()).monsterGrief = 1;
 		return ThePlugin.c1 + "Monster grifing er aktivert for " + world.getName();
 	}
-
-	/*
-	 * TODO må lage en listener og sjekke om trample er av å så sette evente til cancel
-	 */
+	
 	public String setTrample(String worldName) {
 		World world = getWorld(worldName);
 		if (world == null) {
@@ -513,6 +502,19 @@ public class HandleWorlds {
 		for (World world : Bukkit.getServer().getWorlds()) {
 			worldList.add(ThePlugin.c1 + world.getName());
 		}
+		
+		StringBuilder header = new StringBuilder();
+		header.append(ChatColor.YELLOW);
+		header.append("----- ");
+		header.append(ChatColor.WHITE);
+		header.append("Liste over alle verdener på denne server");
+		header.append(ChatColor.YELLOW);
+		header.append(" -----");
+		for (int i = header.length(); i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
+			header.append("-");
+		}
+		sender.sendMessage(header.toString());
+		
 		Collections.sort(worldList, String.CASE_INSENSITIVE_ORDER);
 		for (String worldName : worldList) {
 			sender.sendMessage(worldName);

@@ -165,7 +165,7 @@ public class PlaceCommand {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
-				sender.sendMessage(hPlaces.setPlace(player, id, args[0]));
+				sender.sendMessage(hPlaces.setPlace(player, id, args[2]));
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("entre")) {
