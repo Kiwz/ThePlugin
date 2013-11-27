@@ -20,11 +20,9 @@ import net.kiwz.ThePlugin.commands.WhoCommand;
 import net.kiwz.ThePlugin.commands.WhoisCommand;
 import net.kiwz.ThePlugin.commands.WorldCommand;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.permissions.Permissible;
 
 public class Commands implements CommandExecutor {
 	
@@ -167,8 +165,6 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("test")) {
 			
 			// Test her:
-			((Permissible) Bukkit.getServer().getOfflinePlayer("Kiwz")).addAttachment(Bukkit.getPluginManager().getPlugin("ThePlugin")).
-			setPermission("bukkit.command.kill", true);
 			// Test slutter!
 
 			return true;
