@@ -3,6 +3,8 @@ main: net.kiwz.ThePlugin.ThePlugin
 version: 1.00
 author: Kiwz
 
+loadbefore: [WorldEdit]
+
 commands:
   entity:
     description: a = animals, m = monsters, d = drops

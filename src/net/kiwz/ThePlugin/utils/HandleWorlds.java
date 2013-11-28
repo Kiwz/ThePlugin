@@ -26,7 +26,25 @@ public class HandleWorlds {
 
 	public void loadWorlds() {
 		for (String worldName : getWorldNames()) {
-			Bukkit.getServer().createWorld(new WorldCreator(worldName));
+			
+			String env = worlds.get(worldName).environment;
+			String type = worlds.get(worldName).type;
+			String seed = worlds.get(worldName).seed;
+			WorldCreator wc = new WorldCreator(worldName.toLowerCase());
+			
+			if (env.equalsIgnoreCase("nether")) wc.environment(Environment.NETHER);
+			else if (env.equalsIgnoreCase("the_end")) wc.environment(Environment.THE_END);
+			else wc.environment(Environment.NORMAL);
+			
+			if (type.equalsIgnoreCase("flat")) wc.type(WorldType.FLAT);
+			else if (type.equalsIgnoreCase("largebiomes")) wc.type(WorldType.LARGE_BIOMES);
+			else if (type.equalsIgnoreCase("version1")) wc.type(WorldType.VERSION_1_1);
+			else wc.type(WorldType.NORMAL);
+			
+			if (seed.matches("[0-9-]+")) wc.seed(Long.parseLong(seed));
+			
+			wc.createWorld();
+			
 			World world = Bukkit.getServer().getWorld(worldName);
 			
 			boolean pvp = false;

@@ -2,11 +2,9 @@ package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class WorldCommand {
 	
@@ -20,7 +18,6 @@ public class WorldCommand {
 	public boolean world(CommandSender sender, Command cmd, String[] args) {
 		HandleWorlds hWorlds = new HandleWorlds();
 		HelpCommand help = new HelpCommand();
-		Player player = Bukkit.getPlayer(sender.getName());
 
 		for (String arg : args) {
 			if (!arg.matches("[a-zA-Z-_0-9]+")) {
@@ -108,7 +105,7 @@ public class WorldCommand {
 				return true;
 			}
 			else if (args[1].equalsIgnoreCase("border") && args[2].matches("[0-9]+")) {
-				player.sendMessage(hWorlds.setBorder(args[0], args[2]));
+				sender.sendMessage(hWorlds.setBorder(args[0], args[2]));
 				return true;
 			}
 			else {

@@ -3,13 +3,11 @@ Skyte en spiller som står i en IKKE pvp plass fra ett sted som har pvp
 
 Bugs:
 Plass begrensning nære spawn gjelder ikke fra spawn men fra x0 og z0!!!!
-Ekstra verdener loader ikke environment!
 Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
 
 Kommandoer:
 /message (/msg /m /tell)
 /replay (/r)
-/location (/loc /where)
 
 Specials:
 Teleport-skilt
@@ -17,6 +15,8 @@ Teleport-skilt
 2: [x: -99999]
 3: [y: 256]
 4: [z: -99999]
+
+Fikse en hook mellom min plugin og dynmap
 
 Places:
 Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
