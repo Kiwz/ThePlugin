@@ -202,8 +202,8 @@ public class PlayerListener implements Listener {
 	public void OnPlayerQuit(PlayerQuitEvent event) {
         players.setTimePlayed(event.getPlayer().getName());
 		event.setQuitMessage(ThePlugin.c2 + event.getPlayer().getName() + " logget ut");
-		for (Player players : Bukkit.getServer().getOnlinePlayers()) {
+		/*for (Player players : Bukkit.getServer().getOnlinePlayers()) {
 			players.getLocation().getWorld().strikeLightningEffect(players.getLocation());
-		}
+		}*/
 	}
 }

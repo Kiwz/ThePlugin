@@ -75,7 +75,7 @@ public class HandlePlaces {
 				return false;
 			}
 		}
-		else if (locY < 40) {
+		else if (locY < 40 || !hWorlds.isClaimable(player.getWorld())) {
 			return true;
 		}
 		else {
