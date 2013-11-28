@@ -139,7 +139,7 @@ commands:
       /tid server
   tp:
     description: Teleportering
-    aliases: []
+    aliases: [t]
     permission: ThePlugin.tp
     permission-message: §cDu har ikke tilgang!
     usage: |

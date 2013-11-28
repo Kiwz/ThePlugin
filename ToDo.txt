@@ -1,10 +1,15 @@
 Tester som må utføres:
 Skyte en spiller som står i en IKKE pvp plass fra ett sted som har pvp
-Stoppe monstre fra å gi skade til spillere som er i en plass hvor monstre er deaktivert (feks tilfelle hvis skeleton skyter en spiller)
 
 Bugs:
+Plass begrensning nære spawn gjelder ikke fra spawn men fra x0 og z0!!!!
+Ekstra verdener loader ikke environment!
+Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
 
 Kommandoer:
+/message (/msg /m /tell)
+/replay (/r)
+/location (/loc /where)
 
 Specials:
 Teleport-skilt
@@ -15,5 +20,5 @@ Teleport-skilt
 
 Places:
 Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
-Stoppe monstre og dyr i å spawne/entre plasser som ikke skal ha dette
-Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm og trykk-knapp.
+Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm
+Dersom mobs er av i plassen så kan de heller ikke skade deg

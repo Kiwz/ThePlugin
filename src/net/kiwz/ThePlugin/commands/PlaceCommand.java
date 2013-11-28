@@ -87,57 +87,57 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.getMembered(args[1]));
 				return true;
 			}
-			if (args[1].equalsIgnoreCase("ny")) {
-				sender.sendMessage(hPlaces.addPlace(player, args[0], "40"));
+			if (args[0].equalsIgnoreCase("ny")) {
+				sender.sendMessage(hPlaces.addPlace(player, args[1], "40"));
 				return true;
 			}
-			id = hPlaces.getID(args[0]);
+			id = hPlaces.getID(args[1]);
 			if (id == 0) {
-				sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
+				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				return true;
 			}
-			if (args[1].equalsIgnoreCase("flytt")) {
+			if (args[0].equalsIgnoreCase("flytt")) {
 				sender.sendMessage(hPlaces.setPlace(player, id, "40"));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("spawn")) {
+			else if (args[0].equalsIgnoreCase("spawn")) {
 				player.teleport(hPlaces.getSpawn(id));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("setspawn")) {
+			else if (args[0].equalsIgnoreCase("setspawn")) {
 				sender.sendMessage(hPlaces.setSpawn(player, id));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("slett")) {
+			else if (args[0].equalsIgnoreCase("slett")) {
 				sender.sendMessage(hPlaces.remPlace(player, id));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("entre")) {
+			else if (args[0].equalsIgnoreCase("entre")) {
 				sender.sendMessage(hPlaces.setEnter(player, id, ""));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("forlate")) {
+			else if (args[0].equalsIgnoreCase("forlate")) {
 				sender.sendMessage(hPlaces.setLeave(player, id, ""));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("navn")) {
-				sender.sendMessage(ThePlugin.c2 + "/plass <navn> navn <nytt-navn>");
+			else if (args[0].equalsIgnoreCase("navn")) {
+				sender.sendMessage(ThePlugin.c2 + "/plass navn <plass-navn> <nytt-plass-navn>");
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("sett")) {
-				sender.sendMessage(ThePlugin.c2 + "/plass <navn> sett <[pvp] [monstre] [dyr]>");
+			else if (args[0].equalsIgnoreCase("toggle")) {
+				sender.sendMessage(ThePlugin.c2 + "/plass toggle <plass-navn> <[pvp] [monstre] [dyr]>");
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("inviter")) {
-				sender.sendMessage(ThePlugin.c2 + "/plass <navn> inviter <spiller-navn>");
+			else if (args[0].equalsIgnoreCase("medlem")) {
+				sender.sendMessage(ThePlugin.c2 + "/plass medlem <plass-navn> <spiller-navn>");
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("fjern")) {
-				sender.sendMessage(ThePlugin.c2 + "/plass <navn> fjern <spiller-navn>");
+			else if (args[0].equalsIgnoreCase("kick")) {
+				sender.sendMessage(ThePlugin.c2 + "/plass kick <plass-navn> <spiller-navn>");
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("eier")) {
-				sender.sendMessage(ThePlugin.c2 + "/plass <navn> eier <spiller-navn>");
+			else if (args[0].equalsIgnoreCase("eier")) {
+				sender.sendMessage(ThePlugin.c2 + "/plass eier <plass-navn> <spiller-navn>");
 				return true;
 			}
 			else {
@@ -147,20 +147,20 @@ public class PlaceCommand {
 		}
 		
 		else if (args.length == 3) {
-			if (args[1].equalsIgnoreCase("ny")) {
+			if (args[0].equalsIgnoreCase("ny")) {
 				if (!args[2].matches("[0-9]+")) {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
-				sender.sendMessage(hPlaces.addPlace(player, args[0], args[2]));
+				sender.sendMessage(hPlaces.addPlace(player, args[1], args[2]));
 				return true;
 			}
-			id = hPlaces.getID(args[0]);
+			id = hPlaces.getID(args[1]);
 			if (id == 0) {
-				sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
+				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				return true;
 			}
-			if (args[1].equalsIgnoreCase("flytt")) {
+			if (args[0].equalsIgnoreCase("flytt")) {
 				if (!args[2].matches("[0-9]+")) {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
@@ -168,19 +168,19 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.setPlace(player, id, args[2]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("entre")) {
+			else if (args[0].equalsIgnoreCase("entre")) {
 				sender.sendMessage(hPlaces.setEnter(player, id, args[2]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("forlate")) {
+			else if (args[0].equalsIgnoreCase("forlate")) {
 				sender.sendMessage(hPlaces.setLeave(player, id, args[2]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("navn")) {
+			else if (args[0].equalsIgnoreCase("navn")) {
 				sender.sendMessage(hPlaces.setName(player, id, args[2]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("sett")) {
+			else if (args[0].equalsIgnoreCase("toggle")) {
 				if (args[2].equalsIgnoreCase("pvp")) {
 					sender.sendMessage(hPlaces.setPvP(player, id));
 					return true;
@@ -198,15 +198,15 @@ public class PlaceCommand {
 					return true;
 				}
 			}
-			else if (args[1].equalsIgnoreCase("inviter")) {
+			else if (args[0].equalsIgnoreCase("medlem")) {
 				sender.sendMessage(hPlaces.addMember(player, id, args[2]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("fjern")) {
+			else if (args[0].equalsIgnoreCase("kick")) {
 				sender.sendMessage(hPlaces.remMember(player, id, args[2]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("eier")) {
+			else if (args[0].equalsIgnoreCase("eier")) {
 				sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
 				return true;
 			}
@@ -216,10 +216,10 @@ public class PlaceCommand {
 			}
 		}
 		
-		else if (args.length > 3 && (args[1].equalsIgnoreCase("entre") || args[1].equalsIgnoreCase("forlate"))) {
-			id = hPlaces.getID(args[0]);
+		else if (args.length > 3 && (args[0].equalsIgnoreCase("entre") || args[0].equalsIgnoreCase("forlate"))) {
+			id = hPlaces.getID(args[1]);
 			if (id == 0) {
-				sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
+				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				return true;
 			}
 			String arg = "";
@@ -266,37 +266,37 @@ public class PlaceCommand {
 		help.append(white + "Viser info om plassen du står på\n");
 		help.append(gold + "/plass <plass-navn>\n");
 		help.append(white + "Viser info om angitte plass\n");
-		help.append(gold + "/plass <plass-navn> ny\n");
+		help.append(gold + "/plass ny <plass-navn>\n");
 		help.append(white + "Lager ny plass der du står (størrelse blir 81x81)\n");
-		help.append(gold + "/plass <plass-navn> ny <størrelse>\n");
+		help.append(gold + "/plass ny <plass-navn> <størrelse>\n");
 		help.append(white + "Lager ny plass der du står med ønsket størrelse\n");
-		help.append(gold + "/plass <plass-navn> flytt\n");
+		help.append(gold + "/plass flytt <plass-navn>\n");
 		help.append(white + "Flytter plassen din til der du står (størrelse blir 81x81)\n");
-		help.append(gold + "/plass <plass-navn> flytt <størrelse>\n");
+		help.append(gold + "/plass flytt <plass-navn> <størrelse>\n");
 		help.append(white + "Flytter plassen din til der du står med ønsket størrelse\n");
-		help.append(gold + "/plass <plass-navn> spawn\n");
+		help.append(gold + "/plass spawn <plass-navn>\n");
 		help.append(white + "Teleporterer deg til spawn i angitte plass\n");
-		help.append(gold + "/plass <plass-navn> setspawn\n");
+		help.append(gold + "/plass setspawn <plass-navn>\n");
 		help.append(white + "Setter ny spawn til der du står\n");
-		help.append(gold + "/plass <plass-navn> inviter <spiller-navn>\n");
+		help.append(gold + "/plass medlem <plass-navn> <spiller-navn>\n");
 		help.append(white + "Inviterer spiller til å bli medlem av din plass\n");
-		help.append(gold + "/plass <plass-navn> fjern <spiller-navn>\n");
+		help.append(gold + "/plass kick <plass-navn> <spiller-navn>\n");
 		help.append(white + "Fjerner spiller som medlem av din plass\n");
-		help.append(gold + "/plass <plass-navn> eier <spiller-navn>\n");
+		help.append(gold + "/plass eier <plass-navn> <spiller-navn>\n");
 		help.append(white + "Setter ny eier av din plass, DU kan IKKE gjøre om dette\n");
-		help.append(gold + "/plass <plass-navn> navn <nytt plass-navn>\n");
+		help.append(gold + "/plass navn <plass-navn> <nytt-plass-navn>\n");
 		help.append(white + "Bytter navn på angitte plass\n");
-		help.append(gold + "/plass <plass-navn> sett pvp, monstre, dyr\n");
+		help.append(gold + "/plass toggle <plass-navn> [pvp, monstre, dyr]\n");
 		help.append(white + "Skrur på/av pvp, monstre eller dyr\n");
-		help.append(gold + "/plass <plass-navn> entre <ny velkomst-melding>\n");
+		help.append(gold + "/plass entre <plass-navn> <ny velkomst-melding>\n");
 		help.append(white + "Setter ny velkomst-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> entre\n");
+		help.append(gold + "/plass entre <plass-navn>\n");
 		help.append(white + "Fjerner velkomst-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> forlate <ny forlat-melding>\n");
+		help.append(gold + "/plass forlate <plass-navn> <ny forlat-melding>\n");
 		help.append(white + "Setter ny forlat-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> forlate\n");
+		help.append(gold + "/plass forlate <plass-navn>\n");
 		help.append(white + "Fjerner forlat-melding for angitte plass\n");
-		help.append(gold + "/plass <plass-navn> slett\n");
+		help.append(gold + "/plass slett <plass-navn>\n");
 		help.append(white + "Sletter angitte plass\n");
 		return help.toString();
 	}

@@ -130,7 +130,7 @@ public class HandlePlaces {
 	
 	public boolean isNearSpawn(Player player) {
 		Location spawn = player.getWorld().getSpawnLocation();
-		int distance = 400;
+		int distance = 300;
 		int spawnX = spawn.getBlockX();
 		int spawnZ = spawn.getBlockZ();
 		int playerX = player.getLocation().getBlockX();
@@ -605,7 +605,7 @@ public class HandlePlaces {
 			return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
 		if (isNearSpawn(player) && (size < 10 || size > 15) && !player.isOp()) {
-			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 400 blokker fra spawnen";
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen";
 		}
 		if ((size < 10 || size > 70) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
@@ -673,7 +673,10 @@ public class HandlePlaces {
 		if(!player.isOp() && !hWorlds.isClaimable(player.getWorld())) {
 			return ThePlugin.c2 + "Det er ikke lov å lage plass i " + player.getWorld().getName();
 		}
-		if (size < 10 || size > 70 || !player.isOp()) {
+		if (isNearSpawn(player) && (size < 10 || size > 15) && !player.isOp()) {
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen";
+		}
+		if (size < 10 || size > 70 && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
 		if (!isAvailable(id, loc, size)) {
