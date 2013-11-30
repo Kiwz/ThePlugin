@@ -17,7 +17,6 @@ Teleport-skilt
 4: [z: -99999]
 
 Fikse en hook mellom min plugin og dynmap
-Fikse chat.log og cmd.log
 
 Places:
 Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg

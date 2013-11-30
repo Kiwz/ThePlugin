@@ -6,6 +6,7 @@ import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 import net.kiwz.ThePlugin.utils.HandlePlayers;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
+import net.kiwz.ThePlugin.utils.Log;
 import net.kiwz.ThePlugin.utils.MsgToOthers;
 import net.kiwz.ThePlugin.utils.OfflinePlayer;
 import net.kiwz.ThePlugin.utils.Permissions;
@@ -103,6 +104,10 @@ public class PlayerListener implements Listener {
 				player.sendMessage(ThePlugin.c2 + cmd + " finnes ikke, skriv \"/hjelp\" for hjelp");
 				event.setCancelled(true);
 	    	}
+	    	else {
+	    		Log log = new Log();
+	    		log.logString(" [COMMAND] " + player.getName() + ": " + event.getMessage());
+	    	}
 		}
 	}
 
@@ -124,6 +129,8 @@ public class PlayerListener implements Listener {
 		for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
 			thisPlayer.sendMessage(msg);
 		}
+		Log log = new Log();
+		log.logString(" [CHAT] " + player.getName() + ": " + event.getMessage());
 		event.setCancelled(true);
 	}
 	
@@ -193,6 +200,8 @@ public class PlayerListener implements Listener {
         }
         
         Logger.getLogger("Minecraft-Server").info(log);
+		Log log1 = new Log();
+		log1.logString(" [INFO] " + log);
 		msg.sendMessage(player, loginMsg);
         player.sendMessage(ThePlugin.c1 + "Velkommen til LarvikGaming");
         player.sendMessage(ThePlugin.c1 + "Besøk vår hjemmeside: http://larvikgaming.net");
@@ -202,6 +211,8 @@ public class PlayerListener implements Listener {
 	public void OnPlayerQuit(PlayerQuitEvent event) {
         players.setTimePlayed(event.getPlayer().getName());
 		event.setQuitMessage(ThePlugin.c2 + event.getPlayer().getName() + " logget ut");
+		Log log1 = new Log();
+		log1.logString(" [INFO] " + event.getPlayer().getName() + " logget ut");
 		/*for (Player players : Bukkit.getServer().getOnlinePlayers()) {
 			players.getLocation().getWorld().strikeLightningEffect(players.getLocation());
 		}*/
