@@ -6,7 +6,6 @@ Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du
 /plass liste, /plass spiller må få sider
 
 Kommandoer:
-/message (/msg /m /tell)
 /replay (/r)
 
 Specials:

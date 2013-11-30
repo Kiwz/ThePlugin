@@ -130,6 +130,12 @@ commands:
     permission: ThePlugin.setspawn
     permission-message: §cDu har ikke tilgang!
     usage: /setspawn
+  tell:
+    description: Skriv privat melding
+    aliases: [msg, m]
+    permission: ThePlugin.tell
+    permission-message: §cDu har ikke tilgang!
+    usage: /tell <player>
   tid:
     description: Sett din egen tid
     aliases: []
@@ -195,6 +201,8 @@ permissions:
     default: true
   ThePlugin.spawn:
     default: true
+  ThePlugin.tell:
+    default: true
   ThePlugin.tid:
     default: true
   ThePlugin.ticks:
@@ -204,6 +212,4 @@ permissions:
   bukkit.command.kill:
     default: op
   bukkit.command.me:
-    default: op
-  bukkit.command.tell:
     default: op

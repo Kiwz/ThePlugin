@@ -15,6 +15,7 @@ import net.kiwz.ThePlugin.commands.PlaceCommand;
 import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
 import net.kiwz.ThePlugin.commands.TPSCommand;
+import net.kiwz.ThePlugin.commands.TellCommand;
 import net.kiwz.ThePlugin.commands.TimeCommand;
 import net.kiwz.ThePlugin.commands.WhoCommand;
 import net.kiwz.ThePlugin.commands.WhoisCommand;
@@ -125,6 +126,12 @@ public class Commands implements CommandExecutor {
 			spawn.setSpawn(sender, cmd, args);
 			return true;
 		}
+		
+		else if (cmdName.equalsIgnoreCase("tell")) {
+			TellCommand tell = new TellCommand();
+			tell.tell(sender, args);
+			return true;
+	    }
 		
 		else if (cmdName.equalsIgnoreCase("tid")) {
 			TimeCommand time = new TimeCommand();

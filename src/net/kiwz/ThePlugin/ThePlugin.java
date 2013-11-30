@@ -34,6 +34,7 @@ public class ThePlugin extends JavaPlugin {
 	public static ChatColor c2 = ChatColor.RED;
 	public static ChatColor c3 = ChatColor.YELLOW;
 	public static ChatColor c4 = ChatColor.WHITE;
+	public static ChatColor c5 = ChatColor.DARK_GRAY;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	private Logger logServer = Logger.getLogger("Minecraft-Server");
@@ -101,6 +102,7 @@ public class ThePlugin extends JavaPlugin {
 	    getCommand("plass").setExecutor(cmds);
 		getCommand("spawn").setExecutor(cmds);
 		getCommand("setspawn").setExecutor(cmds);
+	    getCommand("tell").setExecutor(cmds);
 	    getCommand("tid").setExecutor(cmds);
 	    getCommand("tp").setExecutor(cmds);
 	    getCommand("ticks").setExecutor(cmds);
