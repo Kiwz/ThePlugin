@@ -58,6 +58,10 @@ public class PlayerListener implements Listener {
 		}
 		
 		if (event.getClickedBlock() != null) {
+			String blockName = event.getClickedBlock().getType().toString();
+			if (blockName == "WOODEN_DOOR" || blockName == "TRAP_DOOR") {
+				return;
+			}
 			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
