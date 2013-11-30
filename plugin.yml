@@ -3,7 +3,7 @@ main: net.kiwz.ThePlugin.ThePlugin
 version: 1.00
 author: Kiwz
 
-loadbefore: [WorldEdit]
+loadbefore: [Dynmap, NoCheatPlus, WorldEdit]
 
 commands:
   entity:
@@ -149,14 +149,14 @@ commands:
       /tp <x y z>
       /tp <player player>
       /tp <player x y z>
-  tps:
+  ticks:
     description: Tiks pr sekund (skal være 20)
-    aliases: []
-    permission: ThePlugin.tps
+    aliases: [lag, tick]
+    permission: ThePlugin.ticks
     permission-message: §cDu har ikke tilgang!
     usage: |
-      /tps
-      /tps <seconds>
+      /ticks
+      /ticks <seconds>
   who:
     description: Hvem er online
     aliases: [list, online]
@@ -197,7 +197,7 @@ permissions:
     default: true
   ThePlugin.tid:
     default: true
-  ThePlugin.tps:
+  ThePlugin.ticks:
     default: true
   ThePlugin.who:
     default: true

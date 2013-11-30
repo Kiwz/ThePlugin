@@ -132,8 +132,8 @@ public class PlaceCommand {
 				sender.sendMessage(ThePlugin.c2 + "/plass medlem <plass-navn> <spiller-navn>");
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("kick")) {
-				sender.sendMessage(ThePlugin.c2 + "/plass kick <plass-navn> <spiller-navn>");
+			else if (args[0].equalsIgnoreCase("spark")) {
+				sender.sendMessage(ThePlugin.c2 + "/plass spark <plass-navn> <spiller-navn>");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("eier")) {
@@ -202,7 +202,7 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.addMember(player, id, args[2]));
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("kick")) {
+			else if (args[0].equalsIgnoreCase("spark")) {
 				sender.sendMessage(hPlaces.remMember(player, id, args[2]));
 				return true;
 			}
@@ -280,7 +280,7 @@ public class PlaceCommand {
 		help.append(white + "Setter ny spawn til der du står\n");
 		help.append(gold + "/plass medlem <plass-navn> <spiller-navn>\n");
 		help.append(white + "Inviterer spiller til å bli medlem av din plass\n");
-		help.append(gold + "/plass kick <plass-navn> <spiller-navn>\n");
+		help.append(gold + "/plass spark <plass-navn> <spiller-navn>\n");
 		help.append(white + "Fjerner spiller som medlem av din plass\n");
 		help.append(gold + "/plass eier <plass-navn> <spiller-navn>\n");
 		help.append(white + "Setter ny eier av din plass, DU kan IKKE gjøre om dette\n");

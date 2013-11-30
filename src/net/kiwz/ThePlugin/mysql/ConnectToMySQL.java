@@ -30,6 +30,7 @@ public class ConnectToMySQL {
     	String hName = null;
     	String uName = null;
     	String pass = null;
+    	String db = null;
 		try {
 			File file = new File("plugins\\ThePlugin\\mysql.txt");
 			if (file.createNewFile()) {
@@ -37,12 +38,14 @@ public class ConnectToMySQL {
 				writer.println("127.0.0.1");
 				writer.println("rooty");
 				writer.println("booty");
+				writer.println("theplugin");
 				writer.close();
 			}
 			Scanner sc = new Scanner(file);
 			hName = sc.nextLine();
 			uName = sc.nextLine();
 			pass = sc.nextLine();
+			db = sc.nextLine();
 			sc.close();
 		}
 		catch (IOException e) {
@@ -51,7 +54,7 @@ public class ConnectToMySQL {
     	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
         this.hostname = hName;
         this.port = "3306";
-        this.database = "theplugin";
+        this.database = db;
         this.user = uName;
         this.password = pass;
         this.connection = null;
@@ -65,7 +68,7 @@ public class ConnectToMySQL {
         	plugin.getLogger().log(Level.INFO, "MySQL DB not found, trying to create one");
             try {
 	            connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port, this.user, this.password);
-	            connection.createStatement().execute("CREATE DATABASE IF NOT EXISTS theplugin;");
+	            connection.createStatement().execute("CREATE DATABASE IF NOT EXISTS " + this.database + ";");
 	            connection.close();
 	            connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
 	            plugin.getLogger().log(Level.INFO, "MySQL DB created (DB name: " + this.database + ")");

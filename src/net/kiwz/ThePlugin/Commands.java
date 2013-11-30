@@ -138,7 +138,7 @@ public class Commands implements CommandExecutor {
 			return true;
 	    }
 		
-		else if (cmdName.equalsIgnoreCase("tps")) {
+		else if (cmdName.equalsIgnoreCase("ticks")) {
 			TPSCommand tps = new TPSCommand();
 			tps.tps(sender, args);
 			return true;

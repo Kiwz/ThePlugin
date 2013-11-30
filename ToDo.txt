@@ -2,8 +2,8 @@ Tester som må utføres:
 Skyte en spiller som står i en IKKE pvp plass fra ett sted som har pvp
 
 Bugs:
-Plass begrensning nære spawn gjelder ikke fra spawn men fra x0 og z0!!!!
 Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
+/plass liste, /plass spiller må få sider
 
 Kommandoer:
 /message (/msg /m /tell)
@@ -17,8 +17,9 @@ Teleport-skilt
 4: [z: -99999]
 
 Fikse en hook mellom min plugin og dynmap
+Fikse chat.log og cmd.log
 
 Places:
 Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
 Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm
-Dersom mobs er av i plassen så kan de heller ikke skade deg
+Dersom mobs er av i plassen så kan de heller ikke skade deg... kanskje dumt med tanke på mob-farming...

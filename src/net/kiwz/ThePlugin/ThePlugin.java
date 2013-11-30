@@ -103,7 +103,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("setspawn").setExecutor(cmds);
 	    getCommand("tid").setExecutor(cmds);
 	    getCommand("tp").setExecutor(cmds);
-	    getCommand("tps").setExecutor(cmds);
+	    getCommand("ticks").setExecutor(cmds);
 		getCommand("who").setExecutor(cmds);
 		getCommand("whois").setExecutor(cmds);
 		getCommand("world").setExecutor(cmds);

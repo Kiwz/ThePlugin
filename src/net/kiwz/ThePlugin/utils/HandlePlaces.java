@@ -129,13 +129,12 @@ public class HandlePlaces {
 	}
 	
 	public boolean isNearSpawn(Player player) {
-		Location spawn = player.getWorld().getSpawnLocation();
+		Location spawn = hWorlds.getSpawn(player, player.getWorld().getName());
 		int distance = 300;
 		int spawnX = spawn.getBlockX();
 		int spawnZ = spawn.getBlockZ();
 		int playerX = player.getLocation().getBlockX();
 		int playerZ = player.getLocation().getBlockZ();
-		
 		if (playerX >= spawnX + distance || playerX <= spawnX - distance ||
 				playerZ >= spawnZ + distance || playerZ <= spawnZ - distance) {
 			return false;
