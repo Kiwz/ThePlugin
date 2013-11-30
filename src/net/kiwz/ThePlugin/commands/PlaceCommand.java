@@ -227,11 +227,11 @@ public class PlaceCommand {
 				arg = arg + args[i] + " ";
 			}
 			arg = arg.trim();
-			if (args[1].equalsIgnoreCase("entre")) {
+			if (args[0].equalsIgnoreCase("entre")) {
 				sender.sendMessage(hPlaces.setEnter(player, id, arg));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("forlate")) {
+			else if (args[0].equalsIgnoreCase("forlate")) {
 				sender.sendMessage(hPlaces.setLeave(player, id, arg));
 				return true;
 			}
