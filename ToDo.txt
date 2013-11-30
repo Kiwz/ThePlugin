@@ -2,22 +2,25 @@ Tester som må utføres:
 Skyte en spiller som står i en IKKE pvp plass fra ett sted som har pvp
 
 Bugs:
-Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
-/plass liste, /plass spiller må få sider
 
 Kommandoer:
 /replay (/r)
 
-Specials:
-Teleport-skilt
-1: [Teleport]
-2: [x: -99999]
-3: [y: 256]
-4: [z: -99999]
 
+Dynmap:
 Fikse en hook mellom min plugin og dynmap
+
 
 Places:
 Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
-Alt skal være beskyttet bortsett fra å bruke tre-dør, tre-lemm
+Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
+/plass liste, /plass spiller må få sider
 Dersom mobs er av i plassen så kan de heller ikke skade deg... kanskje dumt med tanke på mob-farming...
+
+
+HungerGames:
+
+
+Fun-Plugin:
+Fiske-konkuranse
+Achievements med belønning

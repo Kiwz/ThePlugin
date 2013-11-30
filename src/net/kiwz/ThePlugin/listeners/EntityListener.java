@@ -50,7 +50,7 @@ public class EntityListener implements Listener {
 		
 		Player player = (Player) event.getDamager();
 		Location loc = event.getEntity().getLocation();
-		int id = places.getIDWithCoords(loc.getX(), loc.getZ());
+		int id = places.getIDWithCoords(loc.getWorld().getName(), loc.getX(), loc.getZ());
 		if (id == 0) {
 			return;
 		}

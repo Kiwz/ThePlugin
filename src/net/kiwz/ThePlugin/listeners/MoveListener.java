@@ -26,8 +26,8 @@ public class MoveListener implements Listener {
 		if (fromX == toX && fromZ == toZ) {
 			return;
 		}
-		int fromID = places.getIDWithCoords(fromX, fromZ);
-		int toID = places.getIDWithCoords(toX, toZ);
+		int fromID = places.getIDWithCoords(player.getLocation().getWorld().getName(), fromX, fromZ);
+		int toID = places.getIDWithCoords(player.getLocation().getWorld().getName(), toX, toZ);
 		places.sendEnterLeave(player, fromID, toID);
 		int border = worlds.getBorder(event.getPlayer().getWorld());
 		if (border < toX || -border + 1 > toX || border < toZ || -border + 1 > toZ) {

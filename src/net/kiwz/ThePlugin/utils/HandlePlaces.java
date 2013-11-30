@@ -61,12 +61,13 @@ public class HandlePlaces {
 		if (player.isOp()) {
 			return true;
 		}
+		String world = loc.getWorld().getName();
 		int locX = (int) loc.getX();
 		int locY = (int) loc.getY();
 		int locZ = (int) loc.getZ();
 		if (locX < 0) locX = locX + 1;
 		if (locZ < 0) locZ = locZ + 1;
-		int id = getIDWithCoords(locX, locZ);
+		int id = getIDWithCoords(world, locX, locZ);
 		if (id != 0) {
 			if (isOwner(player.getName(), id) || isMember(player.getName(), id)) {
 				return true;
@@ -90,13 +91,15 @@ public class HandlePlaces {
 	 * @return true if parts of given location + size isn't inside another place
 	 */
 	public boolean isAvailable(Location loc, int size) {
+		String world = loc.getWorld().getName();
 		int x = (int) loc.getX();
 		int z = (int) loc.getZ();
 		for (int key : places.keySet()) {
+			String placeWorld = places.get(key).world;
 			int otherX = places.get(key).x;
 			int otherZ = places.get(key).z;
 			int otherSize = places.get(key).size;
-			if (x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
+			if (world.equals(placeWorld) && x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
 					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
 				return false;
 	    	}
@@ -112,13 +115,15 @@ public class HandlePlaces {
 	 * @return true if parts of given location + size isn't inside another place
 	 */
 	public boolean isAvailable(int id, Location loc, int size) {
+		String world = loc.getWorld().getName();
 		int x = (int) loc.getX();
 		int z = (int) loc.getZ();
 		for (int key : places.keySet()) {
+			String placeWorld = places.get(key).world;
 			int otherX = places.get(key).x;
 			int otherZ = places.get(key).z;
 			int otherSize = places.get(key).size;
-			if (x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
+			if (world.equals(placeWorld) && x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
 					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
 				if (places.get(key).id != id) {
 					return false;
@@ -148,12 +153,13 @@ public class HandlePlaces {
 	 * @param locZ as double
 	 * @return id of the place that this x and z is within as int, if no place was found id = 0
 	 */
-	public int getIDWithCoords(double locX, double locZ) {
+	public int getIDWithCoords(String world, double locX, double locZ) {
 		for (int key : places.keySet()) {
+			String placeWorld = places.get(key).world;
 			int placeX = places.get(key).x;
 			int placeZ = places.get(key).z;
 			int placeSize = places.get(key).size;
-			if ((placeX + placeSize) >= locX && (placeX - placeSize) <= locX &&
+			if (world.equals(placeWorld) && (placeX + placeSize) >= locX && (placeX - placeSize) <= locX &&
 					(placeZ + placeSize) >= locZ && (placeZ - placeSize) <= locZ) {
 				return places.get(key).id;
 			}
@@ -483,6 +489,7 @@ public class HandlePlaces {
 		sender.sendMessage(header.toString());
 		sender.sendMessage(ThePlugin.c1 + "Eier: " + ThePlugin.c4 + getOwner(id));
 		sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members);
+		sender.sendMessage(ThePlugin.c1 + "Verden: " + ThePlugin.c4 + getWorld(id));
 		sender.sendMessage(ThePlugin.c1 + "Sentrum: " + ThePlugin.c4 + getCoords(id));
 		sender.sendMessage(ThePlugin.c1 + "Størrelse: " + ThePlugin.c4 + getSize(id));
 		sender.sendMessage(ThePlugin.c1 + "PvP: " + ThePlugin.c4 + getPvP(id));
@@ -499,9 +506,10 @@ public class HandlePlaces {
 	 * <p>This will send messages to sender containing information of place where sender stands</p>
 	 */
 	public void sendPlaceHere(CommandSender sender) {
+		String world = Bukkit.getServer().getPlayer(sender.getName()).getLocation().getWorld().getName();
 		int locX = (int) Bukkit.getServer().getPlayer(sender.getName()).getLocation().getX();
 		int locZ = (int) Bukkit.getServer().getPlayer(sender.getName()).getLocation().getZ();
-		int id = getIDWithCoords(locX, locZ);
+		int id = getIDWithCoords(world, locX, locZ);
 		if (id != 0) {
 			String members = "";
 			for (String member : getMembers(id)) {
@@ -528,6 +536,7 @@ public class HandlePlaces {
 			sender.sendMessage(header.toString());
 			sender.sendMessage(ThePlugin.c1 + "Eier: " + ThePlugin.c4 + getOwner(id));
 			sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members);
+			sender.sendMessage(ThePlugin.c1 + "Verden: " + ThePlugin.c4 + getWorld(id));
 			sender.sendMessage(ThePlugin.c1 + "Sentrum: " + ThePlugin.c4 + getCoords(id));
 			sender.sendMessage(ThePlugin.c1 + "Størrelse: " + ThePlugin.c4 + getSize(id));
 			sender.sendMessage(ThePlugin.c1 + "PvP: " + ThePlugin.c4 + getPvP(id));
@@ -681,6 +690,7 @@ public class HandlePlaces {
 		if (!isAvailable(id, loc, size)) {
 			return ThePlugin.c2 + "Du er for nærme en annen plass";
     	}
+		places.get(id).world = loc.getWorld().getName();
 		places.get(id).x = (int) loc.getX();
 		places.get(id).z = (int) loc.getZ();
 		places.get(id).size = size;
