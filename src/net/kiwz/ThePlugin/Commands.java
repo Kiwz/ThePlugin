@@ -61,7 +61,7 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 		
-		else if (cmdName.equalsIgnoreCase("hjelp")) {
+		else if (cmdName.equalsIgnoreCase("help")) {
 			HelpCommand help = new HelpCommand();
 			help.help(sender, args);
 			return true;

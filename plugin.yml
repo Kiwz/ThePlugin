@@ -50,16 +50,16 @@ commands:
     usage: |
       /heal
       /heal <player>
-  hjelp:
+  help:
     description: Viser deg hjelpe menyen
     aliases: [help]
-    permission: ThePlugin.hjelp
+    permission: ThePlugin.help
     permission-message: §cDu har ikke tilgang!
     usage: |
-      /hjelp
-      /hjelp <side-nummer>
-      /hjelp <emne>
-      /hjelp <emne> <side-nummer>
+      /help
+      /help <side-nummer>
+      /help <emne>
+      /help <emne> <side-nummer>
   home:
     description: Teleporterer deg hjem
     aliases: [hjem, h]
@@ -87,7 +87,7 @@ commands:
   list:
     description: Hvem er online
     aliases: [who, online]
-    permission: ThePlugin.who
+    permission: ThePlugin.list
     permission-message: §cDu har ikke tilgang!
     usage: /list
   minne:
@@ -189,9 +189,11 @@ commands:
     usage: /test
 
 permissions:
-  ThePlugin.hjelp:
+  ThePlugin.help:
     default: true
   ThePlugin.home:
+    default: true
+  ThePlugin.list:
     default: true
   ThePlugin.minne:
     default: true
@@ -206,8 +208,6 @@ permissions:
   ThePlugin.tid:
     default: true
   ThePlugin.ticks:
-    default: true
-  ThePlugin.who:
     default: true
   bukkit.command.kill:
     default: op

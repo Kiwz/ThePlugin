@@ -91,7 +91,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("fly").setExecutor(cmds);
 		getCommand("gm").setExecutor(cmds);
 		getCommand("heal").setExecutor(cmds);
-		getCommand("hjelp").setExecutor(cmds);
+		getCommand("help").setExecutor(cmds);
 		getCommand("home").setExecutor(cmds);
 		getCommand("sethome").setExecutor(cmds);
 	    getCommand("item").setExecutor(cmds);
