@@ -37,7 +37,7 @@ public class ThePlugin extends JavaPlugin {
 	public static ChatColor c5 = ChatColor.DARK_GRAY;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
-	private Logger logServer = Logger.getLogger("Minecraft-Server");
+	private Logger logServer = Logger.getGlobal();
 	
 	private Homes homes = new Homes();
 	public static HashMap<Integer, Homes> getHomes;

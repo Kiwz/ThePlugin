@@ -11,7 +11,6 @@ import net.kiwz.ThePlugin.utils.Log;
 import net.kiwz.ThePlugin.utils.MsgToOthers;
 import net.kiwz.ThePlugin.utils.OfflinePlayer;
 import net.kiwz.ThePlugin.utils.Permissions;
-import net.kiwz.ThePlugin.utils.Tablist;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -181,7 +180,7 @@ public class PlayerListener implements Listener {
         String log = "Spiller logget inn";
         String loginMsg = "Noen logget inn";
         event.setJoinMessage("");
-        new Tablist().setColor(player);
+        //new Tablist().setColor(player);
         
     	if (perm.isAdmin(player)) {
     		perm.setPermissions(player);
@@ -228,7 +227,7 @@ public class PlayerListener implements Listener {
 			player.sendMessage(ThePlugin.c1 + "############################################");
         }
         
-        Logger.getLogger("Minecraft-Server").info(log);
+        Logger.getLogger("Minecraft").info(log);
 		Log log1 = new Log();
 		log1.logString(" [INFO] " + log);
 		msg.sendMessage(player, loginMsg);
