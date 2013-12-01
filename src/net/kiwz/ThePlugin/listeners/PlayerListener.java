@@ -3,6 +3,7 @@ package net.kiwz.ThePlugin.listeners;
 import java.util.logging.Logger;
 
 import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.utils.HandleItems;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 import net.kiwz.ThePlugin.utils.HandlePlayers;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
@@ -41,10 +42,12 @@ public class PlayerListener implements Listener {
 	private HandlePlaces places = new HandlePlaces();
 	private HandlePlayers players = new HandlePlayers();
 	private HandleWorlds worlds = new HandleWorlds();
+    private HandleItems hItems = new HandleItems();
     private MsgToOthers msg = new MsgToOthers();
     private Permissions perm = new Permissions();
 	private String denyString = ThePlugin.c2 + "Du har ingen tilgang her";
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -64,6 +67,7 @@ public class PlayerListener implements Listener {
 			}
 			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {
 				event.setCancelled(true);
+				player.updateInventory();
 				player.sendMessage(denyString);
 				return;
 			}
@@ -193,6 +197,8 @@ public class PlayerListener implements Listener {
 	        players.setIP(playerName);
 	        log = playerName + " [" + ip + "] logget inn ([" + worldName + "] " + coords + ")";
 			loginMsg = ThePlugin.c3 + playerName + " logget inn";
+	        player.sendMessage(ThePlugin.c1 + "Velkommen til LarvikGaming");
+	        player.sendMessage(ThePlugin.c1 + "Besøk vår hjemmeside på http://larvikgaming.net");
         }
         
         else {
@@ -201,14 +207,31 @@ public class PlayerListener implements Listener {
 			loginMsg = ThePlugin.c3 + playerName + " logget inn for første gang";
 			Location loc = worlds.getSpawn(player, player.getWorld().getName());
 			player.teleport(loc);
+			hItems.giveItem(player, Material.IRON_PICKAXE, 1);
+			hItems.giveItem(player, Material.IRON_AXE, 1);
+			hItems.giveItem(player, Material.IRON_PICKAXE, 1);
+			hItems.giveItem(player, Material.IRON_AXE, 1);
+			hItems.giveItem(player, Material.GOLD_INGOT, 5);
+			hItems.giveItem(player, Material.WOOD, 64);
+			hItems.giveItem(player, Material.IRON_HELMET, 1);
+			hItems.giveItem(player, Material.IRON_CHESTPLATE, 1);
+			player.sendMessage(ThePlugin.c1 + "############################################");
+			player.sendMessage(ThePlugin.c1 + "Velkommen som ny spiller på LarvikGaming.net");
+			player.sendMessage(ThePlugin.c1 + "Kjekt om du vil lese Info-Tavlen i spawnen");
+			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/hjelp" + ThePlugin.c1 +
+					" for hjelp, skriv " + ThePlugin.c3 + "/plass" + ThePlugin.c1 + " for beskyttelse");
+			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/spawn farm" + ThePlugin.c1 +" for å skaffe materialer");
+			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/spawn world " + ThePlugin.c1 + "for å finne ett sted du vil bygge");
+			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/plass ny <plass-navn>" + ThePlugin.c1 + " for å lage plass");
+			player.sendMessage(ThePlugin.c1 + "Kostnad for å lage eller flytte plass er 5 gullbarer");
+			player.sendMessage(ThePlugin.c1 + "Du kan eie 3 plasser og invitere hvem du ønsker til din plass");
+			player.sendMessage(ThePlugin.c1 + "############################################");
         }
         
         Logger.getLogger("Minecraft-Server").info(log);
 		Log log1 = new Log();
 		log1.logString(" [INFO] " + log);
 		msg.sendMessage(player, loginMsg);
-        player.sendMessage(ThePlugin.c1 + "Velkommen til LarvikGaming");
-        player.sendMessage(ThePlugin.c1 + "Besøk vår hjemmeside: http://larvikgaming.net");
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

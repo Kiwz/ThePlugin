@@ -1,7 +1,8 @@
 Tester som må utføres:
-Skyte en spiller som står i en IKKE pvp plass fra ett sted som har pvp
 
 Bugs:
+pil ignorer pvp i plasser
+
 
 Kommandoer:
 /replay (/r)

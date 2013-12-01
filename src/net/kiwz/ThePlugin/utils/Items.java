@@ -10,6 +10,7 @@ public class Items {
 	 * @param type as String
 	 * @return ItemStack with given item type
 	 */
+	@SuppressWarnings("deprecation")
 	public ItemStack getItem(String type) {
 		int id = search(type);
 		if (id == 0) {
@@ -24,6 +25,7 @@ public class Items {
 	 * @param amount as String
 	 * @return ItemStack with given item type and amount
 	 */
+	@SuppressWarnings("deprecation")
 	public ItemStack getItem(String type, String amount) {
 		int id = search(type);
 		int x = toInt(amount);
@@ -43,6 +45,7 @@ public class Items {
 	 * @param damage as String
 	 * @return ItemStack with given item type, amount and damage
 	 */
+	@SuppressWarnings("deprecation")
 	public ItemStack getItem(String type, String amount, String damage) {
 		int id = search(type);
 		int x = toInt(amount);
@@ -64,6 +67,7 @@ public class Items {
 	 * @param type as String to search for an item id
 	 * @return item id as int, if not found int = 0
 	 */
+	@SuppressWarnings("deprecation")
 	private int search(String type) {
 		int id = 0;
 		if (type.length() < 5 && type.matches("[0-9]+")) {

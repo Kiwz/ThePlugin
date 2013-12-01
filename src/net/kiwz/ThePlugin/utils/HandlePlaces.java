@@ -10,6 +10,7 @@ import net.kiwz.ThePlugin.mysql.Places;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
@@ -18,7 +19,10 @@ public class HandlePlaces {
 	private HandlePlayers hPlayers = new HandlePlayers();
 	private HandleWorlds hWorlds = new HandleWorlds();
 	private TimeFormat time = new TimeFormat();
+	private HandleItems hItems = new HandleItems();
 	private HashMap<Integer, Places> places = ThePlugin.getPlaces;
+	private Material material = Material.GOLD_INGOT;
+	private int amount = 5;
 	
 	/**
 	 * 
@@ -632,6 +636,9 @@ public class HandlePlaces {
 		if (!isAvailable(loc, size)) {
 			return ThePlugin.c2 + "Du er for nærme en annen plass";
     	}
+		if (!hItems.removeItem(player, material, amount)) {
+			return ThePlugin.c2 + "Det koster 5 gullbarer å lage ny plass";
+		}
 		int id = 1;
 		while (places.containsKey(id)) {
 			id++;
@@ -690,6 +697,9 @@ public class HandlePlaces {
 		if (!isAvailable(id, loc, size)) {
 			return ThePlugin.c2 + "Du er for nærme en annen plass";
     	}
+		if (!hItems.removeItem(player, material, amount)) {
+			return ThePlugin.c2 + "Det koster 5 gullbarer for å flytte plassen";
+		}
 		places.get(id).world = loc.getWorld().getName();
 		places.get(id).x = (int) loc.getX();
 		places.get(id).z = (int) loc.getZ();

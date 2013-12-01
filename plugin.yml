@@ -52,7 +52,7 @@ commands:
       /heal <player>
   help:
     description: Viser deg hjelpe menyen
-    aliases: [help]
+    aliases: [hjelp]
     permission: ThePlugin.help
     permission-message: §cDu har ikke tilgang!
     usage: |

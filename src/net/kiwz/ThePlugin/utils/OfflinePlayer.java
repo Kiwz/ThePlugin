@@ -2,12 +2,13 @@ package net.kiwz.ThePlugin.utils;
 
 import java.io.File;
 
-import net.minecraft.server.v1_6_R3.EntityPlayer;
-import net.minecraft.server.v1_6_R3.MinecraftServer;
-import net.minecraft.server.v1_6_R3.PlayerInteractManager;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
+import net.minecraft.server.v1_7_R1.MinecraftServer;
+import net.minecraft.server.v1_7_R1.PlayerInteractManager;
+import net.minecraft.util.com.mojang.authlib.GameProfile;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_6_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.entity.Player;
 
 public class OfflinePlayer {
@@ -35,9 +36,10 @@ public class OfflinePlayer {
         for (File playerfile : playerfolder.listFiles()) {
             String filename = playerfile.getName();
             String playername = filename.substring(0, filename.length() - 4);
+            GameProfile gameProfile = new GameProfile(playername, playername);
             if (playername.trim().toLowerCase().startsWith(name.toLowerCase())) {
                 final MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
-                final EntityPlayer entity = new EntityPlayer(server, server.getWorldServer(0), playername, new PlayerInteractManager(server.getWorldServer(0)));
+                final EntityPlayer entity = new EntityPlayer(server, server.getWorldServer(0), gameProfile, new PlayerInteractManager(server.getWorldServer(0)));
                 player = (entity == null) ? null : (Player) entity.getBukkitEntity();
                 if (player != null) {
                 	player.loadData();
