@@ -5,9 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class WhoCommand {
+public class ListCommand {
 	
-	public void who(CommandSender sender, String[] args) {
+	public void list(CommandSender sender, String[] args) {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
 		sender.sendMessage(ThePlugin.c1 + "Det er " + players.length + "/" + Bukkit.getServer().getMaxPlayers() + " spillere online");
 		StringBuilder header = new StringBuilder();

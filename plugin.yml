@@ -84,6 +84,12 @@ commands:
       /item <player> <item>
       /item <player> <amount> <item>
       /item <player> <amount> <item> <data>
+  list:
+    description: Hvem er online
+    aliases: [who, online]
+    permission: ThePlugin.who
+    permission-message: §cDu har ikke tilgang!
+    usage: /list
   minne:
     description: Minne bruk
     aliases: [mem]
@@ -163,12 +169,6 @@ commands:
     usage: |
       /ticks
       /ticks <seconds>
-  who:
-    description: Hvem er online
-    aliases: [list, online]
-    permission: ThePlugin.who
-    permission-message: §cDu har ikke tilgang!
-    usage: /who
   whois:
     description: Spiller info
     aliases: []

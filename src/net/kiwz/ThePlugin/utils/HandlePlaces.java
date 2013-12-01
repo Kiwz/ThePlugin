@@ -613,7 +613,7 @@ public class HandlePlaces {
 			return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
 		if (isNearSpawn(player) && (size < 10 || size > 15) && !player.isOp()) {
-			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen";
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass ny <plass-navn> 15";
 		}
 		if ((size < 10 || size > 70) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
@@ -682,7 +682,7 @@ public class HandlePlaces {
 			return ThePlugin.c2 + "Det er ikke lov å lage plass i " + player.getWorld().getName();
 		}
 		if (isNearSpawn(player) && (size < 10 || size > 15) && !player.isOp()) {
-			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen";
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass flytt <plass-navn> 15";
 		}
 		if (size < 10 || size > 70 && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";

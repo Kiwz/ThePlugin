@@ -17,7 +17,7 @@ import net.kiwz.ThePlugin.commands.TPCommand;
 import net.kiwz.ThePlugin.commands.TPSCommand;
 import net.kiwz.ThePlugin.commands.TellCommand;
 import net.kiwz.ThePlugin.commands.TimeCommand;
-import net.kiwz.ThePlugin.commands.WhoCommand;
+import net.kiwz.ThePlugin.commands.ListCommand;
 import net.kiwz.ThePlugin.commands.WhoisCommand;
 import net.kiwz.ThePlugin.commands.WorldCommand;
 
@@ -85,6 +85,12 @@ public class Commands implements CommandExecutor {
 			return true;
 	    }
 		
+		else if (cmdName.equalsIgnoreCase("list")) {
+			ListCommand list = new ListCommand();
+			list.list(sender, args);
+			return true;
+	    }
+		
 		else if (cmdName.equalsIgnoreCase("minne")) {
 			MemCommand mem = new MemCommand();
 			mem.mem(sender, args);
@@ -148,12 +154,6 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("ticks")) {
 			TPSCommand tps = new TPSCommand();
 			tps.tps(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("who")) {
-			WhoCommand who = new WhoCommand();
-			who.who(sender, args);
 			return true;
 	    }
 		

@@ -95,6 +95,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("home").setExecutor(cmds);
 		getCommand("sethome").setExecutor(cmds);
 	    getCommand("item").setExecutor(cmds);
+		getCommand("list").setExecutor(cmds);
 		getCommand("minne").setExecutor(cmds);
 		getCommand("mute").setExecutor(cmds);
 		getCommand("unmute").setExecutor(cmds);
@@ -106,7 +107,6 @@ public class ThePlugin extends JavaPlugin {
 	    getCommand("tid").setExecutor(cmds);
 	    getCommand("tp").setExecutor(cmds);
 	    getCommand("ticks").setExecutor(cmds);
-		getCommand("who").setExecutor(cmds);
 		getCommand("whois").setExecutor(cmds);
 		getCommand("world").setExecutor(cmds);
 		getCommand("test").setExecutor(cmds);
