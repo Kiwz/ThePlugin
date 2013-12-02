@@ -748,6 +748,9 @@ public class HandlePlaces {
 			return ThePlugin.c2 + owner + " er ikke en spiller her";
 		}
 		owner = hPlayers.getPlayerName(owner);
+		if(!player.isOp() && getIDsWithOwner(owner).size() >= 3) {
+			return ThePlugin.c2 + owner + " eier " + getIDsWithOwner(owner).size() + " plasser og kan ikke eie flere";
+		}
 		places.get(id).owner = owner;
 		places.get(id).enter = "Velkommen til " + owner + " sin plass";
 		places.get(id).leave = "Du forlater " + owner + " sin plass";

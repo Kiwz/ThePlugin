@@ -1,7 +1,8 @@
 Tester som må utføres:
 
 Bugs:
-consolfilter funker ikke
+consolfilter funker ikke... kanskje spigot kan overta?
+tablist blir dobbelt
 pil ignorer pvp i plasser
 
 
