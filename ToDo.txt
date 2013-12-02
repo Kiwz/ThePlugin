@@ -1,6 +1,7 @@
 Tester som må utføres:
 
 Bugs:
+consolfilter funker ikke
 pil ignorer pvp i plasser
 
 

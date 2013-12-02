@@ -107,11 +107,7 @@ public class PlayerListener implements Listener {
 			Player player = event.getPlayer();
 			String cmd = event.getMessage().split(" ")[0];
 	    	HelpTopic topic = Bukkit.getServer().getHelpMap().getHelpTopic(cmd);
-	    	if (topic == null) {
-				player.sendMessage(ThePlugin.c2 + cmd + " finnes ikke, skriv \"/hjelp\" for hjelp");
-				event.setCancelled(true);
-	    	}
-	    	else {
+	    	if (topic != null) {
 	    		Log log = new Log();
 	    		log.logString(" [COMMAND] " + player.getName() + ": " + event.getMessage());
 	    	}
