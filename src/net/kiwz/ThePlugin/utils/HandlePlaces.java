@@ -87,6 +87,26 @@ public class HandlePlaces {
 			return false;
 		}
 	}
+
+	/**
+	 * 
+	 * @param loc as Location
+	 * @return true if this location is outside a "plass"
+	 */
+	public boolean isWilderness(Location loc) {
+		String world = loc.getWorld().getName();
+		int locX = (int) loc.getX();
+		int locZ = (int) loc.getZ();
+		if (locX < 0) locX = locX + 1;
+		if (locZ < 0) locZ = locZ + 1;
+		int id = getIDWithCoords(world, locX, locZ);
+		if (id != 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 	
 	/**
 	 * 

@@ -60,8 +60,8 @@ public class PlayerListener implements Listener {
 		}
 		
 		if (event.getClickedBlock() != null) {
-			String blockName = event.getClickedBlock().getType().toString();
-			if (blockName == "WOODEN_DOOR" || blockName == "TRAP_DOOR") {
+			Material material = event.getClickedBlock().getType();
+			if (material == Material.WOOD_DOOR || material == Material.TRAP_DOOR) {
 				return;
 			}
 			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {
@@ -78,7 +78,8 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		
 		if (event.getRightClicked() != null) {
-			if (!places.hasAccess(player, event.getRightClicked().getLocation())) {
+			Location loc = event.getRightClicked().getLocation();
+			if (!places.hasAccess(player, loc) && !places.isWilderness(loc)) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}

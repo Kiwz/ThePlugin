@@ -4,6 +4,13 @@ Bugs:
 consolfilter funker ikke... kanskje spigot kan overta?
 tablist blir dobbelt
 pil ignorer pvp i plasser
+farger for admins i /who
+Spillere må få sette ut tog og båt i wilderness
+om døra du klikker på har en blokk bak seg vil den ikke lukkes
+vanskelig å plante ting
+/entity funker ikke i Farm
+Spillere får ikke xp av mining
+Spillere må få udødelighet x sekunder etter /plass spawn
 
 
 Kommandoer:
@@ -19,6 +26,7 @@ Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
 Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
 /plass liste, /plass spiller må få sider
 Dersom mobs er av i plassen så kan de heller ikke skade deg... kanskje dumt med tanke på mob-farming...
+La spillere drepe dyr utenfor plasser
 
 
 HungerGames:

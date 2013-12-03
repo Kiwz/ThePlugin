@@ -3,7 +3,8 @@ main: net.kiwz.ThePlugin.ThePlugin
 version: 1.00
 author: Kiwz
 
-loadbefore: [Dynmap, NoCheatPlus, WorldEdit]
+depend: []
+loadbefore: []
 
 commands:
   entity:

@@ -8,5 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/workspace/git/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="C:/workspace/git/lib/dynmap-api.jar" sourcepath="C:/workspace/git/DynmapCoreAPI"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

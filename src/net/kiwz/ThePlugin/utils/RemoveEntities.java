@@ -25,7 +25,7 @@ public class RemoveEntities {
 	
 	public String killAnimals(Player player, int distance) {
 		int i = 0;
-		for (Entity entity : Bukkit.getServer().getWorld("world").getEntities()) {
+		for (Entity entity : player.getWorld().getEntities()) {
 			if (entity instanceof Animals) {
 				int d = (int) entity.getLocation().distance(player.getLocation());
 				if (d < distance) {
@@ -65,7 +65,7 @@ public class RemoveEntities {
 	
 	public String killMonsters(Player player, int distance) {
 		int i = 0;
-		for (Entity entity : Bukkit.getServer().getWorld("world").getEntities()) {
+		for (Entity entity : player.getWorld().getEntities()) {
 			if (entity instanceof Monster) {
 				int d = (int) entity.getLocation().distance(player.getLocation());
 				if (d < distance) {
@@ -110,7 +110,7 @@ public class RemoveEntities {
 	
 	public String killDrops(Player player, int distance) {
 		int i = 0;
-		for (Entity entity : Bukkit.getServer().getWorld("world").getEntities()) {
+		for (Entity entity : player.getWorld().getEntities()) {
 			if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
 				int d = (int) entity.getLocation().distance(player.getLocation());
 				if (d < distance) {
