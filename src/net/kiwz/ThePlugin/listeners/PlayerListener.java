@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -52,7 +53,7 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 
-		if (!worlds.isTrample(block.getWorld())) {
+		if (!worlds.isTrample(block.getWorld()) && event.getAction() == Action.PHYSICAL) {
 			if ((block.getType() == Material.SOIL) || (block.getType() == Material.CROPS)) {
 				event.setCancelled(true);
 				return;
