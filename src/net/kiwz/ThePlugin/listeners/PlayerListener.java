@@ -61,8 +61,8 @@ public class PlayerListener implements Listener {
 		}
 		
 		if (event.getClickedBlock() != null) {
-			Material material = event.getClickedBlock().getType();
-			if (material == Material.WOOD_DOOR || material == Material.TRAP_DOOR) {
+			String type = event.getClickedBlock().getType().toString();
+			if (type == "WOODEN_DOOR" || type == "TRAP_DOOR") {
 				return;
 			}
 			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {

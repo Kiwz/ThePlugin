@@ -7,10 +7,9 @@ pil ignorer pvp i plasser
 farger for admins i /who
 Spillere må få sette ut tog og båt i wilderness
 om døra du klikker på har en blokk bak seg vil den ikke lukkes
-vanskelig å plante ting
-/entity funker ikke i Farm
 Spillere får ikke xp av mining
 Spillere må få udødelighet x sekunder etter /plass spawn
+Preparations have been made to offer name change in the future
 
 
 Kommandoer:
