@@ -3,9 +3,9 @@ Tester som må utføres:
 Bugs:
 consolfilter funker ikke... kanskje spigot kan overta?
 tablist blir dobbelt
-pil ignorer pvp i plasser
 farger for admins i /who
 Spillere må få udødelighet 6 sekunder etter /plass spawn
+fjerne mobs om de er i en plass?
 
 
 Kommandoer:

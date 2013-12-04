@@ -389,6 +389,18 @@ public class HandlePlaces {
 		}
 		return "AKTIVERT";
 	}
+	
+	/**
+	 * 
+	 * @param id as int
+	 * @return false if pvp is not allowed, else true
+	 */
+	public boolean isPvP(int id) {
+		if (places.get(id).pvp == 0) {
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * 
@@ -405,6 +417,18 @@ public class HandlePlaces {
 	/**
 	 * 
 	 * @param id as int
+	 * @return false if monsters is not allowed, else true
+	 */
+	public boolean isMonsters(int id) {
+		if (places.get(id).monsters == 0) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param id as int
 	 * @return String "DEAKTIVERT" if animals is not allowed, else "AKTIVERT"
 	 */
 	public String getAnimals(int id) {
@@ -412,6 +436,18 @@ public class HandlePlaces {
 			return "DEAKTIVERT";
 		}
 		return "AKTIVERT";
+	}
+
+	/**
+	 * 
+	 * @param id as int
+	 * @return false if animals is not allowed, else true
+	 */
+	public boolean isAnimals(int id) {
+		if (places.get(id).animals == 0) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

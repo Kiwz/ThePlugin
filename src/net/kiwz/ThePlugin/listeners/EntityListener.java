@@ -10,8 +10,12 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -43,29 +47,49 @@ public class EntityListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageByEntityEvent event) {
+		Entity attacker = event.getDamager();
+		Player playerAttacker;
+		Entity victim = event.getEntity();
+		Location victimLoc = victim.getLocation();
+		int id = places.getIDWithCoords(victimLoc.getWorld().getName(), victimLoc.getX(), victimLoc.getZ());
 		
-		if (!(event.getDamager() instanceof Player)) {
-			return;
-		}
-		
-		Player player = (Player) event.getDamager();
-		Location loc = event.getEntity().getLocation();
-		int id = places.getIDWithCoords(loc.getWorld().getName(), loc.getX(), loc.getZ());
 		if (id == 0) {
 			return;
 		}
 		
-		if (event.getEntity() instanceof Player) {
-			if (places.getPvP(id).equals("DEAKTIVERT")) {
+		if (attacker instanceof Player && victim instanceof Player) {
+			playerAttacker = (Player) attacker;
+			if (!places.isPvP(id)) {
 				event.setCancelled(true);
-				player.sendMessage(pvpDenyString);
+				playerAttacker.sendMessage(pvpDenyString);
 			}
 		}
 		
-		if (event.getEntity() instanceof Animals) {
-			if (!places.hasAccess(player, loc)) {
+		if (attacker instanceof Projectile && victim instanceof Player) {
+			LivingEntity shooter = ((Projectile) attacker).getShooter();
+			if (shooter instanceof Player && !places.isPvP(id)) {
+				playerAttacker = (Player) shooter;
 				event.setCancelled(true);
-				player.sendMessage(denyString);
+				playerAttacker.sendMessage(pvpDenyString);
+			}
+		}
+		
+		if (attacker instanceof Player && victim instanceof Animals) {
+			playerAttacker = (Player) attacker;
+			if (!places.hasAccess(playerAttacker, victimLoc)) {
+				event.setCancelled(true);
+				playerAttacker.sendMessage(denyString);
+			}
+		}
+		
+		if (attacker instanceof Projectile && victim instanceof Animals) {
+			LivingEntity shooter = ((Projectile) attacker).getShooter();
+			if (shooter instanceof Player) {
+				playerAttacker = (Player) shooter;
+				if (!places.hasAccess(playerAttacker, victimLoc)) {
+					event.setCancelled(true);
+					playerAttacker.sendMessage(denyString);
+				}
 			}
 		}
 	}
@@ -123,6 +147,9 @@ public class EntityListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
+		Location loc = event.getEntity().getLocation();
+		int id = places.getIDWithCoords(loc.getWorld().getName(), loc.getX(), loc.getZ());
+		
 		switch (event.getSpawnReason()) {
 		case BUILD_WITHER:
 			if (event.getLocation().getWorld().getEnvironment() == Environment.NORMAL) {
@@ -130,6 +157,17 @@ public class EntityListener implements Listener {
 			}
 			break;
 		default:
+		}
+
+		if (id == 0) {
+			return;
+		}
+		if (event.getEntity() instanceof Monster) {
+			event.setCancelled(!places.isMonsters(id));
+		}
+		
+		if (event.getEntity() instanceof Animals) {
+			event.setCancelled(!places.isAnimals(id));
 		}
 	}
 }

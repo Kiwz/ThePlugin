@@ -19,7 +19,6 @@ import net.kiwz.ThePlugin.mysql.Places;
 import net.kiwz.ThePlugin.mysql.Players;
 import net.kiwz.ThePlugin.mysql.Worlds;
 import net.kiwz.ThePlugin.utils.ConsoleFilter;
-import net.kiwz.ThePlugin.utils.Dynmap;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
 import net.kiwz.ThePlugin.utils.Permissions;
 import net.kiwz.ThePlugin.utils.ServerManagement;
