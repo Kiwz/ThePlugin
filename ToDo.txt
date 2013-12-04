@@ -5,11 +5,7 @@ consolfilter funker ikke... kanskje spigot kan overta?
 tablist blir dobbelt
 pil ignorer pvp i plasser
 farger for admins i /who
-Spillere må få sette ut tog og båt i wilderness
-om døra du klikker på har en blokk bak seg vil den ikke lukkes
-Spillere får ikke xp av mining
-Spillere må få udødelighet x sekunder etter /plass spawn
-Preparations have been made to offer name change in the future
+Spillere må få udødelighet 6 sekunder etter /plass spawn
 
 
 Kommandoer:
@@ -34,3 +30,4 @@ HungerGames:
 Fun-Plugin:
 Fiske-konkuranse
 Achievements med belønning
+Teleportering med blokker

@@ -65,6 +65,11 @@ public class PlayerListener implements Listener {
 			if (type == "WOODEN_DOOR" || type == "TRAP_DOOR") {
 				return;
 			}
+			String held = player.getItemInHand().getType().toString();
+			if (places.isWilderness(event.getClickedBlock().getLocation()) && (held == "BOAT" || held == "MINECART" ||
+					held == "STORAGE_MINECART" || held == "POWERED_MINECART" || held == "HOPPER_MINECART")) {
+				return;
+			}
 			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {
 				event.setCancelled(true);
 				player.updateInventory();
