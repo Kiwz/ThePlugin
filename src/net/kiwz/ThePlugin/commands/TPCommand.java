@@ -37,7 +37,7 @@ public class TPCommand {
 		}
 		
 		else if (args.length == 2) {
-			if ((onlinePlayer.getPlayer(args[0]) != null) || (onlinePlayer.getPlayer(args[1]) != null)) {
+			if ((onlinePlayer.getPlayer(args[0]) != null) && (onlinePlayer.getPlayer(args[1]) != null)) {
 				Player target = onlinePlayer.getPlayer(args[0]);
 				Player destination = onlinePlayer.getPlayer(args[1]);
 				target.teleport(destination);

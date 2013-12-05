@@ -4,8 +4,6 @@ Bugs:
 consolfilter funker ikke... kanskje spigot kan overta?
 tablist blir dobbelt
 Spillere må få udødelighet 6 sekunder etter /plass spawn
-NP check for /tp til spiller som ikke er online
-oppdatere verdener med spawn koordinater fra databasen
 
 
 Kommandoer:
