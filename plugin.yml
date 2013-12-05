@@ -4,6 +4,7 @@ version: 1.00
 author: Kiwz
 
 depend: []
+softdepend: [dynmap]
 loadbefore: []
 
 commands:
