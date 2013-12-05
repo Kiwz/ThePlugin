@@ -62,7 +62,7 @@ public class PlayerListener implements Listener {
 		
 		if (event.getClickedBlock() != null) {
 			String type = event.getClickedBlock().getType().toString();
-			if (type == "WOODEN_DOOR" || type == "TRAP_DOOR") {
+			if (type == "WOODEN_DOOR") {
 				return;
 			}
 			String held = player.getItemInHand().getType().toString();

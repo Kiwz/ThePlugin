@@ -3,13 +3,12 @@ Tester som må utføres:
 Bugs:
 consolfilter funker ikke... kanskje spigot kan overta?
 tablist blir dobbelt
-farger for admins i /who
 Spillere må få udødelighet 6 sekunder etter /plass spawn
-fjerne mobs om de er i en plass?
+NP check for /tp til spiller som ikke er online
+oppdatere verdener med spawn koordinater fra databasen
 
 
 Kommandoer:
-/replay (/r)
 
 
 Dynmap:
@@ -20,8 +19,6 @@ Places:
 Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
 Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
 /plass liste, /plass spiller må få sider
-Dersom mobs er av i plassen så kan de heller ikke skade deg... kanskje dumt med tanke på mob-farming...
-La spillere drepe dyr utenfor plasser
 
 
 HungerGames:
@@ -31,3 +28,4 @@ Fun-Plugin:
 Fiske-konkuranse
 Achievements med belønning
 Teleportering med blokker
+Når ny spiller joiner gi de en "regel-bok" og 10 cooked steak

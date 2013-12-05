@@ -30,6 +30,10 @@ public class HandleWorlds {
 			String env = worlds.get(worldName).environment;
 			String type = worlds.get(worldName).type;
 			String seed = worlds.get(worldName).seed;
+			String[] stringCoords = worlds.get(worldName).coords.split(" ");
+			int x = (int) Double.parseDouble(stringCoords[0]);
+			int y = (int) Double.parseDouble(stringCoords[1]);
+			int z = (int) Double.parseDouble(stringCoords[2]);
 			WorldCreator wc = new WorldCreator(worldName.toLowerCase());
 			
 			if (env.equalsIgnoreCase("nether")) wc.environment(Environment.NETHER);
@@ -59,6 +63,7 @@ public class HandleWorlds {
 			world.setPVP(pvp);
 			world.setSpawnFlags(monsters, animals);
 			world.setKeepSpawnInMemory(keepSpawn);
+			world.setSpawnLocation(x, y, z);
 		}
 	}
 	
@@ -314,7 +319,7 @@ public class HandleWorlds {
 		String stringPitch = pitch + " " + yaw;
 		worlds.get(worldName).coords = stringCoords;
 		worlds.get(worldName).pitch = stringPitch;
-		Bukkit.getWorld("world").setSpawnLocation(x.intValue(), y.intValue(), z.intValue());
+		Bukkit.getWorld(worldName).setSpawnLocation(x.intValue(), y.intValue(), z.intValue());
 		return ThePlugin.c1 + "Du har satt spawnen her";
 	}
 	
