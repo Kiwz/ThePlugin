@@ -36,7 +36,7 @@ public class OfflinePlayer {
         for (File playerfile : playerfolder.listFiles()) {
             String filename = playerfile.getName();
             String playername = filename.substring(0, filename.length() - 4);
-            GameProfile gameProfile = new GameProfile("", playername);
+            GameProfile gameProfile = new GameProfile(null, playername);
             if (playername.trim().toLowerCase().startsWith(name.toLowerCase())) {
                 final MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
                 final EntityPlayer entity = new EntityPlayer(server, server.getWorldServer(0), gameProfile, new PlayerInteractManager(server.getWorldServer(0)));

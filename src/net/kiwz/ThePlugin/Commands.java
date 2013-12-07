@@ -4,7 +4,6 @@ import net.kiwz.ThePlugin.commands.EntityCommand;
 import net.kiwz.ThePlugin.commands.GameModeCommand;
 import net.kiwz.ThePlugin.commands.FeedCommand;
 import net.kiwz.ThePlugin.commands.FlyCommand;
-import net.kiwz.ThePlugin.commands.ItemCommand;
 import net.kiwz.ThePlugin.commands.HealCommand;
 import net.kiwz.ThePlugin.commands.HelpCommand;
 import net.kiwz.ThePlugin.commands.HomeCommand;
@@ -79,12 +78,6 @@ public class Commands implements CommandExecutor {
 			home.setHome(sender, cmd, args);
 			return true;
 		}
-	    
-		else if (cmdName.equalsIgnoreCase("item")) {
-	    	ItemCommand item = new ItemCommand();
-	    	item.giveItem(sender, cmd, args);
-			return true;
-	    }
 		
 		else if (cmdName.equalsIgnoreCase("list")) {
 			ListCommand list = new ListCommand();

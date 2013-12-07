@@ -3,10 +3,10 @@ Tester som må utføres:
 Bugs:
 consolfilter funker ikke... kanskje spigot kan overta?
 tablist blir dobbelt
-Spillere må få udødelighet 6 sekunder etter /plass spawn
 
 
 Kommandoer:
+/blokker <spiller-navn> (Du slipper å se meldinger fra denne spilleren)
 
 
 Dynmap:
@@ -14,7 +14,6 @@ Fikse en hook mellom min plugin og dynmap
 
 
 Places:
-Stoppe spillere i å "kaste" ting inn i en annen sin plass, f.eks egg
 Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
 /plass liste, /plass spiller må få sider
 

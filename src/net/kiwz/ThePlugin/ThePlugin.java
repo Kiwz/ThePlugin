@@ -94,7 +94,6 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("help").setExecutor(cmds);
 		getCommand("home").setExecutor(cmds);
 		getCommand("sethome").setExecutor(cmds);
-	    getCommand("item").setExecutor(cmds);
 		getCommand("list").setExecutor(cmds);
 		getCommand("minne").setExecutor(cmds);
 		getCommand("mute").setExecutor(cmds);
