@@ -2,7 +2,6 @@ Tester som må utføres:
 
 Bugs:
 consolfilter funker ikke... kanskje spigot kan overta?
-tablist blir dobbelt
 
 
 Kommandoer:
@@ -25,3 +24,4 @@ Fiske-konkuranse
 Achievements med belønning
 Teleportering med blokker
 Når ny spiller joiner gi de en "regel-bok" og 10 cooked steak
+Trade-kiste (en egen plass hvor spillere kan trade rettferdig)

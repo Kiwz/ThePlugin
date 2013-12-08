@@ -3,8 +3,11 @@ package net.kiwz.ThePlugin.listeners;
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
+import net.kiwz.ThePlugin.utils.Log;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,10 +27,24 @@ public class BlockListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Location loc = event.getBlock().getLocation();
+		Material mat = event.getBlock().getType();
 		
 		if (!places.hasAccess(player, loc)) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
+		}
+		else {
+			if (mat.equals(Material.DIAMOND_ORE) || mat.equals(Material.EMERALD_ORE)) {
+				for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
+					thisPlayer.sendMessage(ThePlugin.c1 + player.getName() + ThePlugin.c3 + " fant en " + mat);
+				}
+				String world = loc.getWorld().getName();
+				int x = loc.getBlockX();
+				int y = loc.getBlockY();
+				int z = loc.getBlockZ();
+				Log log = new Log();
+				log.logString(" [MINING] " + player.getName() + ": " + mat + " ([" + world + "] " + x + ", " + y + ", " + z + ")");
+			}
 		}
     }
 
