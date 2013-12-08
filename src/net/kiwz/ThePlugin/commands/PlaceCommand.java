@@ -101,7 +101,12 @@ public class PlaceCommand {
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("spawn")) {
-				player.teleport(hPlaces.getSpawn(id));
+				if (hPlaces.isPriv(id) && !(player.isOp() || hPlaces.isOwner(player.getName(), id) || hPlaces.isMember(player.getName(), id))) {
+					sender.sendMessage(ThePlugin.c2 + args[1] + " er en privat plass og du kan ikke teleportere hit");
+				}
+				else {
+					player.teleport(hPlaces.getSpawn(id));
+				}
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("setspawn")) {
@@ -125,7 +130,7 @@ public class PlaceCommand {
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("toggle")) {
-				sender.sendMessage(ThePlugin.c2 + "/plass toggle <plass-navn> <[pvp] [monstre] [dyr]>");
+				sender.sendMessage(ThePlugin.c2 + "/plass toggle <plass-navn> <[privat] [pvp] [monstre] [dyr]>");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("medlem")) {
@@ -181,7 +186,11 @@ public class PlaceCommand {
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("toggle")) {
-				if (args[2].equalsIgnoreCase("pvp")) {
+				if (args[2].equalsIgnoreCase("privat")) {
+					sender.sendMessage(hPlaces.setPriv(player, id));
+					return true;
+				}
+				else if (args[2].equalsIgnoreCase("pvp")) {
 					sender.sendMessage(hPlaces.setPvP(player, id));
 					return true;
 				}
@@ -286,8 +295,8 @@ public class PlaceCommand {
 		help.append(white + "Setter ny eier av din plass, DU kan IKKE gjøre om dette\n");
 		help.append(gold + "/plass navn <plass-navn> <nytt-plass-navn>\n");
 		help.append(white + "Bytter navn på angitte plass\n");
-		help.append(gold + "/plass toggle <plass-navn> [pvp, monstre, dyr]\n");
-		help.append(white + "Skrur på/av pvp, monstre eller dyr\n");
+		help.append(gold + "/plass toggle <plass-navn> [privat, pvp, monstre, dyr]\n");
+		help.append(white + "Skrur på/av privat, pvp, monstre eller dyr\n");
 		help.append(gold + "/plass entre <plass-navn> <ny velkomst-melding>\n");
 		help.append(white + "Setter ny velkomst-melding for angitte plass\n");
 		help.append(gold + "/plass entre <plass-navn>\n");

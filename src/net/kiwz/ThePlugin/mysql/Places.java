@@ -20,6 +20,7 @@ public class Places {
 	public int size;
 	public String spawnCoords;
 	public String spawnPitch;
+	public int priv;
 	public int pvp;
 	public int monsters;
 	public int animals;
@@ -43,6 +44,7 @@ public class Places {
 				place.size = res.getInt("Size");
 				place.spawnCoords = res.getString("SpawnCoords");
 				place.spawnPitch = res.getString("SpawnPitch");
+				place.priv = res.getInt("Priv");
 				place.pvp = res.getInt("PvP");
 				place.monsters = res.getInt("Monsters");
 				place.animals = res.getInt("Animals");
@@ -70,19 +72,20 @@ public class Places {
 			int size = places.get(key).size;
 			String spawnCoords = places.get(key).spawnCoords;
 			String spawnPitch = places.get(key).spawnPitch;
+			int priv = places.get(key).priv;
 			int pvp = places.get(key).pvp;
 			int monsters = places.get(key).monsters;
 			int animals = places.get(key).animals;
 			String enter = places.get(key).enter;
 			String leave = places.get(key).leave;
 			String queryString = "INSERT INTO places (PlaceID, Time, Name, Owner, Members, World, "
-					+ "X, Z, Size, SpawnCoords, SpawnPitch, PvP, Monsters, Animals, Enter, Leave_) "
+					+ "X, Z, Size, SpawnCoords, SpawnPitch, Priv, PvP, Monsters, Animals, Enter, Leave_) "
 					+ "VALUES ('" + id + "', '" + time + "', '" + name + "', '" + owner + "', '" + members + "', '"
 					+ world + "', '" + x + "', '" + z + "', '" + size + "', '" + spawnCoords + "', '" + spawnPitch + "', '"
-					+ pvp + "', '" + monsters + "', '" + animals + "', '" + enter + "', '" + leave + "') "
+					+ priv + "', '" + pvp + "', '" + monsters + "', '" + animals + "', '" + enter + "', '" + leave + "') "
 					+ "ON DUPLICATE KEY UPDATE Time='" + time + "', Name='" + name + "', Owner='" + owner + "', "
 					+ "Members='" + members + "', World='" + world + "', X='" + x + "', Z='" + z + "', " + "Size='"
-					+ size + "', SpawnCoords='" + spawnCoords + "', SpawnPitch='" + spawnPitch + "', PvP='" + pvp + "', "
+					+ size + "', SpawnCoords='" + spawnCoords + "', SpawnPitch='" + spawnPitch + "', Priv='" + priv + "', PvP='" + pvp + "', "
 					+ "Monsters='" + monsters + "', Animals='" + animals + "', Enter='" + enter + "', Leave_='" + leave + "';";
 			try {
 				conn.createStatement().executeUpdate(queryString);

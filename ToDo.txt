@@ -6,7 +6,6 @@ tablist blir dobbelt
 
 
 Kommandoer:
-/plass privat <plass-navn>
 
 
 Dynmap:

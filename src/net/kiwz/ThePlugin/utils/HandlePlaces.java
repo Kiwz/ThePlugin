@@ -393,6 +393,30 @@ public class HandlePlaces {
 	/**
 	 * 
 	 * @param id as int
+	 * @return false if this place is public, else true
+	 */
+	public boolean isPriv(int id) {
+		if (places.get(id).priv == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param id as int
+	 * @return String "Offentlig" if this place is public, else "Privat"
+	 */
+	public String getPriv(int id) {
+		if (places.get(id).priv == 0) {
+			return "OFFENTLIG";
+		}
+		return "PRIVAT";
+	}
+	
+	/**
+	 * 
+	 * @param id as int
 	 * @return false if pvp is not allowed, else true
 	 */
 	public boolean isPvP(int id) {
@@ -548,10 +572,11 @@ public class HandlePlaces {
 		}
 		sender.sendMessage(header.toString());
 		sender.sendMessage(ThePlugin.c1 + "Eier: " + ThePlugin.c4 + getOwner(id));
-		sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members);
+		sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members + " ");
 		sender.sendMessage(ThePlugin.c1 + "Verden: " + ThePlugin.c4 + getWorld(id));
 		sender.sendMessage(ThePlugin.c1 + "Sentrum: " + ThePlugin.c4 + getCoords(id));
 		sender.sendMessage(ThePlugin.c1 + "Størrelse: " + ThePlugin.c4 + getSize(id));
+		sender.sendMessage(ThePlugin.c1 + "Spawn: " + ThePlugin.c4 + getPriv(id));
 		sender.sendMessage(ThePlugin.c1 + "PvP: " + ThePlugin.c4 + getPvP(id));
 		sender.sendMessage(ThePlugin.c1 + "Monstre: " + ThePlugin.c4 + getMonsters(id));
 		sender.sendMessage(ThePlugin.c1 + "Dyr: " + ThePlugin.c4 + getAnimals(id));
@@ -595,10 +620,11 @@ public class HandlePlaces {
 			}
 			sender.sendMessage(header.toString());
 			sender.sendMessage(ThePlugin.c1 + "Eier: " + ThePlugin.c4 + getOwner(id));
-			sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members);
+			sender.sendMessage(ThePlugin.c1 + "Medlemmer: " + ThePlugin.c4 + members + " ");
 			sender.sendMessage(ThePlugin.c1 + "Verden: " + ThePlugin.c4 + getWorld(id));
 			sender.sendMessage(ThePlugin.c1 + "Sentrum: " + ThePlugin.c4 + getCoords(id));
 			sender.sendMessage(ThePlugin.c1 + "Størrelse: " + ThePlugin.c4 + getSize(id));
+			sender.sendMessage(ThePlugin.c1 + "Spawn: " + ThePlugin.c4 + getPriv(id));
 			sender.sendMessage(ThePlugin.c1 + "PvP: " + ThePlugin.c4 + getPvP(id));
 			sender.sendMessage(ThePlugin.c1 + "Monstre: " + ThePlugin.c4 + getMonsters(id));
 			sender.sendMessage(ThePlugin.c1 + "Dyr: " + ThePlugin.c4 + getAnimals(id));
@@ -711,6 +737,7 @@ public class HandlePlaces {
 		place.size = size;
 		place.spawnCoords = spawnCoords;
 		place.spawnPitch = spawnPitch;
+		place.priv = 0;
 		place.pvp = 0;
 		place.monsters = 0;
 		place.animals = 1;
@@ -807,6 +834,9 @@ public class HandlePlaces {
 		if(!player.isOp() && getIDsWithOwner(owner).size() >= 3) {
 			return ThePlugin.c2 + owner + " eier " + getIDsWithOwner(owner).size() + " plasser og kan ikke eie flere";
 		}
+		if (!isMember(places.get(id).owner, id)) {
+			places.get(id).members = places.get(id).members + places.get(id).owner + " ";
+		}
 		places.get(id).owner = owner;
 		places.get(id).enter = "Velkommen til " + owner + " sin plass";
 		places.get(id).leave = "Du forlater " + owner + " sin plass";
@@ -881,6 +911,24 @@ public class HandlePlaces {
 		else {
 			return ThePlugin.c2 + "Du må stå i " + places.get(id).name;
 		}
+	}
+	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @return String describing the result
+	 */
+	public String setPriv(Player player, int id) {
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
+		}
+		if (!isPriv(id)) {
+			places.get(id).priv = 1;
+			return ThePlugin.c1 + "Din plass er privat og andre kan ikke teleportere hit";
+		}
+		places.get(id).priv = 0;
+		return ThePlugin.c1 + "Din plass er offentlig og andre kan teleportere hit";
 	}
 	
 	/**

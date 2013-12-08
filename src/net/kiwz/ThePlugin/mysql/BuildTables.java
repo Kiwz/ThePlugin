@@ -12,7 +12,7 @@ public class BuildTables {
 	private String places = "CREATE TABLE IF NOT EXISTS places "
 			+ "(PlaceID INT, Time INT, Name VARCHAR(255), Owner VARCHAR(255), Members MEDIUMTEXT, "
 			+ "World VARCHAR(255), X INT, Z INT, Size INT, SpawnCoords VARCHAR(255), "
-			+ "SpawnPitch VARCHAR(255), PvP BOOLEAN, Monsters BOOLEAN, Animals BOOLEAN, "
+			+ "SpawnPitch VARCHAR(255), Priv BOOLEAN, PvP BOOLEAN, Monsters BOOLEAN, Animals BOOLEAN, "
 			+ "Enter VARCHAR(255), Leave_ VARCHAR(255), PRIMARY KEY (PlaceID), UNIQUE (Name));";
 	
 	private String players = "CREATE TABLE IF NOT EXISTS players "
