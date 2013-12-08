@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.kiwz.ThePlugin.Commands;
@@ -50,6 +51,7 @@ public class ThePlugin extends JavaPlugin {
 	public static HashMap<String, Worlds> getWorlds;
 	public static ArrayList<String> remWorlds = new ArrayList<String>();
 	public static ArrayList<String> admins = new ArrayList<String>();
+	public static HashMap<String, List<String>> chatIgnore;
 	
 	@Override
 	public void onLoad() {
@@ -76,6 +78,7 @@ public class ThePlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		admins = new Permissions().loadAdmins();
+		chatIgnore = new HashMap<String, List<String>>();
 		
 		HandleWorlds hWorlds = new HandleWorlds();
 		hWorlds.loadWorlds();
@@ -93,6 +96,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("heal").setExecutor(cmds);
 		getCommand("help").setExecutor(cmds);
 		getCommand("home").setExecutor(cmds);
+		getCommand("ignore").setExecutor(cmds);
 		getCommand("sethome").setExecutor(cmds);
 		getCommand("list").setExecutor(cmds);
 		getCommand("minne").setExecutor(cmds);

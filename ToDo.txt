@@ -6,7 +6,7 @@ tablist blir dobbelt
 
 
 Kommandoer:
-/blokker <spiller-navn> (Du slipper å se meldinger fra denne spilleren)
+/plass privat <plass-navn>
 
 
 Dynmap:

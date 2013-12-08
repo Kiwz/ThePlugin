@@ -7,6 +7,7 @@ import net.kiwz.ThePlugin.commands.FlyCommand;
 import net.kiwz.ThePlugin.commands.HealCommand;
 import net.kiwz.ThePlugin.commands.HelpCommand;
 import net.kiwz.ThePlugin.commands.HomeCommand;
+import net.kiwz.ThePlugin.commands.IgnoreCommand;
 import net.kiwz.ThePlugin.commands.MemCommand;
 import net.kiwz.ThePlugin.commands.MuteCommand;
 import net.kiwz.ThePlugin.commands.OpenInvCommand;
@@ -70,6 +71,12 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("home")) {
 			HomeCommand home = new HomeCommand();
 			home.home(sender, cmd, args);
+			return true;
+		}
+		
+		else if (cmdName.equalsIgnoreCase("ignore")) {
+			IgnoreCommand ignore = new IgnoreCommand();
+			ignore.ignore(sender, args);
 			return true;
 		}
 		

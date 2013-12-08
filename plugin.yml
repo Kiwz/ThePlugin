@@ -68,6 +68,14 @@ commands:
     permission: ThePlugin.home
     permission-message: §cDu har ikke tilgang!
     usage: /home
+  ignore:
+    description: Du slipper mas fra spesifiserte spillere
+    aliases: [i, ignorer, c, chat]
+    permission: ThePlugin.ignore
+    permission-message: §cDu har ikke tilgang!
+    usage: |
+      /ignore
+      /ignore <spiller-navn>
   sethome:
     description: Setter ditt hjem der du står
     aliases: [setthjem, sh]
@@ -182,6 +190,8 @@ permissions:
   ThePlugin.help:
     default: true
   ThePlugin.home:
+    default: true
+  ThePlugin.ignore:
     default: true
   ThePlugin.list:
     default: true

@@ -137,7 +137,14 @@ public class PlayerListener implements Listener {
 			msg = ChatColor.RED + player.getName() + ": " + ChatColor.WHITE + event.getMessage();
 		}
 		for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
-			thisPlayer.sendMessage(msg);
+			if (ThePlugin.chatIgnore.containsKey(thisPlayer.getName())) {
+				if (!ThePlugin.chatIgnore.get(thisPlayer.getName()).contains(player.getName())) {
+					thisPlayer.sendMessage(msg);
+				}
+			}
+			else {
+				thisPlayer.sendMessage(msg);
+			}
 		}
 		Log log = new Log();
 		log.logString(" [CHAT] " + player.getName() + ": " + event.getMessage());
@@ -213,6 +220,7 @@ public class PlayerListener implements Listener {
 			hItems.giveItem(player, Material.IRON_AXE, 1);
 			hItems.giveItem(player, Material.IRON_PICKAXE, 1);
 			hItems.giveItem(player, Material.IRON_AXE, 1);
+			hItems.giveItem(player, Material.COOKED_BEEF, 20);
 			hItems.giveItem(player, Material.GOLD_INGOT, 5);
 			hItems.giveItem(player, Material.WOOD, 64);
 			hItems.giveItem(player, Material.IRON_HELMET, 1);
