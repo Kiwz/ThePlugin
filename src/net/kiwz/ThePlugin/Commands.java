@@ -173,6 +173,7 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("test")) {
 			
 			// Test her:
+			
 			/*
 			StringBuilder header = new StringBuilder();
 			int i = 0;

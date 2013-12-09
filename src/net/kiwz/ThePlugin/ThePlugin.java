@@ -38,7 +38,6 @@ public class ThePlugin extends JavaPlugin {
 	public static ChatColor c5 = ChatColor.DARK_GRAY;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
-	private Logger logServer = Bukkit.getLogger();
 	
 	private Homes homes = new Homes();
 	public static HashMap<Integer, Homes> getHomes;
@@ -56,8 +55,6 @@ public class ThePlugin extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		new File("plugins\\ThePlugin\\").mkdirs();
-		
-		logServer.setFilter(new ConsoleFilter());
 		
 		Connection conn = new ConnectToMySQL().openConnection();
 		
@@ -77,6 +74,11 @@ public class ThePlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		ConsoleFilter filter = new ConsoleFilter();
+		Bukkit.getLogger().setFilter(filter);
+		Logger.getLogger("Minecraft").setFilter(filter);
+		Logger.getLogger("global").setFilter(filter);
+		
 		admins = new Permissions().loadAdmins();
 		chatIgnore = new HashMap<String, List<String>>();
 		

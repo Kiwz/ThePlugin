@@ -1,7 +1,5 @@
 package net.kiwz.ThePlugin.listeners;
 
-import java.util.logging.Logger;
-
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandleItems;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
@@ -239,7 +237,8 @@ public class PlayerListener implements Listener {
 			player.sendMessage(ThePlugin.c1 + "############################################");
         }
         
-        Logger.getLogger("Minecraft").info(log);
+        
+        Bukkit.getLogger().info(log);
 		Log log1 = new Log();
 		log1.logString(" [INFO] " + log);
 		msg.sendMessage(player, loginMsg);
