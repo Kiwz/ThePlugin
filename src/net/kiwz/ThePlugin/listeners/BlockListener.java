@@ -4,6 +4,7 @@ import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
 import net.kiwz.ThePlugin.utils.Log;
+import net.kiwz.ThePlugin.utils.Permissions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,6 +22,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 public class BlockListener implements Listener {
 	private HandlePlaces places = new HandlePlaces();
 	private HandleWorlds worlds = new HandleWorlds();
+    private Permissions perm = new Permissions();
 	private String denyString = ThePlugin.c2 + "Du har ingen tilgang her";
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -33,18 +35,18 @@ public class BlockListener implements Listener {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}
-		else {
-			if (mat.equals(Material.DIAMOND_ORE) || mat.equals(Material.EMERALD_ORE)) {
-				for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
+		if (mat.equals(Material.DIAMOND_ORE) || mat.equals(Material.EMERALD_ORE)) {
+			for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
+				if (perm.isAdmin(thisPlayer) || thisPlayer.isOp()) {
 					thisPlayer.sendMessage(ThePlugin.c1 + player.getName() + ThePlugin.c3 + " fant en " + mat);
 				}
-				String world = loc.getWorld().getName();
-				int x = loc.getBlockX();
-				int y = loc.getBlockY();
-				int z = loc.getBlockZ();
-				Log log = new Log();
-				log.logString(" [MINING] " + player.getName() + ": " + mat + " ([" + world + "] " + x + ", " + y + ", " + z + ")");
 			}
+			String world = loc.getWorld().getName();
+			int x = loc.getBlockX();
+			int y = loc.getBlockY();
+			int z = loc.getBlockZ();
+			Log log = new Log();
+			log.logString(" [MINING] " + player.getName() + ": " + mat + " ([" + world + "] " + x + ", " + y + ", " + z + ")");
 		}
     }
 

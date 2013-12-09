@@ -5,7 +5,7 @@ consolfilter funker ikke...
 
 
 Kommandoer:
-
+/plass endre <plass-navn> <radius>
 
 Dynmap:
 Fikse en hook mellom min plugin og dynmap
@@ -22,7 +22,6 @@ HungerGames:
 Fun-Plugin:
 Fiske-konkuranse
 Achievements med belønning
-Teleportering med blokker
-Når ny spiller joiner gi de en "regel-bok" og 10 cooked steak
+Når ny spiller joiner gi de en "regel-bok"
 Trade-kiste (en egen plass hvor spillere kan trade rettferdig)
 Rails (og blokken under) skal bare kunne fjernes av han som la de.

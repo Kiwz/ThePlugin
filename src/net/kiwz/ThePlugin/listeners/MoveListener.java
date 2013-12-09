@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
+import net.kiwz.ThePlugin.utils.TPRune;
 
 public class MoveListener implements Listener {
 	private HandlePlaces places = new HandlePlaces();
@@ -21,6 +22,7 @@ public class MoveListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		Location fromLoc = event.getFrom();
+		Block block = event.getTo().getBlock();
 		int fromX = (int) event.getFrom().getX();
 		int fromZ = (int) event.getFrom().getZ();
 		int toX = (int) event.getTo().getX();
@@ -36,9 +38,13 @@ public class MoveListener implements Listener {
 			player.teleport(fromLoc);
 			player.sendMessage(ThePlugin.c2 + "Du har nådd enden av denne verden");
 		}
-		Block block = event.getTo().getBlock().getRelative(0, -2, 0);
-		if (block.getType().equals(Material.DIAMOND_BLOCK)) {
-			player.sendMessage("Du står på en diamant-block");
+		if (block.getRelative(0, -2, 0).getType().equals(Material.DIAMOND_BLOCK)) {
+			TPRune tpRune = new TPRune();
+			tpRune.teleportRune1(player, block.getRelative(0, -2, 0), Material.GOLD_BLOCK);
+		}
+		if (block.getRelative(0, -3, 0).getType().equals(Material.DIAMOND_BLOCK)) {
+			TPRune tpRune = new TPRune();
+			tpRune.teleportRune2(player, block.getRelative(0, -3, 0), Material.GOLD_BLOCK);
 		}
 	}
 }
