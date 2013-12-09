@@ -1,7 +1,7 @@
 Tester som må utføres:
 
 Bugs:
-consolfilter funker ikke... kanskje spigot kan overta?
+consolfilter funker ikke...
 
 
 Kommandoer:
@@ -25,3 +25,4 @@ Achievements med belønning
 Teleportering med blokker
 Når ny spiller joiner gi de en "regel-bok" og 10 cooked steak
 Trade-kiste (en egen plass hvor spillere kan trade rettferdig)
+Rails (og blokken under) skal bare kunne fjernes av han som la de.
