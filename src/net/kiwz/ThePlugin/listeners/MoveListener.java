@@ -1,6 +1,8 @@
 package net.kiwz.ThePlugin.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,6 +35,10 @@ public class MoveListener implements Listener {
 		if (border < toX || -border + 1 > toX || border < toZ || -border + 1 > toZ) {
 			player.teleport(fromLoc);
 			player.sendMessage(ThePlugin.c2 + "Du har nådd enden av denne verden");
+		}
+		Block block = event.getTo().getBlock().getRelative(0, -2, 0);
+		if (block.getType().equals(Material.DIAMOND_BLOCK)) {
+			player.sendMessage("Du står på en diamant-block");
 		}
 	}
 }
