@@ -104,6 +104,9 @@ public class PlaceCommand {
 				if (hPlaces.isPriv(id) && !(player.isOp() || hPlaces.isOwner(player.getName(), id) || hPlaces.isMember(player.getName(), id))) {
 					sender.sendMessage(ThePlugin.c2 + args[1] + " er en privat plass og du kan ikke teleportere hit");
 				}
+				else if (!hPlaces.isSpawnSafe(player, id)){
+					sender.sendMessage(ThePlugin.c2 + args[1] + " har ingen spawn");
+				}
 				else {
 					player.teleport(hPlaces.getSpawn(id));
 				}

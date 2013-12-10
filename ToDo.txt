@@ -2,6 +2,7 @@ Tester som må utføres:
 
 Bugs:
 consolfilter funker ikke...
+MoveListener check Y!!!
 
 
 Kommandoer:

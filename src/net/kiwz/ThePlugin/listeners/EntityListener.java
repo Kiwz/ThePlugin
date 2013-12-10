@@ -155,7 +155,12 @@ public class EntityListener implements Listener {
 			if (event.getLocation().getWorld().getEnvironment() == Environment.NORMAL) {
 				event.setCancelled(true);
 			}
-			break;
+		break;
+		/*case BREEDING:
+			if (false) {
+				event.setCancelled(true);
+			}
+		break;*/
 		default:
 		}
 
