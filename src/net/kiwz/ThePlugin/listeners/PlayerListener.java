@@ -226,7 +226,7 @@ public class PlayerListener implements Listener {
 			hItems.giveItem(player, Material.IRON_CHESTPLATE, 1);
 			player.sendMessage(ThePlugin.c1 + "############################################");
 			player.sendMessage(ThePlugin.c1 + "Velkommen som ny spiller på LarvikGaming.net");
-			player.sendMessage(ThePlugin.c1 + "Kjekt om du vil lese Info-Tavlen i spawnen");
+			player.sendMessage(ThePlugin.c1 + "Kjekt om du vil lese Info-Tavlen i spawnen og " + ThePlugin.c3 + "/regler");
 			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/hjelp" + ThePlugin.c1 +
 					" for hjelp, skriv " + ThePlugin.c3 + "/plass" + ThePlugin.c1 + " for beskyttelse");
 			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/spawn farm" + ThePlugin.c1 +" for å skaffe materialer");

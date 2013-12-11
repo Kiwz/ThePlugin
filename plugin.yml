@@ -123,7 +123,7 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: /plass
   rules:
-    description: Plass kommandoer
+    description: Viser deg våres regler
     aliases: [regler]
     permission: ThePlugin.rules
     permission-message: §cDu har ikke tilgang!
