@@ -12,8 +12,6 @@ Fikse en hook mellom min plugin og dynmap
 
 
 Places:
-Sende "velkomst-melding" når man teleporter til en plass
-Sende "Du er i en PvP sone"
 Dersom du er for nærme en annen plass når du lager ny/flytter din plass så må du få navnet på den/de du er for nærme.
 /plass liste, /plass spiller må få sider
 

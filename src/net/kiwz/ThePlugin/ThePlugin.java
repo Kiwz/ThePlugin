@@ -36,6 +36,7 @@ public class ThePlugin extends JavaPlugin {
 	public static ChatColor c3 = ChatColor.YELLOW;
 	public static ChatColor c4 = ChatColor.WHITE;
 	public static ChatColor c5 = ChatColor.DARK_GRAY;
+	public static ChatColor c6 = ChatColor.GREEN;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	
