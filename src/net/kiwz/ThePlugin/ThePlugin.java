@@ -107,6 +107,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("unmute").setExecutor(cmds);
 	    getCommand("oi").setExecutor(cmds);
 	    getCommand("plass").setExecutor(cmds);
+	    getCommand("rules").setExecutor(cmds);
 		getCommand("spawn").setExecutor(cmds);
 		getCommand("setspawn").setExecutor(cmds);
 	    getCommand("tell").setExecutor(cmds);

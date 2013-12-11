@@ -12,6 +12,7 @@ import net.kiwz.ThePlugin.commands.MemCommand;
 import net.kiwz.ThePlugin.commands.MuteCommand;
 import net.kiwz.ThePlugin.commands.OpenInvCommand;
 import net.kiwz.ThePlugin.commands.PlaceCommand;
+import net.kiwz.ThePlugin.commands.RulesCommand;
 import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
 import net.kiwz.ThePlugin.commands.TPSCommand;
@@ -119,6 +120,12 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("plass")) {
 			PlaceCommand place = new PlaceCommand();
 			place.place(sender, cmd, args);
+			return true;
+		}
+		
+		else if (cmdName.equalsIgnoreCase("rules")) {
+			RulesCommand rules = new RulesCommand();
+			rules.rules(sender);
 			return true;
 		}
 		

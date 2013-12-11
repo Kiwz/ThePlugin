@@ -122,6 +122,12 @@ commands:
     permission: ThePlugin.plass
     permission-message: §cDu har ikke tilgang!
     usage: /plass
+  rules:
+    description: Plass kommandoer
+    aliases: [regler]
+    permission: ThePlugin.rules
+    permission-message: §cDu har ikke tilgang!
+    usage: /regler
   spawn:
     description: Teleporterer deg til spawn
     aliases: [s]
@@ -198,6 +204,8 @@ permissions:
   ThePlugin.minne:
     default: true
   ThePlugin.plass:
+    default: true
+  ThePlugin.rules:
     default: true
   ThePlugin.sethome:
     default: true
