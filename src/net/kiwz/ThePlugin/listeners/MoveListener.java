@@ -28,12 +28,10 @@ public class MoveListener implements Listener {
 		Location fromLoc = event.getFrom();
 		Block block = event.getTo().getBlock();
 		int fromX = (int) event.getFrom().getX();
-		int fromY = (int) event.getFrom().getY();
 		int fromZ = (int) event.getFrom().getZ();
 		int toX = (int) event.getTo().getX();
-		int toY = (int) event.getTo().getY();
 		int toZ = (int) event.getTo().getZ();
-		if (fromX == toX && fromY == toY && fromZ == toZ) {
+		if (fromX == toX && fromZ == toZ) {
 			return;
 		}
 		int fromID = places.getIDWithCoords(player.getWorld().getName(), fromX, fromZ);
