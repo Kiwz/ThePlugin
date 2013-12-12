@@ -45,6 +45,7 @@ public class PlayerListener implements Listener {
     private MsgToOthers msg = new MsgToOthers();
     private Permissions perm = new Permissions();
 	private String denyString = ThePlugin.c2 + "Du har ingen tilgang her";
+	private Player player;
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -181,7 +182,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+        player = event.getPlayer();
         String playerName = player.getName();
         String ip = player.getAddress().toString();
         String worldName = player.getWorld().getName();
@@ -213,8 +214,12 @@ public class PlayerListener implements Listener {
         	players.addPlayer(playerName);
 	        log = playerName + " [" + ip + "] logget inn for første gang ([" + worldName + "] " + coords + ")";
 			loginMsg = ThePlugin.c3 + playerName + " logget inn for første gang";
-			Location loc = worlds.getSpawn(player, player.getWorld().getName());
-			player.teleport(loc);
+			player.teleport(worlds.getSpawn(player, player.getWorld().getName()));
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ThePlugin"), new Runnable() {
+				public void run() {
+					player.teleport(worlds.getSpawn(player, player.getWorld().getName()));
+				}
+			}, 10L);
 			hItems.giveItem(player, Material.IRON_PICKAXE, 1);
 			hItems.giveItem(player, Material.IRON_AXE, 1);
 			hItems.giveItem(player, Material.IRON_PICKAXE, 1);
