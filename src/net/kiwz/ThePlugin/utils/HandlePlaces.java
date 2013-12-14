@@ -3,6 +3,7 @@ package net.kiwz.ThePlugin.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.Places;
@@ -19,6 +20,8 @@ import org.bukkit.util.ChatPaginator;
 public class HandlePlaces {
 	private HandlePlayers hPlayers = new HandlePlayers();
 	private HandleWorlds hWorlds = new HandleWorlds();
+	private Permissions perm = new Permissions();
+	private SendAsPages paginator = new SendAsPages();
 	private TimeFormat time = new TimeFormat();
 	private HandleItems hItems = new HandleItems();
 	private HashMap<Integer, Places> places = ThePlugin.getPlaces;
@@ -63,7 +66,7 @@ public class HandlePlaces {
 	 * @return true if this player has access to do stuff at given location
 	 */
 	public boolean hasAccess(Player player, Location loc) {
-		if (player.isOp()) {
+		if (player.isOp() || perm.isAdmin(player)) {
 			return true;
 		}
 		String world = loc.getWorld().getName();
@@ -115,7 +118,7 @@ public class HandlePlaces {
 	 * @param size as int
 	 * @return true if parts of given location + size isn't inside another place
 	 */
-	public boolean isAvailable(Location loc, int size) {
+	/*public boolean isAvailable(Location loc, int size) {
 		String world = loc.getWorld().getName();
 		int x = (int) loc.getX();
 		int z = (int) loc.getZ();
@@ -130,7 +133,7 @@ public class HandlePlaces {
 	    	}
 		}
 		return true;
-	}
+	}*/
 	
 	/**
 	 * 
@@ -139,7 +142,7 @@ public class HandlePlaces {
 	 * @param size as int
 	 * @return true if parts of given location + size isn't inside another place
 	 */
-	public boolean isAvailable(int id, Location loc, int size) {
+	/*public boolean isAvailable(int id, Location loc, int size) {
 		String world = loc.getWorld().getName();
 		int x = (int) loc.getX();
 		int z = (int) loc.getZ();
@@ -156,17 +159,44 @@ public class HandlePlaces {
 	    	}
 		}
 		return true;
+	}*/
+	
+	/**
+	 * 
+	 * @param id as int (send in 0 if it is a new place)
+	 * @param loc as Location
+	 * @param size as int
+	 * @return List of place ID's conflicted with given loc and size
+	 */
+	public List<Integer> getConflictedPlaces(int id, Location loc, int size) {
+		List<Integer> placeIDs = new ArrayList<Integer>();
+		String world = loc.getWorld().getName();
+		int x = (int) loc.getX();
+		int z = (int) loc.getZ();
+		for (int key : places.keySet()) {
+			String placeWorld = places.get(key).world;
+			int otherX = places.get(key).x;
+			int otherZ = places.get(key).z;
+			int otherSize = places.get(key).size;
+			if (world.equals(placeWorld) && x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
+					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
+				if (places.get(key).id != id) {
+					placeIDs.add(key);
+				}
+	    	}
+		}
+		return placeIDs;
 	}
 	
-	public boolean isNearSpawn(Player player) {
-		Location spawn = hWorlds.getSpawn(player, player.getWorld().getName());
+	public boolean isNearSpawn(Location loc) {
+		Location spawn = hWorlds.getSpawn(loc.getWorld().getName());
 		int distance = 300;
 		int spawnX = spawn.getBlockX();
 		int spawnZ = spawn.getBlockZ();
-		int playerX = player.getLocation().getBlockX();
-		int playerZ = player.getLocation().getBlockZ();
-		if (playerX >= spawnX + distance || playerX <= spawnX - distance ||
-				playerZ >= spawnZ + distance || playerZ <= spawnZ - distance) {
+		int locX = loc.getBlockX();
+		int locZ = loc.getBlockZ();
+		if (locX >= spawnX + distance || locX <= spawnX - distance ||
+				locZ >= spawnZ + distance || locZ <= spawnZ - distance) {
 			return false;
 		}
 		return true;
@@ -316,6 +346,19 @@ public class HandlePlaces {
 	/**
 	 * 
 	 * @param id as int
+	 * @return location for given place ID (Y will allways be 65)
+	 */
+	public Location getPlaceLocation(int id) {
+		double x = places.get(id).x;
+		double y = 65;
+		double z = places.get(id).z;
+		Location loc = new Location(Bukkit.getWorld(getWorld(id)), x, y, z);
+		return loc;
+	}
+	
+	/**
+	 * 
+	 * @param id as int
 	 * @return name of the world given id is in as String
 	 */
 	public String getWorld(int id) {
@@ -341,6 +384,15 @@ public class HandlePlaces {
 		return size + " x " + size + " Blokker";
 	}
 	
+	/**
+	 * 
+	 * @param id as int
+	 * @return an int of the given id's radius
+	 */
+	public int getRadius(int id) {
+		return (places.get(id).size);
+	}
+	
 	public boolean isSpawnSafe(Player player, int id) {
 		Location loc = getSpawn(id);
 		Block block = loc.getBlock();
@@ -354,7 +406,7 @@ public class HandlePlaces {
 		Material water = Material.WATER;
 		Material sWater = Material.STATIONARY_WATER;
 		Material fire = Material.FIRE;
-		if (isOwner(player.getName(), id) || isMember(player.getName(), id)) {
+		if (isOwner(player.getName(), id) || isMember(player.getName(), id) || perm.isAdmin(player)) {
 			return true;
 		}
 		if (a.equals(air) && b.equals(air)) {
@@ -670,16 +722,15 @@ public class HandlePlaces {
 	 * 
 	 * <p>This will send messages to sender contaning place-names and owners</p>
 	 */
-	public void sendPlaceList(CommandSender sender) {
-		ArrayList<String> placeList = new ArrayList<String>();
+	public void sendPlaceList(CommandSender sender, String pageN) {
+		ArrayList<String> messages = new ArrayList<String>();
 		for (int key : places.keySet()) {
-			placeList.add(ThePlugin.c1 + places.get(key).name + " [" + places.get(key).owner + "] ");
+			messages.add(ThePlugin.c1 + places.get(key).name + " [" + places.get(key).owner + "] ");
 		}
-		Collections.sort(placeList, String.CASE_INSENSITIVE_ORDER);
-		sender.sendMessage(ThePlugin.c1 + "Plass-Navn [Eier]");
-		for (String place : placeList) {
-			sender.sendMessage(place);
-		}
+		Collections.sort(messages, String.CASE_INSENSITIVE_ORDER);
+		int pageHeight = 6;
+		String about = "Plass-Navn [Eier]";
+		paginator.sendAsPages(sender, pageN, pageHeight, about, messages);
 	}
 
 	/**
@@ -688,9 +739,9 @@ public class HandlePlaces {
 	 * 
 	 * <p>This will send messages to sender contaning owners and place-names</p>
 	 */
-	public void sendPlayersPlaceList(CommandSender sender) {
+	public void sendPlayersPlaceList(CommandSender sender, String pageN) {
 		HashMap<String, String> playersPlaceList = new HashMap<String, String>();
-		ArrayList<String> playersPlacesList = new ArrayList<String>();
+		ArrayList<String> messages = new ArrayList<String>();
 		for (int key : places.keySet()) {
 			String place = "";
 			if (playersPlaceList.get(places.get(key).owner) != null) {
@@ -701,13 +752,12 @@ public class HandlePlaces {
 			playersPlaceList.put(owner, place);
 		}
 		for (String key : playersPlaceList.keySet()) {
-			playersPlacesList.add(key + ": " + playersPlaceList.get(key));
+			messages.add(ThePlugin.c1 + key + ": " + playersPlaceList.get(key));
 		}
-		Collections.sort(playersPlacesList, String.CASE_INSENSITIVE_ORDER);
-		sender.sendMessage(ThePlugin.c1 + "Eier [Plass-navn]");
-		for (String playerPlaces : playersPlacesList) {
-			sender.sendMessage(ThePlugin.c1 + playerPlaces);
-		}
+		Collections.sort(messages, String.CASE_INSENSITIVE_ORDER);
+		int pageHeight = 6;
+		String about = "Eier [Plass-navn]";
+		paginator.sendAsPages(sender, pageN, pageHeight, about, messages);
 	}
 	
 	/**
@@ -728,7 +778,7 @@ public class HandlePlaces {
 		if(!player.isOp() && getIDsWithOwner(player.getName()).size() >= 3) {
 			return ThePlugin.c2 + "Du eier " + getIDsWithOwner(player.getName()).size() + " plasser og kan ikke lage flere";
 		}
-		if (isNearSpawn(player) && (size < 10 || size > 15) && !player.isOp()) {
+		if (isNearSpawn(loc) && (size < 10 || size > 15) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass ny <plass-navn> 15";
 		}
 		if ((size < 10 || size > 70) && !player.isOp()) {
@@ -745,8 +795,14 @@ public class HandlePlaces {
 				return ThePlugin.c2 + "Dette navnet finnes fra før";
 			}
 		}
-		if (!isAvailable(loc, size)) {
-			return ThePlugin.c2 + "Du er for nærme en annen plass";
+		if (!getConflictedPlaces(0, loc, size).isEmpty()) {
+			List<Integer> places = getConflictedPlaces(0, loc, size);
+			String placesString = "";
+			for (int placesID : places) {
+				placesString = placesString + getName(placesID) + ", ";
+			}
+			placesString = placesString.substring(0,placesString.length() - 2);
+			return ThePlugin.c2 + "Du er for nærme følgende plass(er): " + ThePlugin.c3 + placesString;
     	}
 		if (!hItems.removeItem(player, material, amount)) {
 			return ThePlugin.c2 + "Det koster 5 gullbarer å lage ny plass";
@@ -790,25 +846,31 @@ public class HandlePlaces {
 	 * @param radius as String
 	 * @return String describing the result
 	 */
-	public String setPlace(Player player, int id, String radius) {
+	public String setPlace(Player player, int id) {
 		if (!isOwner(player.getName(), id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
-		int size = Integer.parseInt(radius);
+		int size = getRadius(id);
 		Location loc = player.getLocation();
 		String spawnCoords = loc.getX() + " " + loc.getY() + " " + loc.getZ();
 		String spawnPitch = loc.getPitch() + " " + loc.getYaw();
 		if(!player.isOp() && !hWorlds.isClaimable(player.getWorld())) {
 			return ThePlugin.c2 + "Det er ikke lov å lage plass i " + player.getWorld().getName();
 		}
-		if (isNearSpawn(player) && (size < 10 || size > 15) && !player.isOp()) {
+		if (isNearSpawn(loc) && (size < 10 || size > 15) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass flytt <plass-navn> 15";
 		}
 		if (size < 10 || size > 70 && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
-		if (!isAvailable(id, loc, size)) {
-			return ThePlugin.c2 + "Du er for nærme en annen plass";
+		if (!getConflictedPlaces(id, loc, size).isEmpty()) {
+			List<Integer> places = getConflictedPlaces(id, loc, size);
+			String placesString = "";
+			for (int placesID : places) {
+				placesString = placesString + getName(placesID) + ", ";
+			}
+			placesString = placesString.substring(0,placesString.length() - 2);
+			return ThePlugin.c2 + "Plassen din vil bli for nærme følgende plass(er): " + ThePlugin.c3 + placesString;
     	}
 		if (!hItems.removeItem(player, material, amount)) {
 			return ThePlugin.c2 + "Det koster 5 gullbarer for å flytte plassen";
@@ -820,6 +882,38 @@ public class HandlePlaces {
 		places.get(id).spawnCoords = spawnCoords;
 		places.get(id).spawnPitch = spawnPitch;
 		return ThePlugin.c1 + "Du har flyttet plassen din hit";
+	}
+	
+	/**
+	 * 
+	 * @param player as Object
+	 * @param id as int
+	 * @param radius as String
+	 * @return String describing the result
+	 */
+	public String setRadius(Player player, int id, String radius) {
+		if (!isOwner(player.getName(), id)) {
+			return ThePlugin.c2 + getName(id) + " er ikke din plass";
+		}
+		int size = Integer.parseInt(radius);
+		Location loc = getPlaceLocation(id);
+		if (isNearSpawn(loc) && (size < 10 || size > 15) && !player.isOp()) {
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass flytt <plass-navn> 15";
+		}
+		if (size < 10 || size > 70 && !player.isOp()) {
+			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
+		}
+		if (!getConflictedPlaces(id, loc, size).isEmpty()) {
+			List<Integer> places = getConflictedPlaces(id, loc, size);
+			String placesString = "";
+			for (int placesID : places) {
+				placesString = placesString + getName(placesID) + ", ";
+			}
+			placesString = placesString.substring(0,placesString.length() - 2);
+			return ThePlugin.c2 + "Plassen din vil bli for nærme følgende plass(er): " + ThePlugin.c3 + placesString;
+    	}
+		places.get(id).size = size;
+		return ThePlugin.c1 + "Plassen din er nå " + getSize(id);
 	}
 	
 	/**
@@ -1065,5 +1159,11 @@ public class HandlePlaces {
 		places.remove(id);
 		ThePlugin.remPlaces.put(placeName, id);
 		return ThePlugin.c1 + placeName + " er slettet";
+	}
+	
+	public void sendHelp(CommandSender sender, String pageN, ArrayList<String> messages) {
+		int pageHeight = 0;
+		String about = "Hjelp: /plass";
+		paginator.sendAsPages(sender, pageN, pageHeight, about, messages);
 	}
 }

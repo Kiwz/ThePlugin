@@ -193,6 +193,38 @@ public class HandleWorlds {
 	
 	/**
 	 * 
+	 * @param worldName as String
+	 * @return spawn location for given worldName as Location
+	 */
+	public Location getSpawn(String worldName) {
+		Location loc = null;
+		World world = getWorld(worldName);
+		
+		if (world == null) {
+			return loc;
+		}
+		
+		if (worlds.get(world.getName()) == null) {
+			return world.getSpawnLocation();
+		}
+		
+		else {
+			String[] stringCoords = worlds.get(world.getName()).coords.split(" ");
+			String[] stringPitch = worlds.get(world.getName()).pitch.split(" ");
+			double x = Double.parseDouble(stringCoords[0]);
+			double y = Double.parseDouble(stringCoords[1]);
+			double z = Double.parseDouble(stringCoords[2]);
+			float pitch = Float.parseFloat(stringPitch[0]);
+			float yaw = Float.parseFloat(stringPitch[1]);
+			loc = new Location(world, x, y, z);
+			loc.setPitch(pitch);
+			loc.setYaw(yaw);
+			return loc;
+		}
+	}
+	
+	/**
+	 * 
 	 * @param player as Object
 	 * @param worldName as String
 	 * @return spawn location for given worldName as Location

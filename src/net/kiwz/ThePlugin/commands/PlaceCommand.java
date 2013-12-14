@@ -1,5 +1,7 @@
 package net.kiwz.ThePlugin.commands;
 
+import java.util.ArrayList;
+
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 
@@ -20,7 +22,6 @@ public class PlaceCommand {
 	 */
 	public boolean place(CommandSender sender, Command cmd, String[] args) {
 		HandlePlaces hPlaces = new HandlePlaces();
-		HelpCommand help = new HelpCommand();
 		Player player = Bukkit.getPlayer(sender.getName());
 		int id;
 		
@@ -49,17 +50,17 @@ public class PlaceCommand {
 		}
 		
 		if (args.length == 0) {
-			help.customHelp(sender, cmd.getName(), "1", help());
+			hPlaces.sendHelp(sender, "1", help());
 			return true;
 		}
 		
 		else if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("liste")) {
-				hPlaces.sendPlaceList(sender);
+				hPlaces.sendPlaceList(sender, "1");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("spiller")) {
-				hPlaces.sendPlayersPlaceList(sender);
+				hPlaces.sendPlayersPlaceList(sender, "1");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("her")) {
@@ -67,7 +68,7 @@ public class PlaceCommand {
 				return true;
 			}
 			else if (args[0].length() == 1) {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+				hPlaces.sendHelp(sender, args[0], help());
 				return true;
 			}
 			else {
@@ -82,6 +83,14 @@ public class PlaceCommand {
 		}
 		
 		if (args.length == 2) {
+			if (args[0].equalsIgnoreCase("liste")) {
+				hPlaces.sendPlaceList(sender, args[1]);
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("spiller")) {
+				hPlaces.sendPlayersPlaceList(sender, args[1]);
+				return true;
+			}
 			if (args[0].equalsIgnoreCase("spiller")) {
 				sender.sendMessage(hPlaces.getOwned(args[1]));
 				sender.sendMessage(hPlaces.getMembered(args[1]));
@@ -97,7 +106,7 @@ public class PlaceCommand {
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("flytt")) {
-				sender.sendMessage(hPlaces.setPlace(player, id, "40"));
+				sender.sendMessage(hPlaces.setPlace(player, id));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("spawn")) {
@@ -149,7 +158,7 @@ public class PlaceCommand {
 				return true;
 			}
 			else {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+				hPlaces.sendHelp(sender, args[0], help());
 				return true;
 			}
 		}
@@ -168,12 +177,12 @@ public class PlaceCommand {
 				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				return true;
 			}
-			if (args[0].equalsIgnoreCase("flytt")) {
+			if (args[0].equalsIgnoreCase("endre")) {
 				if (!args[2].matches("[0-9]+")) {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
-				sender.sendMessage(hPlaces.setPlace(player, id, args[2]));
+				sender.sendMessage(hPlaces.setRadius(player, id, args[2]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("entre")) {
@@ -223,7 +232,7 @@ public class PlaceCommand {
 				return true;
 			}
 			else {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+				hPlaces.sendHelp(sender, args[0], help());
 				return true;
 			}
 		}
@@ -248,12 +257,12 @@ public class PlaceCommand {
 				return true;
 			}
 			else {
-				help.customHelp(sender, cmd.getName(), args[0], help());
+				hPlaces.sendHelp(sender, args[0], help());
 				return true;
 			}
 		}
 		else {
-			help.customHelp(sender, cmd.getName(), args[0], help());
+			hPlaces.sendHelp(sender, args[0], help());
 			return true;
 		}
 	}
@@ -262,54 +271,52 @@ public class PlaceCommand {
 	 * 
 	 * @return Help entryes for /plass
 	 */
-	private String help() {
+	private ArrayList<String> help() {
 		ChatColor white = ChatColor.WHITE;
 		ChatColor gold = ChatColor.GOLD;
-		StringBuilder help = new StringBuilder();
-		help.append(gold + "/plass\n");
-		help.append(white + "Viser denne hjelpe menyen\n");
-		help.append(gold + "/plass liste\n");
-		help.append(white + "Viser en liste over alle plasser\n");
-		help.append(gold + "/plass spiller\n");
-		help.append(white + "Viser en liste over spillere som har plasser\n");
-		help.append(gold + "/plass spiller <spiller-navn>\n");
-		help.append(white + "Viser hvilke plasser spilleren er eier og medlem av\n");
-		help.append(gold + "/plass her\n");
-		help.append(white + "Viser info om plassen du står på\n");
-		help.append(gold + "/plass <plass-navn>\n");
-		help.append(white + "Viser info om angitte plass\n");
-		help.append(gold + "/plass ny <plass-navn>\n");
-		help.append(white + "Lager ny plass der du står (størrelse blir 81x81)\n");
-		help.append(gold + "/plass ny <plass-navn> <størrelse>\n");
-		help.append(white + "Lager ny plass der du står med ønsket størrelse\n");
-		help.append(gold + "/plass flytt <plass-navn>\n");
-		help.append(white + "Flytter plassen din til der du står (størrelse blir 81x81)\n");
-		help.append(gold + "/plass flytt <plass-navn> <størrelse>\n");
-		help.append(white + "Flytter plassen din til der du står med ønsket størrelse\n");
-		help.append(gold + "/plass spawn <plass-navn>\n");
-		help.append(white + "Teleporterer deg til spawn i angitte plass\n");
-		help.append(gold + "/plass setspawn <plass-navn>\n");
-		help.append(white + "Setter ny spawn til der du står\n");
-		help.append(gold + "/plass medlem <plass-navn> <spiller-navn>\n");
-		help.append(white + "Inviterer spiller til å bli medlem av din plass\n");
-		help.append(gold + "/plass spark <plass-navn> <spiller-navn>\n");
-		help.append(white + "Fjerner spiller som medlem av din plass\n");
-		help.append(gold + "/plass eier <plass-navn> <spiller-navn>\n");
-		help.append(white + "Setter ny eier av din plass, DU kan IKKE gjøre om dette\n");
-		help.append(gold + "/plass navn <plass-navn> <nytt-plass-navn>\n");
-		help.append(white + "Bytter navn på angitte plass\n");
-		help.append(gold + "/plass toggle <plass-navn> [privat, pvp, monstre, dyr]\n");
-		help.append(white + "Skrur på/av privat, pvp, monstre eller dyr\n");
-		help.append(gold + "/plass entre <plass-navn> <ny velkomst-melding>\n");
-		help.append(white + "Setter ny velkomst-melding for angitte plass\n");
-		help.append(gold + "/plass entre <plass-navn>\n");
-		help.append(white + "Fjerner velkomst-melding for angitte plass\n");
-		help.append(gold + "/plass forlate <plass-navn> <ny forlat-melding>\n");
-		help.append(white + "Setter ny forlat-melding for angitte plass\n");
-		help.append(gold + "/plass forlate <plass-navn>\n");
-		help.append(white + "Fjerner forlat-melding for angitte plass\n");
-		help.append(gold + "/plass slett <plass-navn>\n");
-		help.append(white + "Sletter angitte plass\n");
-		return help.toString();
+		ArrayList<String> help = new ArrayList<String>();
+		help.add(gold + "/plass her");
+		help.add(white + "Viser info om plassen du står på");
+		help.add(gold + "/plass <plass-navn>");
+		help.add(white + "Viser info om angitte plass");
+		help.add(gold + "/plass ny <plass-navn>");
+		help.add(white + "Lager ny plass der du står (størrelse blir 81x81)");
+		help.add(gold + "/plass ny <plass-navn> <radius>");
+		help.add(white + "Lager ny plass der du står med ønsket radius");
+		help.add(gold + "/plass flytt <plass-navn>");
+		help.add(white + "Flytter plassen din til der du står");
+		help.add(gold + "/plass endre <plass-navn> <radius>");
+		help.add(white + "Endrer størrelsen på angitt plass til angitt radius");
+		help.add(gold + "/plass spawn <plass-navn>");
+		help.add(white + "Teleporterer deg til spawn i angitt plass");
+		help.add(gold + "/plass setspawn <plass-navn>");
+		help.add(white + "Setter ny spawn til der du står for angitt plass");
+		help.add(gold + "/plass medlem <plass-navn> <spiller-navn>");
+		help.add(white + "Inviterer spiller til å bli medlem av angitt plass");
+		help.add(gold + "/plass spark <plass-navn> <spiller-navn>");
+		help.add(white + "Fjerner spiller som medlem av angitt plass");
+		help.add(gold + "/plass eier <plass-navn> <spiller-navn>");
+		help.add(white + "Setter ny eier i angitt plass, DU kan IKKE gjøre om dette");
+		help.add(gold + "/plass navn <plass-navn> <nytt-plass-navn>");
+		help.add(white + "Bytter navn på angitt plass");
+		help.add(gold + "/plass toggle <plass-navn> [privat, pvp, monstre, dyr]");
+		help.add(white + "Skrur på/av privat, pvp, monstre eller dyr for angitt plass");
+		help.add(gold + "/plass entre <plass-navn> <ny velkomst-melding>");
+		help.add(white + "Setter ny velkomst-melding for angitt plass");
+		help.add(gold + "/plass entre <plass-navn>");
+		help.add(white + "Fjerner velkomst-melding for angitt plass");
+		help.add(gold + "/plass forlate <plass-navn> <ny forlat-melding>");
+		help.add(white + "Setter ny forlat-melding for angitt plass");
+		help.add(gold + "/plass forlate <plass-navn>");
+		help.add(white + "Fjerner forlat-melding for angitt plass");
+		help.add(gold + "/plass slett <plass-navn>");
+		help.add(white + "Sletter angitt plass");
+		help.add(gold + "/plass liste");
+		help.add(white + "Viser en liste over alle plasser");
+		help.add(gold + "/plass spiller");
+		help.add(white + "Viser en liste over spillere som har plasser");
+		help.add(gold + "/plass spiller <spiller-navn>");
+		help.add(white + "Viser hvilke plasser spilleren er eier og medlem av");
+		return help;
 	}
 }
