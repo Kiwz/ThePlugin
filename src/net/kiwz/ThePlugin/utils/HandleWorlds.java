@@ -21,6 +21,7 @@ import org.bukkit.util.ChatPaginator;
 
 public class HandleWorlds {
 	Worlds world = new Worlds();
+	HandleHomes hHomes = new HandleHomes();
 	RemoveEntities e = new RemoveEntities();
 	private HashMap<String, Worlds> worlds = ThePlugin.getWorlds;
 
@@ -79,6 +80,7 @@ public class HandleWorlds {
 		if (!Bukkit.getServer().unloadWorld(world, true)) {
 			return ThePlugin.c2 + worldName + " kunne ikke bli slettet";
 		}
+		hHomes.removeHomes(world);
 		worldName = world.getName();
 		worlds.remove(worldName);
 		ThePlugin.remWorlds.add(worldName);
@@ -157,6 +159,7 @@ public class HandleWorlds {
 		world.type = type; // Kan ikke endres senere
 		world.seed = seed; // Kan ikke endres senere
 		worlds.put(world.world, world);
+		ThePlugin.remWorlds.remove(newWorld.getName());
 	}
 	
 	public ArrayList<String> getWorldNames() {

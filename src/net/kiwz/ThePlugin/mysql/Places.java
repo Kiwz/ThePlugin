@@ -60,6 +60,14 @@ public class Places {
 	}
 	
 	public void setTablePlaces(Connection conn, HashMap<Integer, Places> places) {
+		for (String placeName : ThePlugin.remPlaces.keySet()) {
+			try {
+				conn.createStatement().executeUpdate("DELETE FROM places WHERE PlaceID='" + ThePlugin.remPlaces.get(placeName) + "';");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		ThePlugin.remPlaces.clear();
 		for (int key : places.keySet()) {
 			int id = places.get(key).id;
 			int time = places.get(key).time;
@@ -89,10 +97,6 @@ public class Places {
 					+ "Monsters='" + monsters + "', Animals='" + animals + "', Enter='" + enter + "', Leave_='" + leave + "';";
 			try {
 				conn.createStatement().executeUpdate(queryString);
-				for (String placeName : ThePlugin.remPlaces.keySet()) {
-					conn.createStatement().executeUpdate("DELETE FROM places WHERE PlaceID='" + ThePlugin.remPlaces.get(placeName) + "';");
-				}
-				ThePlugin.remPlaces.clear();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

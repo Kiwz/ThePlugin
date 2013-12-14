@@ -939,11 +939,6 @@ public class HandlePlaces {
 			}
 		}
 		places.get(id).name = name;
-		for (String placeName : ThePlugin.remPlaces.keySet()) {
-			if (ThePlugin.remPlaces.get(placeName) == id) {
-				ThePlugin.remPlaces.remove(placeName);
-			}
-		}
 		return ThePlugin.c1 + "Du har byttet navn på plassen din til: " + name;
 	}
 	

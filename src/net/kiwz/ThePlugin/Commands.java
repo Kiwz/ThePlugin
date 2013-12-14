@@ -181,18 +181,7 @@ public class Commands implements CommandExecutor {
 			
 			// Test her:
 			
-			/*
-			StringBuilder header = new StringBuilder();
-			int i = 0;
-			while (i < 20) {
-				String playerName = "Kiwzjadhwuahds" + i;
-				header.append(ChatColor.RED + playerName + ChatColor.WHITE);
-				header.append(", ");
-				i++;
-			}
-			String[] msg = ChatPaginator.wordWrap(header.substring(0, header.length() - 2) + " ", 55);
-			sender.sendMessage(msg);
-			*/
+			
 			// Test slutter!
 
 			return true;

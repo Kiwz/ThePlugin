@@ -45,6 +45,7 @@ public class Permissions {
 	
 	public void setPermissions(Player player) {
 		PermissionAttachment atch = player.addAttachment(Bukkit.getPluginManager().getPlugin("ThePlugin"));
+		atch.setPermission("worldedit.navigation.jumpto.tool", true);
 		atch.setPermission("bukkit.command.ban", true);
 		atch.setPermission("bukkit.command.ban.list", true);
 		atch.setPermission("bukkit.command.unban", true);

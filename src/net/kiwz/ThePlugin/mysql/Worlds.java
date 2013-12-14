@@ -86,13 +86,17 @@ public class Worlds {
 					+ "Type='" + type + "', Seed='" + seed + "';";
 			try {
 				conn.createStatement().executeUpdate(queryString);
-				for (String worldName : ThePlugin.remWorlds) {
-					conn.createStatement().executeUpdate("DELETE FROM worlds WHERE World='" + worldName + "';");
-				}
-				ThePlugin.remWorlds.clear();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		for (String worldName : ThePlugin.remWorlds) {
+			try {
+				conn.createStatement().executeUpdate("DELETE FROM worlds WHERE World='" + worldName + "';");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		ThePlugin.remWorlds.clear();
 	}
 }

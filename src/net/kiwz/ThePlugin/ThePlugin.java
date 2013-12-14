@@ -41,7 +41,8 @@ public class ThePlugin extends JavaPlugin {
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
 	
 	private Homes homes = new Homes();
-	public static HashMap<Integer, Homes> getHomes;
+	public static HashMap<String, Homes> getHomes;
+	public static ArrayList<String> remHomes = new ArrayList<String>();
 	private Places places = new Places();
 	public static HashMap<Integer, Places> getPlaces;
 	public static HashMap<String, Integer> remPlaces = new HashMap<String, Integer>();

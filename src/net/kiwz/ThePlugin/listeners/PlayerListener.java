@@ -208,11 +208,11 @@ public class PlayerListener implements Listener {
 			loginMsg = ThePlugin.c3 + playerName + " logget inn";
 			player.sendMessage(ThePlugin.c1 + "############################################");
 	        player.sendMessage(ThePlugin.c1 + "Velkommen til LarvikGaming");
-	        player.sendMessage(ThePlugin.c1 + "Hjemmeside: " + ThePlugin.c3 + "http://larvikgaming.net");
-	        player.sendMessage(ThePlugin.c1 + "Kommandoer: " + ThePlugin.c3 + "http://larvikgaming.net/kommandoer.php");
-	        player.sendMessage(ThePlugin.c1 + "Kart: " + ThePlugin.c3 + "http://larvikgaming.net/dynmap.php");
-	        player.sendMessage(ThePlugin.c1 + "Forum: " + ThePlugin.c3 + "http://larvikgaming.net/forum/");
-	        player.sendMessage(ThePlugin.c1 + "Mumble: " + ThePlugin.c3 + "mumble.larvikgaming.net:60000");
+	        player.sendMessage(ThePlugin.c1 + "Hjemmeside:" + ThePlugin.c3 + " http://larvikgaming.net");
+	        player.sendMessage(ThePlugin.c1 + "Kommandoer:" + ThePlugin.c3 + " http://larvikgaming.net/kommandoer.php");
+	        player.sendMessage(ThePlugin.c1 + "Kart:" + ThePlugin.c3 + " http://larvikgaming.net/dynmap.php");
+	        player.sendMessage(ThePlugin.c1 + "Forum:" + ThePlugin.c3 + " http://larvikgaming.net/forum");
+	        player.sendMessage(ThePlugin.c1 + "Mumble:" + ThePlugin.c3 + " mumble.larvikgaming.net:60000");
 			player.sendMessage(ThePlugin.c1 + "############################################");
         }
         

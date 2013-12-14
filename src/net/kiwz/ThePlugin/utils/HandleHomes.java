@@ -1,5 +1,6 @@
 package net.kiwz.ThePlugin.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.kiwz.ThePlugin.ThePlugin;
@@ -11,7 +12,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class HandleHomes {
-	private HashMap<Integer, Homes> homes = ThePlugin.getHomes;
+	private HashMap<String, Homes> homes = ThePlugin.getHomes;
+	private ArrayList<String> remHomes = ThePlugin.remHomes;
 	
 	/**
 	 * 
@@ -42,7 +44,7 @@ public class HandleHomes {
 			return loc;
 		}
 		
-		for (int key : homes.keySet()) {
+		for (String key : homes.keySet()) {
 			String homePlayer = homes.get(key).player;
 			String homeWorld = homes.get(key).world;
 			
@@ -81,7 +83,7 @@ public class HandleHomes {
 		String coords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
 		String pitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
 		
-		for (int key : homes.keySet()) {
+		for (String key : homes.keySet()) {
 			String homePlayer = homes.get(key).player;
 			String homeWorld = homes.get(key).world;
 			
@@ -92,17 +94,32 @@ public class HandleHomes {
 			}
 		}
 		
-		int key = 0;
-		while (homes.containsKey(key)) {
-			key++;
-		}
-		
+		String key = playerName + " " + worldName;
 		Homes home = new Homes();
 		home.player = playerName;
 		home.world = worldName;
 		home.coords = coords;
 		home.pitch = pitch;
 		homes.put(key, home);
+		remHomes.remove(key);
 		return ThePlugin.c1 + "Du har satt nytt hjem her";
+	}
+	
+	/**
+	 * 
+	 * @param world as World
+	 * @Description This will remove all homes for given world
+	 */
+	public void removeHomes(World world) {
+		String worldName = world.getName();
+		
+		for (String key : homes.keySet()) {
+			if (homes.get(key).world.equals(worldName)) {
+				remHomes.add(homes.get(key).player + " " + worldName);
+			}
+		}
+		for (String key : remHomes) {
+			homes.remove(key);
+		}
 	}
 }
