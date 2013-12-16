@@ -16,6 +16,9 @@ public class SendAsPages {
         catch (NumberFormatException e){
         	pageNumber = 1;
         }
+        if (pageNumber == 0) {
+        	pageNumber = 1;
+        }
         int pageWidth;
         
     	if (!(sender instanceof Player)) {

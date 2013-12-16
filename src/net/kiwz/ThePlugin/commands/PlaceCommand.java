@@ -88,13 +88,14 @@ public class PlaceCommand {
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("spiller")) {
-				hPlaces.sendPlayersPlaceList(sender, args[1]);
-				return true;
-			}
-			if (args[0].equalsIgnoreCase("spiller")) {
-				sender.sendMessage(hPlaces.getOwned(args[1]));
-				sender.sendMessage(hPlaces.getMembered(args[1]));
-				return true;
+				if (args[1].matches("[0-9]+") && args[1].length() < 3) {
+					hPlaces.sendPlayersPlaceList(sender, args[1]);
+					return true;
+				}
+				else {
+					sender.sendMessage(hPlaces.getOwnedMembered(args[1]));
+					return true;
+				}
 			}
 			if (args[0].equalsIgnoreCase("ny")) {
 				sender.sendMessage(hPlaces.addPlace(player, args[1], "40"));

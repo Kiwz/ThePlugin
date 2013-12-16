@@ -18,7 +18,7 @@ public class ListCommand {
 		StringBuilder header = new StringBuilder();
 		for (Player player : players) {
 			String playerName = player.getName();
-			if (perm.isAdmin(player)) {
+			if (perm.isAdmin(player) || player.isOp()) {
 				header.append(ChatColor.RED + playerName + ChatColor.WHITE);
 				header.append(", ");
 			}
@@ -27,7 +27,11 @@ public class ListCommand {
 				header.append(", ");
 			}
 		}
-		String[] msg = ChatPaginator.wordWrap(header.substring(0, header.length() - 2) + " ", 55);
+		String playerNames = header.toString();
+		if (playerNames.length() > 0) {
+			playerNames = playerNames.substring(0, header.length() - 2);
+		}
+		String[] msg = ChatPaginator.wordWrap(playerNames + " ", 55);
 		sender.sendMessage(msg);
 	}
 }

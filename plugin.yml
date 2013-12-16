@@ -103,7 +103,7 @@ commands:
       /mute <player>
       /mute list
   unmute:
-    description: Nekter en spiller i å chatte
+    description: Spilleren kan chatte igjen
     aliases: []
     permission: ThePlugin.unmute
     permission-message: §cDu har ikke tilgang!
@@ -122,6 +122,12 @@ commands:
     permission: ThePlugin.plass
     permission-message: §cDu har ikke tilgang!
     usage: /plass
+  pvp:
+    description: Deaktiverer pvp for deg
+    aliases: [worker]
+    permission: ThePlugin.pvp
+    permission-message: §cDu har ikke tilgang!
+    usage: /pvp
   rules:
     description: Viser deg våres regler
     aliases: [regler]

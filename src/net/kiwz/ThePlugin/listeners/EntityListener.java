@@ -50,16 +50,25 @@ public class EntityListener implements Listener {
 		Entity attacker = event.getDamager();
 		Player playerAttacker;
 		Entity victim = event.getEntity();
+		Player playerVictim;
 		Location victimLoc = victim.getLocation();
-		int id = places.getIDWithCoords(victimLoc.getWorld().getName(), victimLoc.getX(), victimLoc.getZ());
-		
-		if (id == 0) {
-			return;
-		}
+		int id = places.getIDWithCoords(victimLoc);
 		
 		if (attacker instanceof Player && victim instanceof Player) {
 			playerAttacker = (Player) attacker;
-			if (!places.isPvP(id)) {
+			playerVictim = (Player) victim;
+			if (ThePlugin.pvpPlayers.contains(playerVictim.getName())) {
+				event.setCancelled(true);
+				playerAttacker.sendMessage(ThePlugin.c2 + "Du kan ikke skade en Admin");
+			}
+			else if (ThePlugin.pvpPlayers.contains(playerAttacker.getName())) {
+				event.setCancelled(true);
+				playerAttacker.sendMessage(ThePlugin.c2 + "Du kan ikke skade andre når du har skrudd av pvp");
+			}
+			else if (id == 0) {
+				return;
+			}
+			else if (!places.isPvP(id)) {
 				event.setCancelled(true);
 				playerAttacker.sendMessage(pvpDenyString);
 			}
@@ -67,11 +76,29 @@ public class EntityListener implements Listener {
 		
 		if (attacker instanceof Projectile && victim instanceof Player) {
 			LivingEntity shooter = ((Projectile) attacker).getShooter();
-			if (shooter instanceof Player && !places.isPvP(id)) {
+			if (shooter instanceof Player) {
 				playerAttacker = (Player) shooter;
-				event.setCancelled(true);
-				playerAttacker.sendMessage(pvpDenyString);
+				playerVictim = (Player) victim;
+				if (ThePlugin.pvpPlayers.contains(playerVictim.getName())) {
+					event.setCancelled(true);
+					playerAttacker.sendMessage(ThePlugin.c2 + "Du kan ikke skade en Admin");
+				}
+				else if (ThePlugin.pvpPlayers.contains(playerAttacker.getName())) {
+					event.setCancelled(true);
+					playerAttacker.sendMessage(ThePlugin.c2 + "Du kan ikke skade andre når du har skrudd av pvp");
+				}
+				else if (id == 0) {
+					return;
+				}
+				if (!places.isPvP(id)) {
+					event.setCancelled(true);
+					playerAttacker.sendMessage(pvpDenyString);
+				}
 			}
+		}
+
+		if (id == 0) {
+			return;
 		}
 		
 		if (attacker instanceof Player && victim instanceof Animals) {
@@ -147,8 +174,7 @@ public class EntityListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		Location loc = event.getEntity().getLocation();
-		int id = places.getIDWithCoords(loc.getWorld().getName(), loc.getX(), loc.getZ());
+		int id = places.getIDWithCoords(event.getEntity().getLocation());
 		
 		switch (event.getSpawnReason()) {
 		case BUILD_WITHER:

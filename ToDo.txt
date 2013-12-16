@@ -3,18 +3,16 @@ Tester som må utføres:
 Bugs:
 consolfilter funker ikke...
 spillere er usynlig for andre etter en teleport
-/plass spiller <spiller-navn> funker ikke
 
 
 Kommandoer:
-/pvp (Admins skal ikke ta eller gjøre skade på andre spillere)
 
 Dynmap:
-Fikse en hook mellom min plugin og dynmap
+Sette spawn-flag for hver plass, denne skal kunne trykkes på å gi info om plassen
 
 
 Places:
-
+Sikker spawn må inkludere trap_door
 
 HungerGames:
 

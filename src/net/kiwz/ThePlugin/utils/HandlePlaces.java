@@ -69,13 +69,7 @@ public class HandlePlaces {
 		if (player.isOp() || perm.isAdmin(player)) {
 			return true;
 		}
-		String world = loc.getWorld().getName();
-		int locX = (int) loc.getX();
-		int locY = (int) loc.getY();
-		int locZ = (int) loc.getZ();
-		if (locX < 0) locX = locX + 1;
-		if (locZ < 0) locZ = locZ + 1;
-		int id = getIDWithCoords(world, locX, locZ);
+		int id = getIDWithCoords(loc);
 		if (id != 0) {
 			if (isOwner(player.getName(), id) || isMember(player.getName(), id)) {
 				return true;
@@ -84,7 +78,7 @@ public class HandlePlaces {
 				return false;
 			}
 		}
-		else if (locY < 40 || !hWorlds.isClaimable(player.getWorld())) {
+		else if (loc.getBlockY() < 40 || !hWorlds.isClaimable(player.getWorld())) {
 			return true;
 		}
 		else {
@@ -98,12 +92,7 @@ public class HandlePlaces {
 	 * @return true if this location is outside a "plass"
 	 */
 	public boolean isWilderness(Location loc) {
-		String world = loc.getWorld().getName();
-		int locX = (int) loc.getX();
-		int locZ = (int) loc.getZ();
-		if (locX < 0) locX = locX + 1;
-		if (locZ < 0) locZ = locZ + 1;
-		int id = getIDWithCoords(world, locX, locZ);
+		int id = getIDWithCoords(loc);
 		if (id != 0) {
 			return false;
 		}
@@ -111,55 +100,6 @@ public class HandlePlaces {
 			return true;
 		}
 	}
-	
-	/**
-	 * 
-	 * @param loc as Location
-	 * @param size as int
-	 * @return true if parts of given location + size isn't inside another place
-	 */
-	/*public boolean isAvailable(Location loc, int size) {
-		String world = loc.getWorld().getName();
-		int x = (int) loc.getX();
-		int z = (int) loc.getZ();
-		for (int key : places.keySet()) {
-			String placeWorld = places.get(key).world;
-			int otherX = places.get(key).x;
-			int otherZ = places.get(key).z;
-			int otherSize = places.get(key).size;
-			if (world.equals(placeWorld) && x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
-					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
-				return false;
-	    	}
-		}
-		return true;
-	}*/
-	
-	/**
-	 * 
-	 * @param id as int
-	 * @param loc as Location
-	 * @param size as int
-	 * @return true if parts of given location + size isn't inside another place
-	 */
-	/*public boolean isAvailable(int id, Location loc, int size) {
-		String world = loc.getWorld().getName();
-		int x = (int) loc.getX();
-		int z = (int) loc.getZ();
-		for (int key : places.keySet()) {
-			String placeWorld = places.get(key).world;
-			int otherX = places.get(key).x;
-			int otherZ = places.get(key).z;
-			int otherSize = places.get(key).size;
-			if (world.equals(placeWorld) && x + size >= otherX - otherSize && x - size <= otherX + otherSize &&
-					z + size >= otherZ - otherSize && z - size <= otherZ + otherSize) {
-				if (places.get(key).id != id) {
-					return false;
-				}
-	    	}
-		}
-		return true;
-	}*/
 	
 	/**
 	 * 
@@ -171,8 +111,8 @@ public class HandlePlaces {
 	public List<Integer> getConflictedPlaces(int id, Location loc, int size) {
 		List<Integer> placeIDs = new ArrayList<Integer>();
 		String world = loc.getWorld().getName();
-		int x = (int) loc.getX();
-		int z = (int) loc.getZ();
+		int x = loc.getBlockX();
+		int z = loc.getBlockZ();
 		for (int key : places.keySet()) {
 			String placeWorld = places.get(key).world;
 			int otherX = places.get(key).x;
@@ -191,12 +131,12 @@ public class HandlePlaces {
 	public boolean isNearSpawn(Location loc) {
 		Location spawn = hWorlds.getSpawn(loc.getWorld().getName());
 		int distance = 300;
+		int x = loc.getBlockX();
+		int z = loc.getBlockZ();
 		int spawnX = spawn.getBlockX();
 		int spawnZ = spawn.getBlockZ();
-		int locX = loc.getBlockX();
-		int locZ = loc.getBlockZ();
-		if (locX >= spawnX + distance || locX <= spawnX - distance ||
-				locZ >= spawnZ + distance || locZ <= spawnZ - distance) {
+		if (x >= spawnX + distance || x <= spawnX - distance ||
+				z >= spawnZ + distance || z <= spawnZ - distance) {
 			return false;
 		}
 		return true;
@@ -208,14 +148,17 @@ public class HandlePlaces {
 	 * @param locZ as double
 	 * @return id of the place that this x and z is within as int, if no place was found id = 0
 	 */
-	public int getIDWithCoords(String world, double locX, double locZ) {
+	public int getIDWithCoords(Location loc) {
+		String world = loc.getWorld().getName();
+		int x = loc.getBlockX();
+		int z = loc.getBlockZ();
 		for (int key : places.keySet()) {
 			String placeWorld = places.get(key).world;
 			int placeX = places.get(key).x;
 			int placeZ = places.get(key).z;
 			int placeSize = places.get(key).size;
-			if (world.equals(placeWorld) && (placeX + placeSize) >= locX && (placeX - placeSize) <= locX &&
-					(placeZ + placeSize) >= locZ && (placeZ - placeSize) <= locZ) {
+			if (world.equals(placeWorld) && (placeX + placeSize) >= x && (placeX - placeSize) <= x &&
+					(placeZ + placeSize) >= z && (placeZ - placeSize) <= z) {
 				return places.get(key).id;
 			}
 		}
@@ -296,6 +239,18 @@ public class HandlePlaces {
 	 */
 	public String getOwner(int id) {
 		return places.get(id).owner;
+	}
+	
+	/**
+	 * 
+	 * @param player as String
+	 * @return a String explaining wich places given player ownes and is member of
+	 */
+	public String getOwnedMembered(String player) {
+		if (!hPlayers.hasPlayedBefore(player)) {
+			return ThePlugin.c2 + player + " er ikke en spiller her";
+		}
+		return getOwned(player) + "\n" + getMembered(player);
 	}
 	
 	/**
@@ -673,10 +628,9 @@ public class HandlePlaces {
 	 * <p>This will send messages to sender containing information of place where sender stands</p>
 	 */
 	public void sendPlaceHere(CommandSender sender) {
-		String world = Bukkit.getServer().getPlayer(sender.getName()).getLocation().getWorld().getName();
-		int locX = (int) Bukkit.getServer().getPlayer(sender.getName()).getLocation().getX();
-		int locZ = (int) Bukkit.getServer().getPlayer(sender.getName()).getLocation().getZ();
-		int id = getIDWithCoords(world, locX, locZ);
+		Player player = Bukkit.getPlayer(sender.getName());
+		Location loc = player.getLocation();
+		int id = getIDWithCoords(loc);
 		if (id != 0) {
 			String members = "";
 			for (String member : getMembers(id)) {
@@ -811,6 +765,7 @@ public class HandlePlaces {
 		while (places.containsKey(id)) {
 			id++;
 		}
+		
 		Places place = new Places();
 		place.id = id;
 		place.time = (int) (System.currentTimeMillis() / 1000);
@@ -818,8 +773,8 @@ public class HandlePlaces {
 		place.owner = player.getName();
 		place.members = "";
 		place.world = loc.getWorld().getName();
-		place.x = (int) loc.getX();
-		place.z = (int) loc.getZ();
+		place.x = loc.getBlockX();
+		place.z = loc.getBlockZ();
 		place.size = size;
 		place.spawnCoords = spawnCoords;
 		place.spawnPitch = spawnPitch;
@@ -860,9 +815,6 @@ public class HandlePlaces {
 		if (isNearSpawn(loc) && (size < 10 || size > 15) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass flytt <plass-navn> 15";
 		}
-		if (size < 10 || size > 70 && !player.isOp()) {
-			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
-		}
 		if (!getConflictedPlaces(id, loc, size).isEmpty()) {
 			List<Integer> places = getConflictedPlaces(id, loc, size);
 			String placesString = "";
@@ -875,10 +827,10 @@ public class HandlePlaces {
 		if (!hItems.removeItem(player, material, amount)) {
 			return ThePlugin.c2 + "Det koster 5 gullbarer for å flytte plassen";
 		}
+		
 		places.get(id).world = loc.getWorld().getName();
-		places.get(id).x = (int) loc.getX();
-		places.get(id).z = (int) loc.getZ();
-		places.get(id).size = size;
+		places.get(id).x = loc.getBlockX();
+		places.get(id).z = loc.getBlockZ();
 		places.get(id).spawnCoords = spawnCoords;
 		places.get(id).spawnPitch = spawnPitch;
 		return ThePlugin.c1 + "Du har flyttet plassen din hit";
@@ -900,7 +852,7 @@ public class HandlePlaces {
 		if (isNearSpawn(loc) && (size < 10 || size > 15) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass flytt <plass-navn> 15";
 		}
-		if (size < 10 || size > 70 && !player.isOp()) {
+		if ((size < 10 || size > 70) && !player.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
 		if (!getConflictedPlaces(id, loc, size).isEmpty()) {
@@ -1014,13 +966,13 @@ public class HandlePlaces {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		Location loc = player.getLocation();
-		int locX = (int) loc.getX();
-		int locZ = (int) loc.getZ();
+		int x = loc.getBlockX();
+		int z = loc.getBlockZ();
 		int placeX = places.get(id).x;
 		int placeZ = places.get(id).z;
 		int placeSize = places.get(id).size;
-		if ((placeX + placeSize) >= locX && (placeX - placeSize) <= locX &&
-				(placeZ + placeSize) >= locZ && (placeZ - placeSize) <= locZ) {
+		if ((placeX + placeSize) >= x && (placeX - placeSize) <= x &&
+				(placeZ + placeSize) >= z && (placeZ - placeSize) <= z) {
 			String spawnCoords = Double.toString(loc.getX()) + " " + Double.toString(loc.getY()) + " " + Double.toString(loc.getZ());
 			String spawnPitch = Float.toString(loc.getPitch()) + " " + Float.toString(loc.getYaw());
 			places.get(id).spawnCoords = spawnCoords;

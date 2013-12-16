@@ -20,6 +20,7 @@ import net.kiwz.ThePlugin.mysql.Places;
 import net.kiwz.ThePlugin.mysql.Players;
 import net.kiwz.ThePlugin.mysql.Worlds;
 import net.kiwz.ThePlugin.utils.ConsoleFilter;
+import net.kiwz.ThePlugin.utils.Dynmap;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
 import net.kiwz.ThePlugin.utils.Permissions;
 import net.kiwz.ThePlugin.utils.ServerManagement;
@@ -53,6 +54,7 @@ public class ThePlugin extends JavaPlugin {
 	public static ArrayList<String> remWorlds = new ArrayList<String>();
 	public static ArrayList<String> admins = new ArrayList<String>();
 	public static HashMap<String, List<String>> chatIgnore;
+	public static ArrayList<String> pvpPlayers = new ArrayList<String>();
 	
 	@Override
 	public void onLoad() {
@@ -108,6 +110,7 @@ public class ThePlugin extends JavaPlugin {
 		getCommand("unmute").setExecutor(cmds);
 	    getCommand("oi").setExecutor(cmds);
 	    getCommand("plass").setExecutor(cmds);
+	    getCommand("pvp").setExecutor(cmds);
 	    getCommand("rules").setExecutor(cmds);
 		getCommand("spawn").setExecutor(cmds);
 		getCommand("setspawn").setExecutor(cmds);
@@ -127,9 +130,9 @@ public class ThePlugin extends JavaPlugin {
 		ServerManagement sm = new ServerManagement();
 	    sm.autoStop();
 	    sm.save(10L);
-	    
-	    //Dynmap dynmap = new Dynmap();
-	    //dynmap.activatedynmap();
+
+    	Dynmap dynmap = new Dynmap();
+    	dynmap.markTheMap();
 	}
 	
 	@Override

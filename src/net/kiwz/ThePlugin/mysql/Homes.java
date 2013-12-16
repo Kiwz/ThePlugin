@@ -34,6 +34,17 @@ public class Homes {
 	}
 	
 	public void setTableHomes(Connection conn, HashMap<String, Homes> homes) {
+		for (String key : ThePlugin.remHomes) {
+			String[] string = key.split(" ");
+			String playerName = string[0];
+			String worldName = string[1];
+			try {
+				conn.createStatement().executeUpdate("DELETE FROM homes WHERE Player='" + playerName + "' AND World='" + worldName + "';");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		ThePlugin.remHomes.clear();
 		for (String key : homes.keySet()) {
 			String homePlayer = homes.get(key).player;
 			String homeWorld = homes.get(key).world;
@@ -48,16 +59,5 @@ public class Homes {
 				e.printStackTrace();
 			}
 		}
-		for (String key : ThePlugin.remHomes) {
-			String[] string = key.split(" ");
-			String playerName = string[0];
-			String worldName = string[1];
-			try {
-				conn.createStatement().executeUpdate("DELETE FROM homes WHERE Player='" + playerName + "' AND World='" + worldName + "';");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		ThePlugin.remHomes.clear();
 	}
 }

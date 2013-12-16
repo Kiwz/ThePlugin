@@ -26,6 +26,7 @@ public class MoveListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		Location fromLoc = event.getFrom();
+		Location toLoc = event.getTo();
 		Block block = event.getTo().getBlock();
 		int fromX = (int) event.getFrom().getX();
 		int fromZ = (int) event.getFrom().getZ();
@@ -34,8 +35,8 @@ public class MoveListener implements Listener {
 		if (fromX == toX && fromZ == toZ) {
 			return;
 		}
-		int fromID = places.getIDWithCoords(player.getWorld().getName(), fromX, fromZ);
-		int toID = places.getIDWithCoords(player.getWorld().getName(), toX, toZ);
+		int fromID = places.getIDWithCoords(fromLoc);
+		int toID = places.getIDWithCoords(toLoc);
 		places.sendEnterLeave(player, fromID, toID);
 		warnPvP.warnPvP(player, player.getWorld(), player.getWorld(), fromID, toID);
 		int border = worlds.getBorder(event.getPlayer().getWorld());
@@ -56,14 +57,12 @@ public class MoveListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
+		Location fromLoc = event.getFrom();
+		Location toLoc = event.getTo();
 		World fromWorld = event.getFrom().getWorld();
 		World toWorld = event.getTo().getWorld();
-		int fromX = (int) event.getFrom().getX();
-		int fromZ = (int) event.getFrom().getZ();
-		int toX = (int) event.getTo().getX();
-		int toZ = (int) event.getTo().getZ();
-		int fromID = places.getIDWithCoords(fromWorld.getName(), fromX, fromZ);
-		int toID = places.getIDWithCoords(toWorld.getName(), toX, toZ);
+		int fromID = places.getIDWithCoords(fromLoc);
+		int toID = places.getIDWithCoords(toLoc);
 		places.sendEnterLeave(player, fromID, toID);
 		warnPvP.warnPvP(player, fromWorld, toWorld, fromID, toID);
 	}

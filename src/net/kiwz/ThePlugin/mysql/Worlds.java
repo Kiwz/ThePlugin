@@ -57,6 +57,14 @@ public class Worlds {
 	}
 	
 	public void setTableWorlds(Connection conn, HashMap<String, Worlds> worlds) {
+		for (String worldName : ThePlugin.remWorlds) {
+			try {
+				conn.createStatement().executeUpdate("DELETE FROM worlds WHERE World='" + worldName + "';");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		ThePlugin.remWorlds.clear();
 		for (String key : worlds.keySet()) {
 			String world = worlds.get(key).world;
 			String coords = worlds.get(key).coords;
@@ -90,13 +98,5 @@ public class Worlds {
 				e.printStackTrace();
 			}
 		}
-		for (String worldName : ThePlugin.remWorlds) {
-			try {
-				conn.createStatement().executeUpdate("DELETE FROM worlds WHERE World='" + worldName + "';");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		ThePlugin.remWorlds.clear();
 	}
 }
