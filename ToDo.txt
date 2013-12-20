@@ -1,4 +1,15 @@
+Opprydding:
+Må fikse banen til filene som lages + en felles class for alle filer istedefor en fil i forskjellige classes
+
+
+Tilegg:
+Chat-sensurering (hent ord fra *.txt)
+
+
+
 Tester som må utføres:
+
+
 
 Bugs:
 consolfilter funker ikke...
@@ -7,11 +18,15 @@ spillere er usynlig for andre etter en teleport
 
 Kommandoer:
 
+
+
 Dynmap:
 
 
+
 Places:
-Sikker spawn må inkludere trap_door
+
+
 
 HungerGames:
 

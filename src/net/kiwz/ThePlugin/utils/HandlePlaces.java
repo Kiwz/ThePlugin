@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
@@ -349,32 +348,7 @@ public class HandlePlaces {
 	}
 	
 	public boolean isSpawnSafe(Player player, int id) {
-		Location loc = getSpawn(id);
-		Block block = loc.getBlock();
-		Material a = block.getRelative(0, 1, 0).getType();
-		Material b = block.getRelative(0, 0, 0).getType();
-		Material c = block.getRelative(0, -1, 0).getType();
-		Material d = block.getRelative(0, -2, 0).getType();
-		Material air = Material.AIR;
-		Material lava = Material.LAVA;
-		Material sLava = Material.STATIONARY_LAVA;
-		Material water = Material.WATER;
-		Material sWater = Material.STATIONARY_WATER;
-		Material fire = Material.FIRE;
-		if (isOwner(player.getName(), id) || isMember(player.getName(), id) || perm.isAdmin(player)) {
-			return true;
-		}
-		if (a.equals(air) && b.equals(air)) {
-			if (c.equals(lava) || c.equals(sLava) || c.equals(water) || c.equals(sWater) || c.equals(fire)) {
-				return false;
-			}
-			if ((c.equals(air)) && (d.equals(air) || d.equals(lava) || d.equals(sLava) || d.equals(water) ||
-					d.equals(sWater) || d.equals(fire))) {
-				return false;
-			}
-			return true;
-		}
-		return false;
+		return new SpawnSafe().isSpawnSafe(getSpawn(id));
 	}
 	
 	/**

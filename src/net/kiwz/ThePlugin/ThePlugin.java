@@ -24,6 +24,7 @@ import net.kiwz.ThePlugin.utils.Dynmap;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
 import net.kiwz.ThePlugin.utils.Permissions;
 import net.kiwz.ThePlugin.utils.ServerManagement;
+import net.kiwz.ThePlugin.utils.SpawnSafe;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,6 +54,7 @@ public class ThePlugin extends JavaPlugin {
 	public static HashMap<String, Worlds> getWorlds;
 	public static ArrayList<String> remWorlds = new ArrayList<String>();
 	public static ArrayList<String> admins = new ArrayList<String>();
+	public static ArrayList<String> blocks = new ArrayList<String>();
 	public static HashMap<String, List<String>> chatIgnore;
 	public static ArrayList<String> pvpPlayers = new ArrayList<String>();
 	
@@ -82,8 +84,9 @@ public class ThePlugin extends JavaPlugin {
 		Bukkit.getLogger().setFilter(filter);
 		Logger.getLogger("Minecraft").setFilter(filter);
 		Logger.getLogger("global").setFilter(filter);
-		
+
 		admins = new Permissions().loadAdmins();
+		blocks = new SpawnSafe().getBlocks();
 		chatIgnore = new HashMap<String, List<String>>();
 		
 		HandleWorlds hWorlds = new HandleWorlds();

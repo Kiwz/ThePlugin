@@ -115,7 +115,7 @@ public class PlaceCommand {
 					sender.sendMessage(ThePlugin.c2 + args[1] + " er en privat plass og du kan ikke teleportere hit");
 				}
 				else if (!hPlaces.isSpawnSafe(player, id)){
-					sender.sendMessage(ThePlugin.c2 + args[1] + " har ingen spawn");
+					sender.sendMessage(ThePlugin.c2 + args[1] + " sin spawn er utrygg, du blir ikke teleportert");
 				}
 				else {
 					player.teleport(hPlaces.getSpawn(id));

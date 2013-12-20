@@ -9,7 +9,7 @@ public class ConsoleFilter implements Filter {
 		String msg = record.getMessage();
 		String filter[] = { "Server permissions file", "Reached end of stream for", "issued server command:",
 				"DSCT: socket closed", "Connection reset", "lost connection", "logged in with entity id", "moved wrongly!",
-				"Disconnecting", "achievement", "UUID"};
+				"Disconnecting", "achievement", "UUID" };
 		for (String thisFilter : filter) {
 			if (msg.contains(thisFilter)) {
 				return false;
