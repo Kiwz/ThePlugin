@@ -348,7 +348,8 @@ public class HandlePlaces {
 	}
 	
 	public boolean isSpawnSafe(Player player, int id) {
-		return new SpawnSafe().isSpawnSafe(getSpawn(id));
+		if (isOwner(player.getName(), id) || isMember(player.getName(), id) || perm.isAdmin(player)) return true;
+		else return new SpawnSafe().isSpawnSafe(getSpawn(id));
 	}
 	
 	/**

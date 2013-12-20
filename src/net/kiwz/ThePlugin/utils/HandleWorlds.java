@@ -113,6 +113,7 @@ public class HandleWorlds {
 		
 		wc.createWorld();
 		World world = Bukkit.getServer().getWorld(worldName);
+		world.setPVP(false);
 		addWorld(world);
 		return ChatColor.GOLD + "World: " + ChatColor.WHITE + world.getName()
 				+ ChatColor.GOLD + " Environment: " + ChatColor.WHITE + world.getEnvironment()
