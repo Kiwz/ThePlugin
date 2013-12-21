@@ -70,9 +70,29 @@ public class BlockListener implements Listener {
 	public void onBlockIgnite(BlockIgniteEvent event) {
 		Block block = event.getBlock();
 		
-		if (!worlds.isFireSpread(block.getWorld()) && event.getCause() == IgniteCause.SPREAD) {
+		if (!worlds.isFireSpread(block.getWorld()) && event.getCause().equals(IgniteCause.SPREAD)) {
 			event.setCancelled(true);
 			return;
+		}
+		
+		if (event.getCause().equals(IgniteCause.LAVA)) {
+			Location fromLoc = event.getIgnitingBlock().getLocation();
+			Location toLoc = event.getBlock().getLocation();
+			int fromID = places.getIDWithCoords(fromLoc);
+			int toID = places.getIDWithCoords(toLoc);
+			String fromOwner = "";
+			String toOwner = "";
+			if (fromID != toID) {
+				if (fromID != 0) {
+					fromOwner = places.getOwner(fromID);
+				}
+				if (toID != 0) {
+					toOwner = places.getOwner(toID);
+				}
+				if (!fromOwner.equals(toOwner)) {
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 	
