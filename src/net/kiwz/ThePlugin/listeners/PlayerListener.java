@@ -52,26 +52,44 @@ public class PlayerListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-
-		if (!worlds.isTrample(block.getWorld()) && event.getAction() == Action.PHYSICAL) {
-			if ((block.getType() == Material.SOIL) || (block.getType() == Material.CROPS)) {
+		Material soil = Material.SOIL;
+		Material crops = Material.CROPS;
+		Material wDoor = Material.WOODEN_DOOR;
+		Material boat = Material.BOAT;
+		Material cart = Material.MINECART;
+		Material sCart = Material.STORAGE_MINECART;
+		Material pCart = Material.POWERED_MINECART;
+		Material hCart = Material.HOPPER_MINECART;
+		Material wPlate = Material.WOOD_PLATE;
+		Material sPlate = Material.STONE_PLATE;
+		Material iPlate = Material.IRON_PLATE;
+		Material gPlate = Material.GOLD_PLATE;
+		
+		if (!worlds.isTrample(block.getWorld()) && event.getAction().equals(Action.PHYSICAL)) {
+			if ((block.getType().equals(soil)) || (block.getType().equals(crops))) {
 				event.setCancelled(true);
 				return;
 			}
 		}
-		
 		if (event.getClickedBlock() != null) {
-			String type = event.getClickedBlock().getType().toString();
-			if (type == "WOODEN_DOOR") {
+			Material clickedBlock = event.getClickedBlock().getType();
+			Material heldItem = player.getItemInHand().getType();
+			if (clickedBlock.equals(wDoor)) {
 				return;
 			}
-			String held = player.getItemInHand().getType().toString();
-			if (places.isWilderness(event.getClickedBlock().getLocation()) && (held == "BOAT" || held == "MINECART" ||
-					held == "STORAGE_MINECART" || held == "POWERED_MINECART" || held == "HOPPER_MINECART")) {
-				return;
+			if (places.isWilderness(event.getClickedBlock().getLocation())) {
+				if (heldItem.equals(boat) || heldItem.equals(cart) || heldItem.equals(sCart) ||
+						heldItem.equals(pCart) || heldItem.equals(hCart)) {
+					return;
+				}
 			}
 			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {
 				event.setCancelled(true);
+				/// Må fikse iPlate og gPlate
+				if (clickedBlock.equals(wPlate) || clickedBlock.equals(sPlate) ||
+						clickedBlock.equals(iPlate) || clickedBlock.equals(gPlate)) {
+					return;
+				}
 				player.updateInventory();
 				player.sendMessage(denyString);
 				return;
