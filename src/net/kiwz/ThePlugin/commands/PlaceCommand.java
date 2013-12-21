@@ -25,23 +25,6 @@ public class PlaceCommand {
 		Player player = Bukkit.getPlayer(sender.getName());
 		int id;
 		
-		if (!(sender instanceof Player)) {
-			int check = 0;
-			if (args.length == 0) {
-				check = 1;
-			}
-			if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("spiller")) {
-				check = 1;
-			}
-			if (args.length == 1 && !args[0].equalsIgnoreCase("her")) {
-				check = 1;
-			}
-			if (check == 0) {
-				sender.sendMessage(ThePlugin.c2 + "Consolen kan bare bruke /plass, /plass liste, /plass spiller <navn> og /plass <navn>");
-				return true;
-			}
-		}
-		
 		for (String arg : args) {
 			if (!arg.matches("[a-zA-Z-_0-9æøåÆØÅ]+")) {
 				sender.sendMessage(ThePlugin.c2 + "Tillatte tegn er a-å A-Å 0-9 - _");
@@ -63,7 +46,7 @@ public class PlaceCommand {
 				hPlaces.sendPlayersPlaceList(sender, "1");
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("her")) {
+			else if (args[0].equalsIgnoreCase("her") && sender instanceof Player) {
 				hPlaces.sendPlaceHere(sender);
 				return true;
 			}
@@ -72,7 +55,7 @@ public class PlaceCommand {
 				return true;
 			}
 			else {
-				id = hPlaces.getID(args[0]);
+				id = hPlaces.getID(sender, args[0]);
 				if (id == 0) {
 					sender.sendMessage(ThePlugin.c2 + args[0] + " finnes ikke");
 					return true;
@@ -98,20 +81,32 @@ public class PlaceCommand {
 				}
 			}
 			if (args[0].equalsIgnoreCase("ny")) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(ThePlugin.c2 + "Consolen kan ikke bruke /plass " + args[0]);
+					return true;
+				}
 				sender.sendMessage(hPlaces.addPlace(player, args[1], "40"));
 				return true;
 			}
-			id = hPlaces.getID(args[1]);
+			id = hPlaces.getID(sender, args[1]);
 			if (id == 0) {
 				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("flytt")) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(ThePlugin.c2 + "Consolen kan ikke bruke /plass " + args[0]);
+					return true;
+				}
 				sender.sendMessage(hPlaces.setPlace(player, id));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("spawn")) {
-				if (hPlaces.isPriv(id) && !(player.isOp() || hPlaces.isOwner(player.getName(), id) || hPlaces.isMember(player.getName(), id))) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(ThePlugin.c2 + "Consolen kan ikke bruke /plass " + args[0]);
+					return true;
+				}
+				if (hPlaces.isPriv(id) && !(player.isOp() || hPlaces.isOwner(sender, id) || hPlaces.isMember(sender, id))) {
 					sender.sendMessage(ThePlugin.c2 + args[1] + " er en privat plass og du kan ikke teleportere hit");
 				}
 				else if (!hPlaces.isSpawnSafe(player, id)){
@@ -123,19 +118,23 @@ public class PlaceCommand {
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("setspawn")) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(ThePlugin.c2 + "Consolen kan ikke bruke /plass " + args[0]);
+					return true;
+				}
 				sender.sendMessage(hPlaces.setSpawn(player, id));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("slett")) {
-				sender.sendMessage(hPlaces.remPlace(player, id));
+				sender.sendMessage(hPlaces.remPlace(sender, id));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("entre")) {
-				sender.sendMessage(hPlaces.setEnter(player, id, ""));
+				sender.sendMessage(hPlaces.setEnter(sender, id, ""));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("forlate")) {
-				sender.sendMessage(hPlaces.setLeave(player, id, ""));
+				sender.sendMessage(hPlaces.setLeave(sender, id, ""));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("navn")) {
@@ -166,6 +165,10 @@ public class PlaceCommand {
 		
 		else if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("ny")) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(ThePlugin.c2 + "Consolen kan ikke bruke /plass " + args[0]);
+					return true;
+				}
 				if (!args[2].matches("[0-9]+")) {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
@@ -173,7 +176,7 @@ public class PlaceCommand {
 				sender.sendMessage(hPlaces.addPlace(player, args[1], args[2]));
 				return true;
 			}
-			id = hPlaces.getID(args[1]);
+			id = hPlaces.getID(sender, args[1]);
 			if (id == 0) {
 				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				return true;
@@ -183,36 +186,36 @@ public class PlaceCommand {
 					sender.sendMessage(ThePlugin.c2 + "Størrelsen må defineres med tall");
 					return true;
 				}
-				sender.sendMessage(hPlaces.setRadius(player, id, args[2]));
+				sender.sendMessage(hPlaces.setRadius(sender, id, args[2]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("entre")) {
-				sender.sendMessage(hPlaces.setEnter(player, id, args[2]));
+				sender.sendMessage(hPlaces.setEnter(sender, id, args[2]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("forlate")) {
-				sender.sendMessage(hPlaces.setLeave(player, id, args[2]));
+				sender.sendMessage(hPlaces.setLeave(sender, id, args[2]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("navn")) {
-				sender.sendMessage(hPlaces.setName(player, id, args[2]));
+				sender.sendMessage(hPlaces.setName(sender, id, args[2]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("toggle")) {
 				if (args[2].equalsIgnoreCase("privat")) {
-					sender.sendMessage(hPlaces.setPriv(player, id));
+					sender.sendMessage(hPlaces.setPriv(sender, id));
 					return true;
 				}
 				else if (args[2].equalsIgnoreCase("pvp")) {
-					sender.sendMessage(hPlaces.setPvP(player, id));
+					sender.sendMessage(hPlaces.setPvP(sender, id));
 					return true;
 				}
 				else if (args[2].equalsIgnoreCase("monstre")) {
-					sender.sendMessage(hPlaces.setMonsters(player, id));
+					sender.sendMessage(hPlaces.setMonsters(sender, id));
 					return true;
 				}
 				else if (args[2].equalsIgnoreCase("dyr")) {
-					sender.sendMessage(hPlaces.setAnimals(player, id));
+					sender.sendMessage(hPlaces.setAnimals(sender, id));
 					return true;
 				}
 				else {
@@ -221,15 +224,15 @@ public class PlaceCommand {
 				}
 			}
 			else if (args[0].equalsIgnoreCase("medlem")) {
-				sender.sendMessage(hPlaces.addMember(player, id, args[2]));
+				sender.sendMessage(hPlaces.addMember(sender, id, args[2]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("spark")) {
-				sender.sendMessage(hPlaces.remMember(player, id, args[2]));
+				sender.sendMessage(hPlaces.remMember(sender, id, args[2]));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("eier")) {
-				sender.sendMessage(hPlaces.setOwner(player, id, args[2]));
+				sender.sendMessage(hPlaces.setOwner(sender, id, args[2]));
 				return true;
 			}
 			else {
@@ -239,7 +242,7 @@ public class PlaceCommand {
 		}
 		
 		else if (args.length > 3 && (args[0].equalsIgnoreCase("entre") || args[0].equalsIgnoreCase("forlate"))) {
-			id = hPlaces.getID(args[1]);
+			id = hPlaces.getID(sender, args[1]);
 			if (id == 0) {
 				sender.sendMessage(ThePlugin.c2 + args[1] + " finnes ikke");
 				return true;
@@ -250,11 +253,11 @@ public class PlaceCommand {
 			}
 			arg = arg.trim();
 			if (args[0].equalsIgnoreCase("entre")) {
-				sender.sendMessage(hPlaces.setEnter(player, id, arg));
+				sender.sendMessage(hPlaces.setEnter(sender, id, arg));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("forlate")) {
-				sender.sendMessage(hPlaces.setLeave(player, id, arg));
+				sender.sendMessage(hPlaces.setLeave(sender, id, arg));
 				return true;
 			}
 			else {

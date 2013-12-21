@@ -6,9 +6,7 @@ Tilegg:
 Chat-sensurering (hent ord fra *.txt)
 
 
-
 Tester som må utføres:
-
 
 
 Bugs:
@@ -19,13 +17,11 @@ spillere er usynlig for andre etter en teleport
 Kommandoer:
 
 
-
 Dynmap:
 
 
-
 Places:
-
+I nether så kan ghasts ødelegge blokker, dette må forhindres
 
 
 HungerGames:

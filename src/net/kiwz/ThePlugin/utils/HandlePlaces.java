@@ -29,15 +29,31 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param player name as String ignoring case
+	 * @param CommandSender
 	 * @param id as int
-	 * @return true if this player is an owner of the place with given id
+	 * @return true if this CommandSender is an owner of the place with given id
 	 */
-	public boolean isOwner(String player, int id) {
-		if (getOwner(id).equalsIgnoreCase(player)) {
+	public boolean isOwner(CommandSender sender, int id) {
+		if (getOwner(id).equalsIgnoreCase(sender.getName())) {
 			return true;
 		}
-		if (Bukkit.getServer().getPlayer(player).isOp()) {
+		if (sender.isOp()) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param Player
+	 * @param id as int
+	 * @return true if this Player is an owner of the place with given id
+	 */
+	public boolean isOwner(Player player, int id) {
+		if (getOwner(id).equalsIgnoreCase(player.getName())) {
+			return true;
+		}
+		if (player.isOp()) {
 			return true;
 		}
 		return false;
@@ -45,13 +61,43 @@ public class HandlePlaces {
 
 	/**
 	 * 
-	 * @param player name as String ignoring case
+	 * @param CommandSender
 	 * @param id as int
-	 * @return true if this player is a member of the place with given id
+	 * @return true if this CommandSender is a member of the place with given id
 	 */
-	public boolean isMember(String player, int id) {
+	public boolean isMember(CommandSender sender, int id) {
 		for (String member : getMembers(id)) {
-			if (member.equalsIgnoreCase(player)) {
+			if (member.equalsIgnoreCase(sender.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param Player
+	 * @param id as int
+	 * @return true if this Player is a member of the place with given id
+	 */
+	public boolean isMember(Player player, int id) {
+		for (String member : getMembers(id)) {
+			if (member.equalsIgnoreCase(player.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param PlayerName as a String
+	 * @param id as int
+	 * @return true if this PlayerName is a member of the place with given id
+	 */
+	public boolean isMember(String name, int id) {
+		for (String member : getMembers(id)) {
+			if (member.equalsIgnoreCase(name)) {
 				return true;
 			}
 		}
@@ -70,7 +116,7 @@ public class HandlePlaces {
 		}
 		int id = getIDWithCoords(loc);
 		if (id != 0) {
-			if (isOwner(player.getName(), id) || isMember(player.getName(), id)) {
+			if (isOwner(player, id) || isMember(player, id)) {
 				return true;
 			}
 			else {
@@ -203,11 +249,20 @@ public class HandlePlaces {
 	 * @param name the Name of a place as String
 	 * @return id of the given place-name as int, if no place where found id = 0
 	 */
-	public int getID(String name) {
+	public int getID(CommandSender sender, String name) {
 		int id = 0;
 		for (int key : places.keySet()) {
-			if (places.get(key).name.equalsIgnoreCase(name)) {
-				id = places.get(key).id;
+			if (getName(key).toLowerCase().startsWith(name.toLowerCase())) {
+				for (String member : getMembers(key)) {
+					if (getOwner(key).equals(sender.getName()) || member.equals(sender.getName())) {
+						return key;
+					}
+				}
+			}
+		}
+		for (int key : places.keySet()) {
+			if (getName(key).toLowerCase().startsWith(name.toLowerCase())) {
+				return key;
 			}
 		}
 		return id;
@@ -348,7 +403,7 @@ public class HandlePlaces {
 	}
 	
 	public boolean isSpawnSafe(Player player, int id) {
-		if (isOwner(player.getName(), id) || isMember(player.getName(), id) || perm.isAdmin(player)) return true;
+		if (isOwner(player, id) || isMember(player, id) || perm.isAdmin(player)) return true;
 		else return new SpawnSafe().isSpawnSafe(getSpawn(id));
 	}
 	
@@ -777,7 +832,7 @@ public class HandlePlaces {
 	 * @return String describing the result
 	 */
 	public String setPlace(Player player, int id) {
-		if (!isOwner(player.getName(), id)) {
+		if (!isOwner(player, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		int size = getRadius(id);
@@ -813,21 +868,21 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @param radius as String
 	 * @return String describing the result
 	 */
-	public String setRadius(Player player, int id, String radius) {
-		if (!isOwner(player.getName(), id)) {
+	public String setRadius(CommandSender sender, int id, String radius) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		int size = Integer.parseInt(radius);
 		Location loc = getPlaceLocation(id);
-		if (isNearSpawn(loc) && (size < 10 || size > 15) && !player.isOp()) {
+		if (isNearSpawn(loc) && (size < 10 || size > 15) && !sender.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 15. Større plass får du utenfor 300 blokker fra spawnen. Hvis du vil ha liten plass her, prøv /plass flytt <plass-navn> 15";
 		}
-		if ((size < 10 || size > 70) && !player.isOp()) {
+		if ((size < 10 || size > 70) && !sender.isOp()) {
 			return ThePlugin.c2 + "Plassen kan ikke være mindre enn 10 eller større enn 70";
 		}
 		if (!getConflictedPlaces(id, loc, size).isEmpty()) {
@@ -845,13 +900,13 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @param name as String (the new name)
 	 * @return String describing the result
 	 */
-	public String setName(Player player, int id, String name) {
-		if (!isOwner(player.getName(), id)) {
+	public String setName(CommandSender sender, int id, String name) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (name.length() < 2 || name.length() > 20) {
@@ -869,15 +924,15 @@ public class HandlePlaces {
 		return ThePlugin.c1 + "Du har byttet navn på plassen din til: " + name;
 	}
 	
-	public String setOwner(Player player, int id, String owner) {
-		if (!isOwner(player.getName(), id)) {
+	public String setOwner(CommandSender sender, int id, String owner) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (!hPlayers.hasPlayedBefore(owner)) {
 			return ThePlugin.c2 + owner + " er ikke en spiller her";
 		}
 		owner = hPlayers.getPlayerName(owner);
-		if(!player.isOp() && getIDsWithOwner(owner).size() >= 3) {
+		if(!sender.isOp() && getIDsWithOwner(owner).size() >= 3) {
 			return ThePlugin.c2 + owner + " eier " + getIDsWithOwner(owner).size() + " plasser og kan ikke eie flere";
 		}
 		if (!isMember(places.get(id).owner, id)) {
@@ -891,13 +946,13 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @param member as String (new member)
 	 * @return String describing the result
 	 */
-	public String addMember(Player player, int id, String member) {
-		if (!isOwner(player.getName(), id)) {
+	public String addMember(CommandSender sender, int id, String member) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (!hPlayers.hasPlayedBefore(member)) {
@@ -913,13 +968,13 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @param member as String (member to remove)
 	 * @return String describing the result
 	 */
-	public String remMember(Player player, int id, String member) {
-		if (!isOwner(player.getName(), id)) {
+	public String remMember(CommandSender sender, int id, String member) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (!isMember(member, id)) {
@@ -937,7 +992,7 @@ public class HandlePlaces {
 	 * @return String describing the result
 	 */
 	public String setSpawn(Player player, int id) {
-		if (!isOwner(player.getName(), id)) {
+		if (!isOwner(player, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		Location loc = player.getLocation();
@@ -961,12 +1016,12 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @return String describing the result
 	 */
-	public String setPriv(Player player, int id) {
-		if (!isOwner(player.getName(), id)) {
+	public String setPriv(CommandSender sender, int id) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (!isPriv(id)) {
@@ -979,12 +1034,12 @@ public class HandlePlaces {
 	
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @return String describing the result
 	 */
-	public String setPvP(Player player, int id) {
-		if (!isOwner(player.getName(), id)) {
+	public String setPvP(CommandSender sender, int id) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (getPvP(id).equals("DEAKTIVERT")) {
@@ -997,12 +1052,12 @@ public class HandlePlaces {
 
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @return String describing the result
 	 */
-	public String setMonsters(Player player, int id) {
-		if (!isOwner(player.getName(), id)) {
+	public String setMonsters(CommandSender sender, int id) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (getMonsters(id).equals("DEAKTIVERT")) {
@@ -1015,12 +1070,12 @@ public class HandlePlaces {
 
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @return String describing the result
 	 */
-	public String setAnimals(Player player, int id) {
-		if (!isOwner(player.getName(), id)) {
+	public String setAnimals(CommandSender sender, int id) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		if (getAnimals(id).equals("DEAKTIVERT")) {
@@ -1033,13 +1088,13 @@ public class HandlePlaces {
 
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @param enter as String
 	 * @return String describing the result
 	 */
-	public String setEnter(Player player, int id, String enter) {
-		if (!isOwner(player.getName(), id)) {
+	public String setEnter(CommandSender sender, int id, String enter) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		places.get(id).enter = enter;
@@ -1051,13 +1106,13 @@ public class HandlePlaces {
 
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @param leave as String
 	 * @return String describing the result
 	 */
-	public String setLeave(Player player, int id, String leave) {
-		if (!isOwner(player.getName(), id)) {
+	public String setLeave(CommandSender sender, int id, String leave) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		places.get(id).leave = leave;
@@ -1069,12 +1124,12 @@ public class HandlePlaces {
 
 	/**
 	 * 
-	 * @param player as Object
+	 * @param Commandsender
 	 * @param id as int
 	 * @return String describing the result
 	 */
-	public String remPlace(Player player, int id) {
-		if (!isOwner(player.getName(), id)) {
+	public String remPlace(CommandSender sender, int id) {
+		if (!isOwner(sender, id)) {
 			return ThePlugin.c2 + getName(id) + " er ikke din plass";
 		}
 		String placeName = places.get(id).name;
