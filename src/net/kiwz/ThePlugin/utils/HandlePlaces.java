@@ -252,6 +252,11 @@ public class HandlePlaces {
 	public int getID(CommandSender sender, String name) {
 		int id = 0;
 		for (int key : places.keySet()) {
+			if (getName(key).equalsIgnoreCase(name)) {
+				return key;
+			}
+		}
+		for (int key : places.keySet()) {
 			if (getName(key).toLowerCase().startsWith(name.toLowerCase())) {
 				for (String member : getMembers(key)) {
 					if (getOwner(key).equals(sender.getName()) || member.equals(sender.getName())) {
