@@ -21,7 +21,6 @@ Dynmap:
 
 
 Places:
-I nether så kan ghasts ødelegge blokker, dette må forhindres
 
 
 HungerGames:

@@ -1,5 +1,7 @@
 package net.kiwz.ThePlugin.listeners;
 
+import java.util.List;
+
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.HandlePlaces;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
@@ -17,6 +19,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlockListener implements Listener {
@@ -68,6 +72,61 @@ public class BlockListener implements Listener {
 		if (!worlds.isFireSpread(block.getWorld()) && event.getCause() == IgniteCause.SPREAD) {
 			event.setCancelled(true);
 			return;
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onPistonRetract(BlockPistonRetractEvent event) {
+		Block block = event.getBlock();
+		if (block.getType() != Material.PISTON_STICKY_BASE) {
+			return;
+		}
+		block = block.getRelative(event.getDirection());
+		
+		if (!block.getRelative(event.getDirection()).getType().equals(Material.AIR) && !block.isLiquid()) {
+			Location fromLoc = block.getRelative(event.getDirection()).getLocation();
+			Location toLoc = block.getLocation();
+			int fromID = places.getIDWithCoords(fromLoc);
+			int toID = places.getIDWithCoords(toLoc);
+			String fromOwner = "";
+			String toOwner = "";
+			if (fromID != toID) {
+				if (fromID != 0) {
+					fromOwner = places.getOwner(fromID);
+				}
+				if (toID != 0) {
+					toOwner = places.getOwner(toID);
+				}
+				if (!fromOwner.equals(toOwner)) {
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onPistonExtend(BlockPistonExtendEvent event) {
+		List<Block> blocks = event.getBlocks();
+		if (!blocks.isEmpty()) {
+			for (Block block : blocks) {
+				Location fromLoc = block.getLocation();
+				Location toLoc = block.getRelative(event.getDirection()).getLocation();
+				int fromID = places.getIDWithCoords(fromLoc);
+				int toID = places.getIDWithCoords(toLoc);
+				String fromOwner = "";
+				String toOwner = "";
+				if (fromID != toID) {
+					if (fromID != 0) {
+						fromOwner = places.getOwner(fromID);
+					}
+					if (toID != 0) {
+						toOwner = places.getOwner(toID);
+					}
+					if (!fromOwner.equals(toOwner)) {
+						event.setCancelled(true);
+					}
+				}
+			}
 		}
 	}
 }
