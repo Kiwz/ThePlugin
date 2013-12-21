@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPistonExtendEvent;
@@ -126,6 +127,27 @@ public class BlockListener implements Listener {
 						event.setCancelled(true);
 					}
 				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onBlockMove(BlockFromToEvent event) {
+		Location fromLoc = event.getBlock().getLocation();
+		Location toLoc = event.getToBlock().getLocation();
+		int fromID = places.getIDWithCoords(fromLoc);
+		int toID = places.getIDWithCoords(toLoc);
+		String fromOwner = "";
+		String toOwner = "";
+		if (fromID != toID) {
+			if (fromID != 0) {
+				fromOwner = places.getOwner(fromID);
+			}
+			if (toID != 0) {
+				toOwner = places.getOwner(toID);
+			}
+			if (!fromOwner.equals(toOwner)) {
+				event.setCancelled(true);
 			}
 		}
 	}
