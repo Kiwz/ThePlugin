@@ -128,6 +128,12 @@ commands:
     permission: ThePlugin.pvp
     permission-message: §cDu har ikke tilgang!
     usage: /pvp
+  replay:
+    description: Skriv privat melding tilbake
+    aliases: [r, svar]
+    permission: ThePlugin.replay
+    permission-message: §cDu har ikke tilgang!
+    usage: /replay
   rules:
     description: Viser deg våres regler
     aliases: [regler]
@@ -148,7 +154,7 @@ commands:
     usage: /setspawn
   tell:
     description: Skriv privat melding
-    aliases: [msg, m]
+    aliases: [msg, m, melde]
     permission: ThePlugin.tell
     permission-message: §cDu har ikke tilgang!
     usage: /tell <player>
@@ -210,6 +216,8 @@ permissions:
   ThePlugin.minne:
     default: true
   ThePlugin.plass:
+    default: true
+  ThePlugin.replay:
     default: true
   ThePlugin.rules:
     default: true

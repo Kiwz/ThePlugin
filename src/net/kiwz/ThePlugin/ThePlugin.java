@@ -114,6 +114,7 @@ public class ThePlugin extends JavaPlugin {
 	    getCommand("oi").setExecutor(cmds);
 	    getCommand("plass").setExecutor(cmds);
 	    getCommand("pvp").setExecutor(cmds);
+	    getCommand("replay").setExecutor(cmds);
 	    getCommand("rules").setExecutor(cmds);
 		getCommand("spawn").setExecutor(cmds);
 		getCommand("setspawn").setExecutor(cmds);

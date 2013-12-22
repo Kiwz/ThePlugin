@@ -34,6 +34,8 @@ public class TellCommand {
 				message = ThePlugin.c5 + sender.getName() + " -> " + player.getPlayer(destination).getName() + ": " + message;
 				sender.sendMessage(message);
 				player.getPlayer(destination).sendMessage(message);
+				ThePlugin.replayMsg.put(sender.getName(), player.getPlayer(destination).getName());
+				ThePlugin.replayMsg.put(player.getPlayer(destination).getName(), sender.getName());
 			}
 			else {
 				sender.sendMessage(ThePlugin.c2 + destination + " er ikke online");

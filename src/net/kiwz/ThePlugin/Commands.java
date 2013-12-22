@@ -13,6 +13,7 @@ import net.kiwz.ThePlugin.commands.MuteCommand;
 import net.kiwz.ThePlugin.commands.OpenInvCommand;
 import net.kiwz.ThePlugin.commands.PlaceCommand;
 import net.kiwz.ThePlugin.commands.PvpCommand;
+import net.kiwz.ThePlugin.commands.ReplayCommand;
 import net.kiwz.ThePlugin.commands.RulesCommand;
 import net.kiwz.ThePlugin.commands.SpawnCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
@@ -127,6 +128,12 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("pvp")) {
 			PvpCommand pvp = new PvpCommand();
 			pvp.pvp(sender);
+			return true;
+		}
+		
+		else if (cmdName.equalsIgnoreCase("replay")) {
+			ReplayCommand replay = new ReplayCommand();
+			replay.replay(sender, args);
 			return true;
 		}
 		
