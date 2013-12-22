@@ -53,10 +53,11 @@ public class ThePlugin extends JavaPlugin {
 	private Worlds worlds = new Worlds();
 	public static HashMap<String, Worlds> getWorlds;
 	public static ArrayList<String> remWorlds = new ArrayList<String>();
-	public static ArrayList<String> admins = new ArrayList<String>();
-	public static ArrayList<String> blocks = new ArrayList<String>();
-	public static HashMap<String, List<String>> chatIgnore;
+	public static ArrayList<String> admins;
+	public static ArrayList<String> blocks;
+	public static HashMap<String, List<String>> chatIgnore = new HashMap<String, List<String>>();
 	public static ArrayList<String> pvpPlayers = new ArrayList<String>();
+	public static HashMap<String, String> replayMsg = new HashMap<String, String>();
 	
 	@Override
 	public void onLoad() {
@@ -87,7 +88,6 @@ public class ThePlugin extends JavaPlugin {
 
 		admins = new Permissions().loadAdmins();
 		blocks = new SpawnSafe().getBlocks();
-		chatIgnore = new HashMap<String, List<String>>();
 		
 		HandleWorlds hWorlds = new HandleWorlds();
 		hWorlds.loadWorlds();

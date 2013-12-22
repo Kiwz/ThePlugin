@@ -47,49 +47,49 @@ public class WorldCommand {
 		}
 		
 		else if (args.length == 2) {
-			if (args[1].equalsIgnoreCase("new")) {
+			if (args[0].equalsIgnoreCase("new")) {
 				sender.sendMessage(ThePlugin.c1 + "Loading new world....");
-				sender.sendMessage(hWorlds.createWorld(args[0], "", "", ""));
+				sender.sendMessage(hWorlds.createWorld(args[1], "", "", ""));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("claimable")) {
-				sender.sendMessage(hWorlds.setClaimable(args[0]));
+			else if (args[0].equalsIgnoreCase("claimable")) {
+				sender.sendMessage(hWorlds.setClaimable(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("firespread")) {
-				sender.sendMessage(hWorlds.setFireSpread(args[0]));
+			else if (args[0].equalsIgnoreCase("firespread")) {
+				sender.sendMessage(hWorlds.setFireSpread(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("explosions")) {
-				sender.sendMessage(hWorlds.setExplosions(args[0]));
+			else if (args[0].equalsIgnoreCase("explosions")) {
+				sender.sendMessage(hWorlds.setExplosions(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("monstergrief")) {
-				sender.sendMessage(hWorlds.setMonsterGrief(args[0]));
+			else if (args[0].equalsIgnoreCase("monstergrief")) {
+				sender.sendMessage(hWorlds.setMonsterGrief(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("trample")) {
-				sender.sendMessage(hWorlds.setTrample(args[0]));
+			else if (args[0].equalsIgnoreCase("trample")) {
+				sender.sendMessage(hWorlds.setTrample(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("pvp")) {
-				sender.sendMessage(hWorlds.setPvP(args[0]));
+			else if (args[0].equalsIgnoreCase("pvp")) {
+				sender.sendMessage(hWorlds.setPvP(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("monsters")) {
-				sender.sendMessage(hWorlds.setMonsters(args[0]));
+			else if (args[0].equalsIgnoreCase("monsters")) {
+				sender.sendMessage(hWorlds.setMonsters(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("animals")) {
-				sender.sendMessage(hWorlds.setAnimals(args[0]));
+			else if (args[0].equalsIgnoreCase("animals")) {
+				sender.sendMessage(hWorlds.setAnimals(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("keepspawn")) {
-				sender.sendMessage(hWorlds.setKeepSpawnInMemory(args[0]));
+			else if (args[0].equalsIgnoreCase("keepspawn")) {
+				sender.sendMessage(hWorlds.setKeepSpawnInMemory(args[1]));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("delete")) {
-				sender.sendMessage(hWorlds.remWorld(args[0]));
+			else if (args[0].equalsIgnoreCase("delete")) {
+				sender.sendMessage(hWorlds.remWorld(args[1]));
 				return true;
 			}
 			else {
@@ -99,13 +99,13 @@ public class WorldCommand {
 		}
 		
 		else if (args.length == 3) {
-			if (args[1].equalsIgnoreCase("new")) {
+			if (args[0].equalsIgnoreCase("new")) {
 				sender.sendMessage(ThePlugin.c1 + "Loading new world....");
-				sender.sendMessage(hWorlds.createWorld(args[0], args[2], "", ""));
+				sender.sendMessage(hWorlds.createWorld(args[1], args[2], "", ""));
 				return true;
 			}
-			else if (args[1].equalsIgnoreCase("border") && args[2].matches("[0-9]+")) {
-				sender.sendMessage(hWorlds.setBorder(args[0], args[2]));
+			else if (args[0].equalsIgnoreCase("border") && args[2].matches("[0-9]+")) {
+				sender.sendMessage(hWorlds.setBorder(args[1], args[2]));
 				return true;
 			}
 			else {
@@ -115,9 +115,9 @@ public class WorldCommand {
 		}
 		
 		else if (args.length == 4) {
-			if (args[1].equalsIgnoreCase("new")) {
+			if (args[0].equalsIgnoreCase("new")) {
 				sender.sendMessage(ThePlugin.c1 + "Loading new world....");
-				sender.sendMessage(hWorlds.createWorld(args[0], args[2], args[3], ""));
+				sender.sendMessage(hWorlds.createWorld(args[1], args[2], args[3], ""));
 				return true;
 			}
 			else {
@@ -127,9 +127,9 @@ public class WorldCommand {
 		}
 		
 		else if (args.length == 5) {
-			if (args[1].equalsIgnoreCase("new")) {
+			if (args[0].equalsIgnoreCase("new")) {
 				sender.sendMessage(ThePlugin.c1 + "Loading new world....");
-				sender.sendMessage(hWorlds.createWorld(args[0], args[2], args[3], args[4]));
+				sender.sendMessage(hWorlds.createWorld(args[1], args[2], args[3], args[4]));
 				return true;
 			}
 			else {
@@ -159,38 +159,38 @@ public class WorldCommand {
 		help.append(white + "Viser liste over alle verdener\n");
 		help.append(gold + "/world <verden-navn>\n");
 		help.append(white + "Viser info om oppgitte verden\n");
-		help.append(gold + "/world <verden-navn> delete\n");
+		help.append(gold + "/world delete <verden-navn>\n");
 		help.append(white + "Sletter oppgitte verden (filer vil bli flyttet til egen mappe)\n");
-		help.append(gold + "/world <verden-navn> new\n");
+		help.append(gold + "/world new <verden-navn>\n");
 		help.append(white + "Lager ny normal verden\n");
 		help.append(yellow + "Environment: NORMAL, NETHER, THE_END\n");
 		help.append(yellow + "Type: NORMAL, FLAT, LARGE_BIOMES, VERSION1\n");
 		help.append(yellow + "Seed: Må være ett tall (kan være negativt)\n");
-		help.append(gold + "/world <verden-navn> new [Environment]\n");
+		help.append(gold + "/world new <verden-navn> [Environment]\n");
 		help.append(white + "Lager ny verden med oppgitte omgivelsen\n");
-		help.append(gold + "/world <verden-navn> new [Environment] [Type]\n");
+		help.append(gold + "/world new <verden-navn> [Environment] [Type]\n");
 		help.append(white + "Lager ny verden med oppgitte omgivelsen og typen\n");
-		help.append(gold + "/world <verden-navn> new [Environment] [Type] [Seed]\n");
+		help.append(gold + "/world new <verden-navn> [Environment] [Type] [Seed]\n");
 		help.append(white + "Lager ny verden med oppgitte omgivelse, type og frø\n");
-		help.append(gold + "/world <verden-navn> border <radius>\n");
+		help.append(gold + "/world border <verden-navn> <radius>\n");
 		help.append(white + "Setter ny grense for oppgitte verden\n");
-		help.append(gold + "/world <verden-navn> claimable\n");
+		help.append(gold + "/world claimable <verden-navn>\n");
 		help.append(white + "Skrur på/av mulighet for å lage plasser\n");
-		help.append(gold + "/world <verden-navn> firespread\n");
+		help.append(gold + "/world firespread <verden-navn>\n");
 		help.append(white + "Skrur på/av ill spredning\n");
-		help.append(gold + "/world <verden-navn> explosions\n");
+		help.append(gold + "/world explosions <verden-navn>\n");
 		help.append(white + "Skrur på/av eksplosjoner\n");
-		help.append(gold + "/world <verden-navn> monstergrief\n");
+		help.append(gold + "/world monstergrief <verden-navn>\n");
 		help.append(white + "Skrur på/av Monster grifing\n");
-		help.append(gold + "/world <verden-navn> trample\n");
+		help.append(gold + "/world trample <verden-navn>\n");
 		help.append(white + "Skrur på/av tråkking\n");
-		help.append(gold + "/world <verden-navn> pvp\n");
+		help.append(gold + "/world pvp <verden-navn>\n");
 		help.append(white + "Skrur på/av PvP\n");
-		help.append(gold + "/world <verden-navn> monsters\n");
+		help.append(gold + "/world monsters <verden-navn>\n");
 		help.append(white + "Skrur på/av monstre\n");
-		help.append(gold + "/world <verden-navn> animals\n");
+		help.append(gold + "/world animals <verden-navn>\n");
 		help.append(white + "Skrur på/av dyr\n");
-		help.append(gold + "/world <verden-navn> keepspawn\n");
+		help.append(gold + "/world keepspawn <verden-navn>\n");
 		help.append(white + "Skrur på/av beholde spawn i minne\n");
 		return help.toString();
 	}

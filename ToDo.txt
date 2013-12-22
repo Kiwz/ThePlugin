@@ -1,6 +1,7 @@
 Opprydding:
 Må fikse banen til filene som lages + en felles class for alle filer istedefor en fil i forskjellige classes
 Rydde litt i playerinteractevent angående action=physical
+Rydde i world hjelpe teksten så den er på samme måte som plass hjelpen
 
 
 Tilegg:
@@ -17,6 +18,7 @@ spillere er usynlig for andre etter en teleport
 
 Kommandoer:
 /replay [/r] Dette kan bli lagret i ett hashmap<String, String> hvor <SenderName, RecieverName>
+/world fill <world-name> (jobb i FillWorld.java)
 
 
 Dynmap:
