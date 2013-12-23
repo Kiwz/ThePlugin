@@ -95,9 +95,8 @@ public class WorldCommand {
 				sender.sendMessage(hWorlds.remWorld(args[1]));
 				return true;
 			}
-			// siste parameteret må fjernes senere!
 			else if (args[0].equalsIgnoreCase("fill")) {
-				fill.generateChunks(sender, args[1], "20");
+				fill.generateChunks(sender, args[1]);
 				return true;
 			}
 			else {
@@ -114,11 +113,6 @@ public class WorldCommand {
 			}
 			else if (args[0].equalsIgnoreCase("border") && args[2].matches("[0-9]+")) {
 				sender.sendMessage(hWorlds.setBorder(args[1], args[2]));
-				return true;
-			}
-			// denne kan fjernes senere!
-			else if (args[0].equalsIgnoreCase("fill")) {
-				fill.generateChunks(sender, args[1], args[2]);
 				return true;
 			}
 			else {
@@ -187,6 +181,8 @@ public class WorldCommand {
 		help.append(white + "Lager ny verden med oppgitte omgivelse, type og frø\n");
 		help.append(gold + "/world border <verden-navn> <radius>\n");
 		help.append(white + "Setter ny grense for oppgitte verden\n");
+		help.append(gold + "/world fill <verden-navn>\n");
+		help.append(white + "Genererer alle chunks t.o.m. 12 chunks utenfor border\n");
 		help.append(gold + "/world claimable <verden-navn>\n");
 		help.append(white + "Skrur på/av mulighet for å lage plasser\n");
 		help.append(gold + "/world firespread <verden-navn>\n");

@@ -9,19 +9,20 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 public class FillWorld {
+	private HandleWorlds hWorlds = new HandleWorlds();
 	private HashMap<Integer, FillWorld> chunks = new HashMap<Integer, FillWorld>();
 	private String world;
 	private int x;
 	private int z;
 	
-	public void generateChunks(CommandSender sender, String worldName, String radius) {
+	public void generateChunks(CommandSender sender, String worldName) {
 		if (Bukkit.getServer().getWorld(worldName) == null) {
 			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
 			return;
 		}
-
-		int r = Integer.parseInt(radius);
+		
 		World world = Bukkit.getServer().getWorld(worldName);
+		int r = hWorlds.getBorder(world) * 2;
     	int X = r;
     	int Z = r;
         int x = 0;
@@ -55,7 +56,7 @@ public class FillWorld {
 	}
 	
 	private void executeMap() {
-		int delay = 20;
+		int delay = 60;
 		int key = 0;
 		while (key < chunks.size()) {
 			scheduleGeneration(key, delay);
@@ -99,10 +100,10 @@ public class FillWorld {
 		int x = chunks.get(key).x;
 		int z = chunks.get(key).z;
 		
-    	int minX = x - 1;
-    	while (minX <= x + 1) {
-        	int minZ = z - 1;
-    		while (minZ <= z + 1) {
+    	int minX = x - 2;
+    	while (minX <= x + 2) {
+        	int minZ = z - 2;
+    		while (minZ <= z + 2) {
     			if (world.loadChunk(minX, minZ, false)) {
 					System.out.println("Safety Chunk " + minX + " " + minZ + " is loaded");
     			}
@@ -125,10 +126,10 @@ public class FillWorld {
 						System.out.println("Chunk " + x + " " + z + " couldnt be unloaded");
 					}
 					
-			    	minX = x - 1;
-			    	while (minX <= x + 1) {
-			        	int minZ = z - 1;
-			    		while (minZ <= z + 1) {
+			    	minX = x - 2;
+			    	while (minX <= x + 2) {
+			        	int minZ = z - 2;
+			    		while (minZ <= z + 2) {
 			    			if (world.unloadChunk(minX, minZ)) {
 								System.out.println("Safety Chunk " + minX + " " + minZ + " is unloaded");
 			    			}
