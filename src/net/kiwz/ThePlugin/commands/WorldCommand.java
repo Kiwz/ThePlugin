@@ -1,7 +1,9 @@
 package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.utils.FillWorld;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,6 +19,7 @@ public class WorldCommand {
 	 */
 	public boolean world(CommandSender sender, Command cmd, String[] args) {
 		HandleWorlds hWorlds = new HandleWorlds();
+		FillWorld fill = new FillWorld();
 		HelpCommand help = new HelpCommand();
 
 		for (String arg : args) {
@@ -92,6 +95,11 @@ public class WorldCommand {
 				sender.sendMessage(hWorlds.remWorld(args[1]));
 				return true;
 			}
+			// siste parameteret må fjernes senere!
+			else if (args[0].equalsIgnoreCase("fill")) {
+				fill.generateChunks(sender, args[1], "20");
+				return true;
+			}
 			else {
 				help.customHelp(sender, cmd.getName(), args[0], help());
 				return true;
@@ -106,6 +114,11 @@ public class WorldCommand {
 			}
 			else if (args[0].equalsIgnoreCase("border") && args[2].matches("[0-9]+")) {
 				sender.sendMessage(hWorlds.setBorder(args[1], args[2]));
+				return true;
+			}
+			// denne kan fjernes senere!
+			else if (args[0].equalsIgnoreCase("fill")) {
+				fill.generateChunks(sender, args[1], args[2]);
 				return true;
 			}
 			else {

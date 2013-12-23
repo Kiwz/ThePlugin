@@ -267,7 +267,7 @@ public class PlayerListener implements Listener {
         }
         
         
-        Bukkit.getLogger().info(log);
+        ThePlugin.log.info(log);
 		Log log1 = new Log();
 		log1.logString(" [INFO] " + log);
 		msg.sendMessage(player, loginMsg);

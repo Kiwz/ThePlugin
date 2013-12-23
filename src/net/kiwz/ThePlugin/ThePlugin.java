@@ -41,6 +41,7 @@ public class ThePlugin extends JavaPlugin {
 	public static ChatColor c6 = ChatColor.GREEN;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
+	public static Logger log = Bukkit.getLogger();
 	
 	private Homes homes = new Homes();
 	public static HashMap<String, Homes> getHomes;

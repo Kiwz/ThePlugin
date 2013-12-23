@@ -14,6 +14,7 @@ Tester som må utføres:
 Bugs:
 consolfilter funker ikke...
 spillere er usynlig for andre etter en teleport
+event.setJoinMessage() instead of the other shit
 
 
 Kommandoer:

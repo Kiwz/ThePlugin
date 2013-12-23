@@ -86,7 +86,7 @@ public class HandleWorlds {
 		ThePlugin.remWorlds.add(worldName);
 		try {
 			new File("plugins\\ThePlugin\\Old worlds\\").mkdirs();
-			File folder = new File(worldName);
+			File folder = world.getWorldFolder();
 			folder.renameTo(new File("plugins\\ThePlugin\\Old Worlds\\" + folder.getName() + " (" + System.currentTimeMillis() / 1000 + ")"));
 		}
 		catch (Exception e) {
