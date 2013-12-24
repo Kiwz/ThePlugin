@@ -41,7 +41,7 @@ public class ThePlugin extends JavaPlugin {
 	public static ChatColor c6 = ChatColor.GREEN;
 	
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
-	public static Logger log = Bukkit.getLogger();
+	public static Logger log = Bukkit.getServer().getLogger();
 	
 	private Homes homes = new Homes();
 	public static HashMap<String, Homes> getHomes;
@@ -83,7 +83,7 @@ public class ThePlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		ConsoleFilter filter = new ConsoleFilter();
-		Bukkit.getLogger().setFilter(filter);
+		log.setFilter(filter);
 		Logger.getLogger("Minecraft").setFilter(filter);
 		Logger.getLogger("global").setFilter(filter);
 

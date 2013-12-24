@@ -9,11 +9,15 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 public class FillWorld {
+	public int x;
+	public int z;
+	private World world;
 	private HandleWorlds hWorlds = new HandleWorlds();
 	private HashMap<Integer, FillWorld> chunks = new HashMap<Integer, FillWorld>();
-	private String world;
-	private int x;
-	private int z;
+	private Long totTime = System.currentTimeMillis();
+	private Long time = System.currentTimeMillis();
+	private int gen = 0;
+	private int tempGen = 0;
 	
 	public void generateChunks(CommandSender sender, String worldName) {
 		if (Bukkit.getServer().getWorld(worldName) == null) {
@@ -21,50 +25,43 @@ public class FillWorld {
 			return;
 		}
 		
-		World world = Bukkit.getServer().getWorld(worldName);
-		int r = hWorlds.getBorder(world) * 2;
-    	int X = r;
-    	int Z = r;
+		world = Bukkit.getServer().getWorld(worldName);
+		int d = hWorlds.getBorder(world) * 2;
+		d = (d / 16) + 1 + 12 + 12;
         int x = 0;
         int z = 0;
         int dx = 0;
-        int dy = -1;
-        int t = Math.max(X, Z);
-        int maxI = t * t;
+        int dz = -1;
+        int t;
         
-        for (int i = 0; i < maxI; i++) {
-            if ((-X / 2 <= x) && (x <= X / 2) && (-Z / 2 <= z) && (z <= Z / 2)) {
-            	buildMap(i, world.getName(), x, z);
+        for (int i = 0; i < d * d; i++) {
+            if ((x == z) || ((x < 0) && (x == -z)) || ((x > 0) && (x == 1 - z))) {
+                t = dx;
+                dx = -dz;
+                dz = t;
             }
-            if ((x == z) || ((x < 0) && (x == -z)) || ((x > 0) && (x == 1-z))) {
-                t=dx;
-                dx=-dy;
-                dy=t;
-            }   
+        	buildMap(i, x, z);
             x += dx;
-            z += dy;
+            z += dz;
         }
         executeMap();
     }
 	
-	private void buildMap(int key, String world, int x, int z) {
+	private void buildMap(int key, int x, int z) {
 		FillWorld value = new FillWorld();
-		value.world = world;
 		value.x = x;
 		value.z = z;
 		chunks.put(key, value);
 	}
 	
 	private void executeMap() {
-		int delay = 60;
+		int delay = 10;
 		int key = 0;
 		while (key < chunks.size()) {
 			scheduleGeneration(key, delay);
 			key++;
 			delay++;
 		}
-		int id = scheduleWorldSave(600);
-		scheduleKillWorldSave(id, delay + 800);
 	}
 	
 	private void scheduleGeneration(final int key, int delay) {
@@ -75,82 +72,75 @@ public class FillWorld {
         }, delay);
 	}
 	
-	private int scheduleWorldSave(int delay) {
-        return Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("ThePlugin"), new Runnable() {
-			public void run() {
-				for (World world : Bukkit.getServer().getWorlds()) {
-					System.out.println("Saving world: " + world.getName());
-					world.save();
-				}
-			}
-        }, delay, delay);
-	}
-	
-	private int scheduleKillWorldSave(final int id, int delay) {
-        return Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ThePlugin"), new Runnable() {
-			public void run() {
-				Bukkit.getScheduler().cancelTask(id);
-				System.out.println("World Saving is DONE!");
-			}
-        }, delay);
-	}
-	
 	private void generateChunk(int key) {
-		World world = Bukkit.getServer().getWorld(chunks.get(key).world);
 		int x = chunks.get(key).x;
 		int z = chunks.get(key).z;
+    	int nearbyX;
+    	int nearbyZ;
+    	
+    	status(key);
 		
-    	int minX = x - 2;
-    	while (minX <= x + 2) {
-        	int minZ = z - 2;
-    		while (minZ <= z + 2) {
-    			if (world.loadChunk(minX, minZ, false)) {
-					System.out.println("Safety Chunk " + minX + " " + minZ + " is loaded");
-    			}
-    			else {
-					System.out.println("Safety Chunk " + minX + " " + minZ + " isnt generated yet");
-    			}
-    			minZ++;
+		if (world.isChunkLoaded(x, z)) {
+			return;
+		}
+		if (world.loadChunk(x, z, false)) {
+			return;
+		}
+		
+		nearbyX = x - 2;
+    	while (nearbyX <= x + 2) {
+    		nearbyZ = z - 2;
+    		while (nearbyZ <= z + 2) {
+    			world.loadChunk(nearbyX, nearbyZ, false);
+    			nearbyZ++;
     		}
-    		minX++;
+    		nearbyX++;
     	}
+    	
+		world.loadChunk(x, z);
+    	gen++;
+    	tempGen++;
+		world.unloadChunk(x, z);
 		
-		if (!world.isChunkLoaded(x, z)) {
-			if (!world.loadChunk(x, z, false)) {
-				if (world.loadChunk(x, z, true)) {
-					System.out.println("Chunk " + x + " " + z + " is generated");
-					if (world.unloadChunk(x, z)) {
-						System.out.println("Chunk " + x + " " + z + " is unloaded");
-					}
-					else {
-						System.out.println("Chunk " + x + " " + z + " couldnt be unloaded");
-					}
-					
-			    	minX = x - 2;
-			    	while (minX <= x + 2) {
-			        	int minZ = z - 2;
-			    		while (minZ <= z + 2) {
-			    			if (world.unloadChunk(minX, minZ)) {
-								System.out.println("Safety Chunk " + minX + " " + minZ + " is unloaded");
-			    			}
-							else {
-								System.out.println("Safety Chunk " + minX + " " + minZ + " couldnt be unloaded");
-							}
-			    			minZ++;
-			    		}
-			    		minX++;
-			    	}
-				}
-				else {
-					System.out.println("Chunk " + x + " " + z + " couldnt be generated");
-				}
+		nearbyX = x - 2;
+    	while (nearbyX <= x + 2) {
+    		nearbyZ = z - 2;
+    		while (nearbyZ <= z + 2) {
+    			world.unloadChunk(nearbyX, nearbyZ);
+    			nearbyZ++;
+    		}
+    		nearbyX++;
+		}
+	}
+	
+	private void status(int key) {
+    	int printEvery = 1200;
+		if (key % printEvery == 0) {
+			if (key == 0) {
+				time = System.currentTimeMillis();
+				info("Genererer " + chunks.size() + " chunks for [" + world.getName() + "]");
+				info("Antatt ferdig om " + chunks.size() / 20 / 60 + "min");
 			}
 			else {
-				System.out.println("Chunk " + x + " " + z + " was allready generated");
+				world.save();
+				String percent = String.format("%.2f", (key * 100.0) / chunks.size());
+				time = System.currentTimeMillis() - time;
+				info("[" + world.getName() + "] [" + percent + "%] Generert " + tempGen + "/" + printEvery + " chunks (" + time / 1000 + "s)");
+				tempGen = 0;
+				time = System.currentTimeMillis();
 			}
 		}
-		else {
-			System.out.println("Chunk " + x + " " + z + " is allready loaded");
-		}
+		
+    	if (key == chunks.size() - 1) {
+			world.save();
+			totTime = System.currentTimeMillis() - totTime;
+			time = (Long) (totTime / 1000 / 60);
+			info("[" + world.getName() + "] [100,00%] Generert " + gen + "/" + chunks.size() + " chunks (" + time + "min)");
+    	}
+	}
+	
+	private void info(String s) {
+		s = "[ThePlugin] " + s;
+		ThePlugin.log.info(s);
 	}
 }
