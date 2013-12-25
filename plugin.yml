@@ -177,6 +177,12 @@ commands:
       /tp <x y z>
       /tp <player player>
       /tp <player x y z>
+  tpchunk:
+    description: Teleportering til angitt chunk
+    aliases: [chunk]
+    permission: ThePlugin.tpchunk
+    permission-message: §cDu har ikke tilgang!
+    usage: /tp <world> <x y z>
   ticks:
     description: Tiks pr sekund (skal være 20)
     aliases: [lag, tick]

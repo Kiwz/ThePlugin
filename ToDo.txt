@@ -6,7 +6,6 @@ Rydde i world hjelpe teksten så den er på samme måte som plass hjelpen
 
 Tilegg:
 Chat-sensurering (hent ord fra *.txt)
-OnJoin, remove all permissions except for bukkit and ThePlugin
 
 
 Tester som må utføres:
@@ -19,7 +18,6 @@ event.setJoinMessage() instead of the other shit
 
 
 Kommandoer:
-/world chunk <world-name> <type (monsters, blocks etc)
 
 
 Dynmap:

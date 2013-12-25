@@ -16,6 +16,7 @@ import net.kiwz.ThePlugin.commands.PvpCommand;
 import net.kiwz.ThePlugin.commands.ReplayCommand;
 import net.kiwz.ThePlugin.commands.RulesCommand;
 import net.kiwz.ThePlugin.commands.SpawnCommand;
+import net.kiwz.ThePlugin.commands.TPChunkCommand;
 import net.kiwz.ThePlugin.commands.TPCommand;
 import net.kiwz.ThePlugin.commands.TPSCommand;
 import net.kiwz.ThePlugin.commands.TellCommand;
@@ -170,6 +171,12 @@ public class Commands implements CommandExecutor {
 		else if (cmdName.equalsIgnoreCase("tp")) {
 			TPCommand tp = new TPCommand();
 			tp.tp(sender, cmd, args);
+			return true;
+	    }
+		
+		else if (cmdName.equalsIgnoreCase("tpchunk")) {
+			TPChunkCommand tpChunk = new TPChunkCommand();
+			tpChunk.tp(sender, args);
 			return true;
 	    }
 		

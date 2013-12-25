@@ -1,6 +1,7 @@
 package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.utils.ChunkLag;
 import net.kiwz.ThePlugin.utils.FillWorld;
 import net.kiwz.ThePlugin.utils.HandleWorlds;
 
@@ -20,6 +21,7 @@ public class WorldCommand {
 	public boolean world(CommandSender sender, Command cmd, String[] args) {
 		HandleWorlds hWorlds = new HandleWorlds();
 		FillWorld fill = new FillWorld();
+		ChunkLag chunkLag = new ChunkLag();
 		HelpCommand help = new HelpCommand();
 
 		for (String arg : args) {
@@ -37,6 +39,10 @@ public class WorldCommand {
 		else if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("list")) {
 				hWorlds.sendWorldList(sender);
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
+				chunkLag.sendChunks(sender);
 				return true;
 			}
 			else if (args[0].length() == 1 && args[0].matches("[0-9]+")){
@@ -99,6 +105,10 @@ public class WorldCommand {
 				sender.sendMessage(hWorlds.setKeepSpawnInMemory(args[1]));
 				return true;
 			}
+			else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
+				chunkLag.sendChunks(sender, args[1]);
+				return true;
+			}
 			else if (args[0].equalsIgnoreCase("delete")) {
 				sender.sendMessage(hWorlds.remWorld(args[1]));
 				return true;
@@ -121,6 +131,10 @@ public class WorldCommand {
 			}
 			else if (args[0].equalsIgnoreCase("fill")) {
 				fill.generateChunks(sender, args[1], args[2]);
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
+				chunkLag.sendChunks(sender, args[1], args[2]);
 				return true;
 			}
 			else {
@@ -211,6 +225,8 @@ public class WorldCommand {
 		help.append(white + "Skrur på/av dyr\n");
 		help.append(gold + "/world keepspawn <verden-navn>\n");
 		help.append(white + "Skrur på/av beholde spawn i minne\n");
+		help.append(gold + "/world lag [dyr, monstre, items, alt] [antall]\n");
+		help.append(white + "Informerer om de mest laggete chunksa\n");
 		return help.toString();
 	}
 }

@@ -87,6 +87,7 @@ public class ThePlugin extends JavaPlugin {
 		Logger.getLogger("Minecraft").setFilter(filter);
 		Logger.getLogger("global").setFilter(filter);
 
+		new Permissions().setPermissions();
 		admins = new Permissions().loadAdmins();
 		blocks = new SpawnSafe().getBlocks();
 		
@@ -122,6 +123,7 @@ public class ThePlugin extends JavaPlugin {
 	    getCommand("tell").setExecutor(cmds);
 	    getCommand("tid").setExecutor(cmds);
 	    getCommand("tp").setExecutor(cmds);
+	    getCommand("tpchunk").setExecutor(cmds);
 	    getCommand("ticks").setExecutor(cmds);
 		getCommand("whois").setExecutor(cmds);
 		getCommand("world").setExecutor(cmds);

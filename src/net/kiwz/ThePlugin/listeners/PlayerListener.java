@@ -211,7 +211,7 @@ public class PlayerListener implements Listener {
         new Tablist().setColor(player);
         
     	if (perm.isAdmin(player)) {
-    		perm.setPermissions(player);
+    		perm.setAdminPermissions(player);
     	}
     	
         if (!player.isOp()) {

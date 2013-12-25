@@ -10,7 +10,11 @@ import net.kiwz.ThePlugin.ThePlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 public class Permissions {
 	
@@ -43,8 +47,8 @@ public class Permissions {
         return false;
 	}
 	
-	public void setPermissions(Player player) {
-		PermissionAttachment atch = player.addAttachment(Bukkit.getPluginManager().getPlugin("ThePlugin"));
+	public void setAdminPermissions(Player player) {
+		PermissionAttachment atch = player.addAttachment(Bukkit.getServer().getPluginManager().getPlugin("ThePlugin"));
 		atch.setPermission("worldedit.navigation.jumpto.tool", true);
 		atch.setPermission("bukkit.command.ban", true);
 		atch.setPermission("bukkit.command.ban.list", true);
@@ -59,6 +63,25 @@ public class Permissions {
 		atch.setPermission("ThePlugin.whois", true);
 		if (player.getName().equals("Kiwz") || player.getName().equals("zacker")) {
 			atch.setPermission("bukkit.command.op", true);
+		}
+	}
+	
+	public void setPermissions() {
+		PluginManager pm = Bukkit.getServer().getPluginManager();
+		for (Plugin plugin : pm.getPlugins()) {
+			if (!plugin.getName().equals("WorldEdit") && !plugin.getName().equals("ThePlugin")) {
+				for (String cmd : plugin.getDescription().getCommands().keySet()) {
+					Object perm = plugin.getDescription().getCommands().get(cmd).get("permission");
+					if (perm == null) {
+						Bukkit.getServer().getPluginCommand(cmd).setPermission(plugin.getName() + "." + cmd);
+					}
+				}
+				for (Permission perm : plugin.getDescription().getPermissions()) {
+					if (!perm.getDefault().equals(PermissionDefault.OP)) {
+						perm.setDefault(PermissionDefault.OP);
+					}
+				}
+			}
 		}
 	}
 }
