@@ -7,25 +7,50 @@ import net.kiwz.ThePlugin.ThePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class FillWorld {
+	public static HashMap<String, Integer> tasks = new HashMap<String, Integer>();
 	public int x;
 	public int z;
 	private World world;
 	private HandleWorlds hWorlds = new HandleWorlds();
 	private HashMap<Integer, FillWorld> chunks = new HashMap<Integer, FillWorld>();
+	private int key = 0;
+	private int speed = 1;
 	private Long totTime = System.currentTimeMillis();
 	private Long time = System.currentTimeMillis();
 	private int gen = 0;
 	private int tempGen = 0;
 	
-	public void generateChunks(CommandSender sender, String worldName) {
+	public void cancelGeneration(CommandSender sender, String worldName) {
 		if (Bukkit.getServer().getWorld(worldName) == null) {
 			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
 			return;
 		}
+		String world = Bukkit.getServer().getWorld(worldName).getName();
 		
+		if (tasks.get(world) == null) {
+			sender.sendMessage(ThePlugin.c2 + "Ingen pågående generering for " + world);
+			return;
+		}
+		Bukkit.getServer().getScheduler().cancelTask(tasks.get(world));
+		tasks.remove(world);
+		sender.sendMessage(ThePlugin.c2 + "Generering avbrutt for " + world);
+	}
+	
+	public void generateChunks(CommandSender sender, String worldName, String speedString) {
+		if (Bukkit.getServer().getWorld(worldName) == null) {
+			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
+			return;
+		}
 		world = Bukkit.getServer().getWorld(worldName);
+
+		if (tasks.get(world.getName()) != null) {
+			sender.sendMessage(ThePlugin.c2 + "Jobber allerede med å generere " + world.getName());
+			return;
+		}
+		
 		int d = hWorlds.getBorder(world) * 2;
 		d = (d / 16) + 1 + 12 + 12;
         int x = 0;
@@ -44,8 +69,33 @@ public class FillWorld {
             x += dx;
             z += dz;
         }
-        executeMap();
+        
+		setSpeed(speedString);
+        tasks.put(world.getName(), scheduleGenerations());
+        if (sender instanceof Player) {
+			sender.sendMessage(ThePlugin.c1 + "Genererer " + chunks.size() + " chunks for [" + world.getName() + "]");
+			long eta = Math.round(chunks.size() / 40.0 / 60 * speed);
+			sender.sendMessage(ThePlugin.c1 + "Antatt ferdig om " + eta + "min (forutsatt TPS=20)");
+        }
     }
+	
+	private void setSpeed(String speedString) {
+		int speed = 1;
+		try {
+			speed = Integer.parseInt(speedString);
+		}
+		catch (NumberFormatException e) {
+		}
+		if (speed >= 3) {
+			this.speed = 1;
+		}
+		else if (speed == 2) {
+			this.speed = 2;
+		}
+		else if (speed <= 1) {
+			this.speed = 4;
+		}
+	}
 	
 	private void buildMap(int key, int x, int z) {
 		FillWorld value = new FillWorld();
@@ -54,31 +104,29 @@ public class FillWorld {
 		chunks.put(key, value);
 	}
 	
-	private void executeMap() {
-		int delay = 10;
-		int key = 0;
-		while (key < chunks.size()) {
-			scheduleGeneration(key, delay);
-			key++;
-			delay++;
-		}
-	}
-	
-	private void scheduleGeneration(final int key, int delay) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ThePlugin"), new Runnable() {
+	private int scheduleGenerations() {
+        return Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("ThePlugin"), new Runnable() {
 			public void run() {
 				generateChunk(key);
+				key++;
+				generateChunk(key);
+				key++;
 			}
-        }, delay);
+        }, 1, speed);
 	}
 	
 	private void generateChunk(int key) {
+    	status(key);
+		if (chunks.get(key) == null) {
+			Bukkit.getServer().getScheduler().cancelTask(tasks.get(world.getName()));
+			tasks.remove(world.getName());
+			return;
+		}
+		
 		int x = chunks.get(key).x;
 		int z = chunks.get(key).z;
     	int nearbyX;
     	int nearbyZ;
-    	
-    	status(key);
 		
 		if (world.isChunkLoaded(x, z)) {
 			return;
@@ -119,7 +167,8 @@ public class FillWorld {
 			if (key == 0) {
 				time = System.currentTimeMillis();
 				info("Genererer " + chunks.size() + " chunks for [" + world.getName() + "]");
-				info("Antatt ferdig om " + chunks.size() / 20 / 60 + "min");
+				long eta = Math.round(chunks.size() / 40.0 / 60 * speed);
+				info("Antatt ferdig om " + eta + "min (forutsatt TPS=20)");
 			}
 			else {
 				world.save();

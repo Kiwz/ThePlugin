@@ -55,6 +55,14 @@ public class WorldCommand {
 				sender.sendMessage(hWorlds.createWorld(args[1], "", "", ""));
 				return true;
 			}
+			else if (args[0].equalsIgnoreCase("fill")) {
+				fill.generateChunks(sender, args[1], "2");
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("cancelfill")) {
+				fill.cancelGeneration(sender, args[1]);
+				return true;
+			}
 			else if (args[0].equalsIgnoreCase("claimable")) {
 				sender.sendMessage(hWorlds.setClaimable(args[1]));
 				return true;
@@ -95,10 +103,6 @@ public class WorldCommand {
 				sender.sendMessage(hWorlds.remWorld(args[1]));
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("fill")) {
-				fill.generateChunks(sender, args[1]);
-				return true;
-			}
 			else {
 				help.customHelp(sender, cmd.getName(), args[0], help());
 				return true;
@@ -113,6 +117,10 @@ public class WorldCommand {
 			}
 			else if (args[0].equalsIgnoreCase("border") && args[2].matches("[0-9]+")) {
 				sender.sendMessage(hWorlds.setBorder(args[1], args[2]));
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("fill")) {
+				fill.generateChunks(sender, args[1], args[2]);
 				return true;
 			}
 			else {
@@ -183,6 +191,8 @@ public class WorldCommand {
 		help.append(white + "Setter ny grense for oppgitte verden\n");
 		help.append(gold + "/world fill <verden-navn>\n");
 		help.append(white + "Genererer alle chunks t.o.m. 12 chunks utenfor border\n");
+		help.append(gold + "/world cancelfill <verden-navn>\n");
+		help.append(white + "Avbryter en pågående generering av angitt verden\n");
 		help.append(gold + "/world claimable <verden-navn>\n");
 		help.append(white + "Skrur på/av mulighet for å lage plasser\n");
 		help.append(gold + "/world firespread <verden-navn>\n");
