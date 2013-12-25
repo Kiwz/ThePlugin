@@ -20,7 +20,6 @@ event.setJoinMessage() instead of the other shit
 
 Kommandoer:
 /world chunk <world-name> <type (monsters, blocks etc)
-/world cancelfill <world-name>
 
 
 Dynmap:

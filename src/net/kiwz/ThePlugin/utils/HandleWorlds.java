@@ -73,6 +73,12 @@ public class HandleWorlds {
 		if (world == null) {
 			return ThePlugin.c2 + worldName + " finnes ikke";
 		}
+		
+		if (FillWorld.tasks.get(world.getName()) != null) {
+			Bukkit.getServer().getScheduler().cancelTask(FillWorld.tasks.get(world.getName()));
+			FillWorld.tasks.remove(world.getName());
+		}
+		
 		for (Player player : world.getPlayers()) {
 			player.teleport(getSpawn(player, "world"));
 			player.sendMessage(ThePlugin.c2 + "Verdenen du var i ble slettet, du er nå i hoved-spawnen");
