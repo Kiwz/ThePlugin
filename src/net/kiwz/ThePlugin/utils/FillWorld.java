@@ -1,6 +1,10 @@
 package net.kiwz.ThePlugin.utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import net.kiwz.ThePlugin.ThePlugin;
 
@@ -11,11 +15,13 @@ import org.bukkit.entity.Player;
 
 public class FillWorld {
 	public static HashMap<String, Integer> tasks = new HashMap<String, Integer>();
-	public int x;
-	public int z;
+	public static HashMap<String, FillWorld> save = new HashMap<String, FillWorld>();
+	private int x;
+	private int z;
 	private World world;
 	private HandleWorlds hWorlds = new HandleWorlds();
 	private HashMap<Integer, FillWorld> chunks = new HashMap<Integer, FillWorld>();
+	private String speedString;
 	private int key = 0;
 	private int speed = 1;
 	private Long totTime = System.currentTimeMillis();
@@ -36,16 +42,18 @@ public class FillWorld {
 		}
 		Bukkit.getServer().getScheduler().cancelTask(tasks.get(world));
 		tasks.remove(world);
+		save.remove(world);
 		sender.sendMessage(ThePlugin.c2 + "Generering avbrutt for " + world);
 	}
 	
 	public void generateChunks(CommandSender sender, String worldName, String speedString) {
+		this.speedString = speedString;
 		if (Bukkit.getServer().getWorld(worldName) == null) {
 			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
 			return;
 		}
 		world = Bukkit.getServer().getWorld(worldName);
-
+		
 		if (tasks.get(world.getName()) != null) {
 			sender.sendMessage(ThePlugin.c2 + "Jobber allerede med å generere " + world.getName());
 			return;
@@ -70,7 +78,7 @@ public class FillWorld {
             z += dz;
         }
         
-		setSpeed(speedString);
+		setSpeed();
         tasks.put(world.getName(), scheduleGenerations());
         if (sender instanceof Player) {
 			sender.sendMessage(ThePlugin.c1 + "Genererer " + chunks.size() + " chunks for [" + world.getName() + "]");
@@ -79,7 +87,7 @@ public class FillWorld {
         }
     }
 	
-	private void setSpeed(String speedString) {
+	private void setSpeed() {
 		int speed = 1;
 		try {
 			speed = Integer.parseInt(speedString);
@@ -107,6 +115,10 @@ public class FillWorld {
 	private int scheduleGenerations() {
         return Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("ThePlugin"), new Runnable() {
 			public void run() {
+				FillWorld value = new FillWorld();
+				value.speedString = speedString;
+				value.key = key;
+				save.put(world.getName(), value);
 				generateChunk(key);
 				key++;
 				generateChunk(key);
@@ -118,8 +130,12 @@ public class FillWorld {
 	private void generateChunk(int key) {
     	status(key);
 		if (chunks.get(key) == null) {
+			if (tasks.get(world.getName()) == null) {
+				return;
+			}
 			Bukkit.getServer().getScheduler().cancelTask(tasks.get(world.getName()));
 			tasks.remove(world.getName());
+			save.remove(world.getName());
 			return;
 		}
 		
@@ -191,5 +207,45 @@ public class FillWorld {
 	private void info(String s) {
 		s = "[ThePlugin] " + s;
 		ThePlugin.log.info(s);
+	}
+	
+	public void continueFromSave() {
+		for (World world : Bukkit.getServer().getWorlds()) {
+			try {
+				File file = new File("plugins\\ThePlugin\\" + world.getName() + "-chunk.txt");
+				Scanner sc = new Scanner(file);
+				String speedString = sc.nextLine();
+				String keyString = sc.nextLine();
+				sc.close();
+				try {
+					int key = Integer.parseInt(keyString);
+					this.key = key - 2;
+				}
+				catch (NumberFormatException e) {
+				}
+				info("Fortsetter med generering av [" + world.getName() + "]");
+				generateChunks(Bukkit.getServer().getConsoleSender(), world.getName(), speedString);
+				file.delete();
+			}
+			catch (IOException e) {
+			}
+		}
+	}
+	
+	public void cancelSave() {
+		for (String key : save.keySet()) {
+			try {
+				File file = new File("plugins\\ThePlugin\\" + key + "-chunk" + ".txt");
+				if (file.createNewFile()) {
+					PrintWriter writer = new PrintWriter("plugins\\ThePlugin\\" + key + "-chunk.txt");
+					writer.println(save.get(key).speedString);
+					writer.println(save.get(key).key);
+					writer.close();
+				}
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

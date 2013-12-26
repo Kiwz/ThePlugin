@@ -12,7 +12,6 @@ public class TPChunkCommand {
 	
 	public boolean tp(CommandSender sender, String[] args) {
 		Player player = Bukkit.getServer().getPlayer(sender.getName());
-		String worldName = args[0];
 		int x = 0;
 		int y = 100;
 		int z = 0;
@@ -21,7 +20,8 @@ public class TPChunkCommand {
 			sender.sendMessage(ThePlugin.c2 + "Du må skrive navnet på verdenen, chunk x, koordinat y og chunk z");
 			return true;
 		}
-		
+
+		String worldName = args[0];
 		if (Bukkit.getServer().getWorld(worldName) == null) {
 			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
 			return true;
