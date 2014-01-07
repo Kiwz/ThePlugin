@@ -1,15 +1,15 @@
 package net.kiwz.ThePlugin.listeners;
 
 import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.utils.ChatIgnore;
+import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.HandleItems;
-import net.kiwz.ThePlugin.utils.HandlePlaces;
-import net.kiwz.ThePlugin.utils.HandlePlayers;
-import net.kiwz.ThePlugin.utils.HandleWorlds;
-import net.kiwz.ThePlugin.utils.Log;
-import net.kiwz.ThePlugin.utils.MsgToOthers;
-import net.kiwz.ThePlugin.utils.OfflinePlayer;
-import net.kiwz.ThePlugin.utils.Permissions;
-import net.kiwz.ThePlugin.utils.Tablist;
+import net.kiwz.ThePlugin.utils.Place;
+import net.kiwz.ThePlugin.utils.MyPlayer;
+import net.kiwz.ThePlugin.utils.MyWorld;
+import net.kiwz.ThePlugin.utils.Perm;
+import net.kiwz.ThePlugin.utils.ServerManager;
+import net.kiwz.ThePlugin.utils.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,17 +35,9 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 public class PlayerListener implements Listener {
-	private HandlePlaces places = new HandlePlaces();
-	private HandlePlayers players = new HandlePlayers();
-	private HandleWorlds worlds = new HandleWorlds();
-    private HandleItems hItems = new HandleItems();
-    private MsgToOthers msg = new MsgToOthers();
-    private Permissions perm = new Permissions();
-	private String denyString = ThePlugin.c2 + "Du har ingen tilgang her";
-	private Player player;
+	private String denyString = Color.WARNING + "Du har ingen tilgang her";
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -65,34 +57,48 @@ public class PlayerListener implements Listener {
 		Material iPlate = Material.IRON_PLATE;
 		Material gPlate = Material.GOLD_PLATE;
 		
-		if (!worlds.isTrample(block.getWorld()) && event.getAction().equals(Action.PHYSICAL)) {
+		if (!MyWorld.getWorld(block.getWorld()).getTrample() && event.getAction().equals(Action.PHYSICAL)) {
 			if ((block.getType().equals(soil)) || (block.getType().equals(crops))) {
 				event.setCancelled(true);
 				return;
 			}
 		}
+		
 		if (event.getClickedBlock() != null) {
+			Location clickedBlockLoc = event.getClickedBlock().getLocation();
 			Material clickedBlock = event.getClickedBlock().getType();
 			Material heldItem = player.getItemInHand().getType();
+			Place place = Place.getPlace(clickedBlockLoc);
+			
 			if (clickedBlock.equals(wDoor)) {
 				return;
 			}
-			if (places.isWilderness(event.getClickedBlock().getLocation())) {
-				if (heldItem.equals(boat) || heldItem.equals(cart) || heldItem.equals(sCart) ||
-						heldItem.equals(pCart) || heldItem.equals(hCart)) {
-					return;
+			
+			if (place != null) {
+				if (!place.hasAccess(player)) {
+					event.setCancelled(true);
+					/**
+					 * TODO iPlate og gPlate kaller ikke på denne eventen!
+					 */
+					if (clickedBlock.equals(wPlate) || clickedBlock.equals(sPlate) ||
+							clickedBlock.equals(iPlate) || clickedBlock.equals(gPlate)) {
+					} else {
+						player.updateInventory();
+						player.sendMessage(denyString);
+					}
 				}
-			}
-			if (!places.hasAccess(player, event.getClickedBlock().getLocation())) {
-				event.setCancelled(true);
-				/// Må fikse iPlate og gPlate
-				if (clickedBlock.equals(wPlate) || clickedBlock.equals(sPlate) ||
-						clickedBlock.equals(iPlate) || clickedBlock.equals(gPlate)) {
-					return;
+			} else if (!player.isOp() && MyWorld.getWorld(clickedBlockLoc.getWorld()).getClaimable() && clickedBlockLoc.getBlockY() > 40) {
+				if (!(heldItem.equals(boat) || heldItem.equals(cart) || heldItem.equals(sCart) ||
+						heldItem.equals(pCart) || heldItem.equals(hCart))) {
+					event.setCancelled(true);
+					/// Må fikse iPlate og gPlate
+					if (clickedBlock.equals(wPlate) || clickedBlock.equals(sPlate) ||
+							clickedBlock.equals(iPlate) || clickedBlock.equals(gPlate)) {
+						return;
+					}
+					player.updateInventory();
+					player.sendMessage(denyString);
 				}
-				player.updateInventory();
-				player.sendMessage(denyString);
-				return;
 			}
 		}
 	}
@@ -103,9 +109,12 @@ public class PlayerListener implements Listener {
 		
 		if (event.getRightClicked() != null) {
 			Location loc = event.getRightClicked().getLocation();
-			if (!places.hasAccess(player, loc) && !places.isWilderness(loc)) {
-				event.setCancelled(true);
-				player.sendMessage(denyString);
+			Place place = Place.getPlace(loc);
+			if (place != null) {
+				if (!place.hasAccess(player)) {
+					event.setCancelled(true);
+					player.sendMessage(denyString);
+				}
 			}
 		}
 	}
@@ -118,8 +127,7 @@ public class PlayerListener implements Listener {
 			Player holder = (Player) inv.getHolder();
 			if (!holder.isOnline()) {
 				ItemStack[] content = inv.getHolder().getInventory().getContents();
-				OfflinePlayer offlinePlayer = new OfflinePlayer();
-				Player player = offlinePlayer.getPlayer(holder.getName());
+				Player player = MyPlayer.getPlayer(holder.getName()).getBukkitPlayer();
 				player.getInventory().setContents(content);
 				player.saveData();
 			}
@@ -133,8 +141,7 @@ public class PlayerListener implements Listener {
 			String cmd = event.getMessage().split(" ")[0];
 	    	HelpTopic topic = Bukkit.getServer().getHelpMap().getHelpTopic(cmd);
 	    	if (topic != null) {
-	    		Log log = new Log();
-	    		log.logString(" [COMMAND] " + player.getName() + ": " + event.getMessage());
+	    		ServerManager.logString("[COMMAND] " + player.getName() + ": " + event.getMessage());
 	    	}
 		}
 	}
@@ -145,27 +152,28 @@ public class PlayerListener implements Listener {
 		Player player = event.getPlayer();
 		String msg = player.getName() + ": " + event.getMessage();
 		
-		if (players.isMuted(player.getName())) {
-			player.sendMessage(ThePlugin.c2 + "En admin har bestemt at du ikke får snakke av gode grunner");
+		if (MyPlayer.getPlayer(player).isMuted()) {
+			player.sendMessage(Color.WARNING + "En admin har bestemt at du ikke får snakke av gode grunner");
 			event.setCancelled(true);
 			return;
 		}
-		if (player.isOp() || perm.isAdmin(player)) {
+		
+		if (player.isOp() || Perm.isAdmin(player)) {
 			//event.setFormat(ChatColor.RED + "%s: " + ChatColor.WHITE + "%s");
 			msg = ChatColor.RED + player.getName() + ": " + ChatColor.WHITE + event.getMessage();
 		}
+		
 		for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
-			if (ThePlugin.chatIgnore.containsKey(thisPlayer.getName())) {
-				if (!ThePlugin.chatIgnore.get(thisPlayer.getName()).contains(player.getName())) {
+			if (ChatIgnore.getPlayers(thisPlayer) != null) {
+				if (!ChatIgnore.getPlayers(thisPlayer).contains(player.getName())) {
 					thisPlayer.sendMessage(msg);
 				}
-			}
-			else {
+			} else {
 				thisPlayer.sendMessage(msg);
 			}
 		}
-		Log log = new Log();
-		log.logString(" [CHAT] " + player.getName() + ": " + event.getMessage());
+		
+		ServerManager.logString("[CHAT] " + player.getName() + ": " + event.getMessage());
 		event.setCancelled(true);
 	}
 	
@@ -179,17 +187,16 @@ public class PlayerListener implements Listener {
 		String x = Double.toString(loc.getX()).replaceAll("\\..*","");
 		String y = Double.toString(loc.getY()).replaceAll("\\..*","");
 		String z = Double.toString(loc.getZ()).replaceAll("\\..*","");
-		event.getEntity().getPlayer().sendMessage(ThePlugin.c2 + "Du døde i " + world
+		event.getEntity().getPlayer().sendMessage(Color.WARNING + "Du døde i " + world
 				+ " X: " + x + " Y: " + y + " Z: " + z);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
 		final Player player = event.getPlayer();
-		final Location loc = worlds.getSpawn(player, player.getWorld().getName());
+		final Location loc = MyWorld.getWorld(player.getWorld()).getSpawn();
 		if (player.getBedSpawnLocation() == null) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(pl, new Runnable() {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 					@Override
 	                public void run() {
 					player.teleport(loc);
@@ -200,18 +207,16 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        player = event.getPlayer();
+        final Player player = event.getPlayer();
         String playerName = player.getName();
-        String ip = player.getAddress().toString();
+        String ip = player.getAddress().getAddress().toString().replace("/", "");
         String worldName = player.getWorld().getName();
         String coords = player.getLocation().getBlockX() + ", " + player.getLocation().getBlockY() + ", " + player.getLocation().getBlockZ();
-        String log = "Spiller logget inn";
-        String loginMsg = "Noen logget inn";
-        event.setJoinMessage("");
-        new Tablist().setColor(player);
+        String log;
         
-    	if (perm.isAdmin(player)) {
-    		perm.setAdminPermissions(player);
+        Perm.setOpPerm(player);
+    	if (Perm.isAdmin(player)) {
+    		Perm.setAdminPermissions(player);
     	}
     	
         if (!player.isOp()) {
@@ -219,66 +224,68 @@ public class PlayerListener implements Listener {
         	player.setAllowFlight(false);
         }
         
-        if (players.hasPlayedBefore(playerName)) {
-	        players.setLastLogin(playerName);
-	        players.setIP(playerName);
-	        log = playerName + " [" + ip + "] logget inn ([" + worldName + "] " + coords + ")";
-			loginMsg = ThePlugin.c3 + playerName + " logget inn";
-			player.sendMessage(ThePlugin.c1 + "############################################");
-	        player.sendMessage(ThePlugin.c1 + "Velkommen til LarvikGaming");
-	        player.sendMessage(ThePlugin.c1 + "Hjemmeside:" + ThePlugin.c3 + " http://larvikgaming.net");
-	        player.sendMessage(ThePlugin.c1 + "Kommandoer:" + ThePlugin.c3 + " http://larvikgaming.net/kommandoer.php");
-	        player.sendMessage(ThePlugin.c1 + "Kart:" + ThePlugin.c3 + " http://larvikgaming.net/dynmap.php");
-	        player.sendMessage(ThePlugin.c1 + "Forum:" + ThePlugin.c3 + " http://larvikgaming.net/forum");
-	        player.sendMessage(ThePlugin.c1 + "Mumble:" + ThePlugin.c3 + " mumble.larvikgaming.net:60000");
-			player.sendMessage(ThePlugin.c1 + "############################################");
-        }
+        MyPlayer myPlayer = new MyPlayer(player);
         
-        else {
-        	players.addPlayer(playerName);
-	        log = playerName + " [" + ip + "] logget inn for første gang ([" + worldName + "] " + coords + ")";
-			loginMsg = ThePlugin.c3 + playerName + " logget inn for første gang";
-			player.teleport(worlds.getSpawn(player, player.getWorld().getName()));
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ThePlugin"), new Runnable() {
+        if (!myPlayer.save()) {
+        	myPlayer = MyPlayer.getPlayer(player);
+        	myPlayer.setName(playerName);
+        	myPlayer.setIp(ip);
+        	myPlayer.setLastPlayed(System.currentTimeMillis() / 1000);
+	        log = playerName + " logget inn (" + worldName + " " + coords + ") [" + ip + "]";
+			event.setJoinMessage(Color.HEADER + playerName + " logget inn");
+			player.sendMessage(Color.INFO + "############################################");
+	        player.sendMessage(Color.INFO + "Velkommen til LarvikGaming");
+	        player.sendMessage(Color.INFO + "Hjemmeside:" + Color.HEADER + " http://larvikgaming.net");
+	        player.sendMessage(Color.INFO + "Kommandoer:" + Color.HEADER + " http://larvikgaming.net/kommandoer.php");
+	        player.sendMessage(Color.INFO + "Kart:" + Color.HEADER + " http://larvikgaming.net/dynmap.php");
+	        player.sendMessage(Color.INFO + "Forum:" + Color.HEADER + " http://larvikgaming.net/forum");
+	        player.sendMessage(Color.INFO + "Mumble:" + Color.HEADER + " mumble.larvikgaming.net:60000");
+			player.sendMessage(Color.INFO + "############################################");
+        } else {
+	        log = playerName + " logget inn for første gang (" + worldName + " " + coords + ") [" + ip + "]";
+			event.setJoinMessage(Color.HEADER + playerName + " logget inn for første gang");
+			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
+			Bukkit.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 				public void run() {
-					player.teleport(worlds.getSpawn(player, player.getWorld().getName()));
+					player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 				}
 			}, 10L);
-			hItems.giveItem(player, Material.IRON_PICKAXE, 1);
-			hItems.giveItem(player, Material.IRON_AXE, 1);
-			hItems.giveItem(player, Material.IRON_PICKAXE, 1);
-			hItems.giveItem(player, Material.IRON_AXE, 1);
-			hItems.giveItem(player, Material.COOKED_BEEF, 20);
-			hItems.giveItem(player, Material.GOLD_INGOT, 5);
-			hItems.giveItem(player, Material.WOOD, 64);
-			hItems.giveItem(player, Material.IRON_HELMET, 1);
-			hItems.giveItem(player, Material.IRON_CHESTPLATE, 1);
-			player.sendMessage(ThePlugin.c1 + "############################################");
-			player.sendMessage(ThePlugin.c1 + "Velkommen som ny spiller på LarvikGaming.net");
-			player.sendMessage(ThePlugin.c1 + "Kjekt om du vil lese Info-Tavlen i spawnen og " + ThePlugin.c3 + "/regler");
-			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/hjelp" + ThePlugin.c1 +
-					" for hjelp, skriv " + ThePlugin.c3 + "/plass" + ThePlugin.c1 + " for beskyttelse");
-			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/spawn farm" + ThePlugin.c1 +" for å skaffe materialer");
-			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/spawn world " + ThePlugin.c1 + "for å finne ett sted du vil bygge");
-			player.sendMessage(ThePlugin.c1 + "Skriv " + ThePlugin.c3 + "/plass ny <plass-navn>" + ThePlugin.c1 + " for å lage plass");
-			player.sendMessage(ThePlugin.c1 + "Kostnad for å lage eller flytte plass er 5 gullbarer");
-			player.sendMessage(ThePlugin.c1 + "Du kan eie 3 plasser og invitere hvem du ønsker til din plass");
-			player.sendMessage(ThePlugin.c1 + "############################################");
+			HandleItems.giveItem(player, Material.IRON_PICKAXE, 1);
+			HandleItems.giveItem(player, Material.IRON_AXE, 1);
+			HandleItems.giveItem(player, Material.IRON_PICKAXE, 1);
+			HandleItems.giveItem(player, Material.IRON_AXE, 1);
+			HandleItems.giveItem(player, Material.COOKED_BEEF, 20);
+			HandleItems.giveItem(player, Material.GOLD_INGOT, 5);
+			HandleItems.giveItem(player, Material.WOOD, 64);
+			HandleItems.giveItem(player, Material.IRON_HELMET, 1);
+			HandleItems.giveItem(player, Material.IRON_CHESTPLATE, 1);
+			player.sendMessage(Color.INFO + "############################################");
+			player.sendMessage(Color.INFO + "Velkommen som ny spiller på LarvikGaming.net");
+			player.sendMessage(Color.INFO + "Kjekt om du vil lese Info-Tavlen i spawnen og " + Color.HEADER + "/regler");
+			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/hjelp" + Color.INFO +
+					" for hjelp, skriv " + Color.HEADER + "/plass" + Color.INFO + " for beskyttelse");
+			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/spawn farm" + Color.INFO +" for å skaffe materialer");
+			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/spawn world " + Color.INFO + "for å finne ett sted du vil bygge");
+			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/plass ny <plass-navn>" + Color.INFO + " for å lage plass");
+			player.sendMessage(Color.INFO + "Kostnad for å lage eller flytte plass er 5 gullbarer");
+			player.sendMessage(Color.INFO + "Du kan eie 3 plasser og invitere hvem du ønsker til din plass");
+			player.sendMessage(Color.INFO + "############################################");
         }
         
-        
-        ThePlugin.log.info(log);
-		Log log1 = new Log();
-		log1.logString(" [INFO] " + log);
-		msg.sendMessage(player, loginMsg);
+        Util.setTabColor(player);
+		ServerManager.logString("[CONN] " + log);
+        Bukkit.getServer().getLogger().info(log);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void OnPlayerQuit(PlayerQuitEvent event) {
-        players.setTimePlayed(event.getPlayer().getName());
-		event.setQuitMessage(ThePlugin.c2 + event.getPlayer().getName() + " logget ut");
-		Log log1 = new Log();
-		log1.logString(" [INFO] " + event.getPlayer().getName() + " logget ut");
+		MyPlayer myPlayer = MyPlayer.getPlayer(event.getPlayer());
+		long curr = (System.currentTimeMillis() / 1000);
+		long login = myPlayer.getLastPlayed();
+		long tot = myPlayer.getTimePlayed();
+		myPlayer.setTimePlayed(curr - login + tot);
+		event.setQuitMessage(Color.UNSAFE + event.getPlayer().getName() + " logget ut");
+		ServerManager.logString("[CONN] " + event.getPlayer().getName() + " logget ut");
 		/*for (Player players : Bukkit.getServer().getOnlinePlayers()) {
 			players.getLocation().getWorld().strikeLightningEffect(players.getLocation());
 		}*/

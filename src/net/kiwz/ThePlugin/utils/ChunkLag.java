@@ -2,8 +2,6 @@ package net.kiwz.ThePlugin.utils;
 
 import java.util.TreeMap;
 
-import net.kiwz.ThePlugin.ThePlugin;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -35,14 +33,14 @@ public class ChunkLag {
 	private String[] getMsg(String typeString, String amountString) {
 		TreeMap<Integer, ChunkLag> chunks = getChunks(typeString, amountString);
 		String[] s = new String[chunks.size() + 1];
-		s[0] = ThePlugin.c2 + "------  Liste over ting som er loada  ------";
+		s[0] = Color.WARNING + "------  Liste over ting som er loada  ------";
 		for (int key : chunks.keySet()) {
 			String world = chunks.get(key).world.getName();
 			int x = chunks.get(key).x;
 			int z = chunks.get(key).z;
 			int amount = chunks.get(key).amount;
 			String type = chunks.get(key).type;
-			s[key + 1] = ThePlugin.c1 + "Det er " + amount + " " + type + " i " + world + "-chunk: x" + x + ", z" + z;
+			s[key + 1] = Color.INFO + "Det er " + amount + " " + type + " i " + world + "-chunk: x" + x + ", z" + z;
 		}
 		return s;
 	}

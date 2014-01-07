@@ -1,63 +1,54 @@
 package net.kiwz.ThePlugin.mysql;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Scanner;
 import java.util.logging.Level;
+
+import net.kiwz.ThePlugin.ThePlugin;
+import net.kiwz.ThePlugin.utils.Config;
+import net.kiwz.ThePlugin.utils.MultiWorld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.fusesource.jansi.Ansi;
 
 public class ConnectToMySQL {
-	private final Plugin plugin;
-    private final String user;
-    private final String database;
-    private final String password;
-    private final String port;
-    private final String hostname;
-
-    private Connection connection;
-
-    /**
-     * Creates a new MySQL instance
-     * 
-     */
-    public ConnectToMySQL() {
-    	String hName = null;
-    	String uName = null;
-    	String pass = null;
-    	String db = null;
-		try {
-			File file = new File("plugins\\ThePlugin\\mysql.txt");
-			if (file.createNewFile()) {
-				PrintWriter writer = new PrintWriter("plugins\\ThePlugin\\mysql.txt");
-				writer.println("127.0.0.1");
-				writer.println("rooty");
-				writer.println("booty");
-				writer.println("theplugin");
-				writer.close();
-			}
-			Scanner sc = new Scanner(file);
-			hName = sc.nextLine();
-			uName = sc.nextLine();
-			pass = sc.nextLine();
-			db = sc.nextLine();
-			sc.close();
+	private final Plugin plugin = ThePlugin.getPlugin();
+    private final String hostname = Config.getHost();
+    private final String port = Config.getPort();
+    private final String database = Config.getDatabase();
+    private final String user = Config.getUser();
+    private final String password = Config.getPassword();
+    private Connection connection = null;
+    
+    public void loadTables() {
+		Connection conn = openConnection();
+		if (conn == null) {
+			plugin.getLogger().severe(Ansi.ansi().fg(Ansi.Color.RED) + "Ingen database funnet, aktiverer White-List!"
+					+ Ansi.ansi().fg(Ansi.Color.DEFAULT));
+			Bukkit.getServer().setWhitelist(true);
+			return;
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-    	this.plugin = Bukkit.getServer().getPluginManager().getPlugin("ThePlugin");
-        this.hostname = hName;
-        this.port = "3306";
-        this.database = db;
-        this.user = uName;
-        this.password = pass;
-        this.connection = null;
+		BuildTables.createTables(conn);
+		SqlQuery query = new SqlQuery(conn);
+		query.selectWorlds();
+		new MultiWorld().loadWorlds();
+		query.selectPlayers();
+		query.selectHomes();
+		query.selectPlaces();
+		closeConnection(conn);
+    }
+    
+    public void saveTables() {
+		Connection conn = openConnection();
+		if (conn == null) return;
+		SqlQuery query = new SqlQuery(conn);
+		query.insertPlayers();
+		query.insertWorlds();
+		query.insertHomes();
+		query.insertPlaces();
+		closeConnection(conn);
     }
 
     public Connection openConnection() {
@@ -79,5 +70,13 @@ public class ConnectToMySQL {
             plugin.getLogger().log(Level.SEVERE, "JDBC Driver not found!");
         }
         return connection;
+    }
+    
+    public void closeConnection(Connection conn) {
+    	try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
     }
 }

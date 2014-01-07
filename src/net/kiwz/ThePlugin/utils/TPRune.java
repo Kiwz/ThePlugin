@@ -1,7 +1,5 @@
 package net.kiwz.ThePlugin.utils;
 
-import net.kiwz.ThePlugin.ThePlugin;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,7 +13,7 @@ public class TPRune {
 			loc.setPitch(player.getLocation().getPitch());
 			loc.setYaw(player.getLocation().getYaw());
 			player.teleport(loc);
-			player.sendMessage(ThePlugin.c1 + "Du ble på magisk vis teleportet");
+			player.sendMessage(Color.INFO + "Du ble på magisk vis teleportet");
 		}
 	}
 	
@@ -25,7 +23,7 @@ public class TPRune {
 			loc.setPitch(player.getLocation().getPitch());
 			loc.setYaw(player.getLocation().getYaw());
 			player.teleport(loc);
-			player.sendMessage(ThePlugin.c1 + "Du ble på magisk vis teleportet");
+			player.sendMessage(Color.INFO + "Du ble på magisk vis teleportet");
 		}
 	}
 	

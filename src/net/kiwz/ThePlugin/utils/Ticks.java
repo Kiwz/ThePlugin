@@ -2,8 +2,6 @@ package net.kiwz.ThePlugin.utils;
 
 import java.text.DecimalFormat;
 
-import net.kiwz.ThePlugin.ThePlugin;
-
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
@@ -33,6 +31,6 @@ public class Ticks implements Runnable {
 		ticksPerSecond = (elapsedTicks * 1000000000.0) / elapsedNanoTime;
 		if (!sender.isOp()) ticksPerSecond = ticksPerSecond + 0.1;
 		tps = df.format(ticksPerSecond);
-		sender.sendMessage(ThePlugin.c1 + "TPS: " + ThePlugin.c4 + tps + " (målt over " + delay + " sek)");
+		sender.sendMessage(Color.INFO + "TPS: " + Color.VARIABLE + tps + Color.INFO + " (målt over " + delay + " sek)");
 	}
 }

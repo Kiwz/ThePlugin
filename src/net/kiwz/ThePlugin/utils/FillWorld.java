@@ -14,12 +14,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class FillWorld {
+	/**
+	 * TODO Denne må skrives på en bedre måte!
+	 */
 	public static HashMap<String, Integer> tasks = new HashMap<String, Integer>();
 	public static HashMap<String, FillWorld> save = new HashMap<String, FillWorld>();
 	private int x;
 	private int z;
 	private World world;
-	private HandleWorlds hWorlds = new HandleWorlds();
 	private HashMap<Integer, FillWorld> chunks = new HashMap<Integer, FillWorld>();
 	private String speedString;
 	private int key = 0;
@@ -29,37 +31,29 @@ public class FillWorld {
 	private int gen = 0;
 	private int tempGen = 0;
 	
-	public void cancelGeneration(CommandSender sender, String worldName) {
-		if (Bukkit.getServer().getWorld(worldName) == null) {
-			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
-			return;
-		}
-		String world = Bukkit.getServer().getWorld(worldName).getName();
+	public void cancelGeneration(CommandSender sender, World world) {
+		String worldName = world.getName();
 		
-		if (tasks.get(world) == null) {
-			sender.sendMessage(ThePlugin.c2 + "Ingen pågående generering for " + world);
+		if (tasks.get(worldName) == null) {
+			sender.sendMessage(Color.WARNING + "Ingen pågående generering for " + worldName);
 			return;
 		}
-		Bukkit.getServer().getScheduler().cancelTask(tasks.get(world));
-		tasks.remove(world);
-		save.remove(world);
-		sender.sendMessage(ThePlugin.c2 + "Generering avbrutt for " + world);
+		Bukkit.getServer().getScheduler().cancelTask(tasks.get(worldName));
+		tasks.remove(worldName);
+		save.remove(worldName);
+		sender.sendMessage(Color.WARNING + "Generering avbrutt for " + worldName);
 	}
 	
-	public void generateChunks(CommandSender sender, String worldName, String speedString) {
+	public void generateChunks(CommandSender sender, World world, String speedString) {
+		this.world = world;
 		this.speedString = speedString;
-		if (Bukkit.getServer().getWorld(worldName) == null) {
-			sender.sendMessage(ThePlugin.c2 + worldName + " finnes ikke");
-			return;
-		}
-		world = Bukkit.getServer().getWorld(worldName);
 		
 		if (tasks.get(world.getName()) != null) {
-			sender.sendMessage(ThePlugin.c2 + "Jobber allerede med å generere " + world.getName());
+			sender.sendMessage(Color.WARNING + "Jobber allerede med å generere " + world.getName());
 			return;
 		}
 		
-		int d = hWorlds.getBorder(world) * 2;
+		int d = MyWorld.getWorld(world).getBorder() * 2;
 		d = (d / 16) + 1 + 12 + 12;
         int x = 0;
         int z = 0;
@@ -81,9 +75,9 @@ public class FillWorld {
 		setSpeed();
         tasks.put(world.getName(), scheduleGenerations());
         if (sender instanceof Player) {
-			sender.sendMessage(ThePlugin.c1 + "Genererer " + chunks.size() + " chunks for [" + world.getName() + "]");
+			sender.sendMessage(Color.INFO + "Genererer " + chunks.size() + " chunks for [" + world.getName() + "]");
 			long eta = Math.round(chunks.size() / 40.0 / 60 * speed);
-			sender.sendMessage(ThePlugin.c1 + "Antatt ferdig om " + eta + "min (forutsatt TPS=20)");
+			sender.sendMessage(Color.INFO + "Antatt ferdig om " + eta + "min (forutsatt TPS=20)");
         }
     }
 	
@@ -205,14 +199,13 @@ public class FillWorld {
 	}
 	
 	private void info(String s) {
-		s = "[ThePlugin] " + s;
-		ThePlugin.log.info(s);
+		ThePlugin.getPlugin().getLogger().info(s);
 	}
 	
 	public void continueFromSave() {
 		for (World world : Bukkit.getServer().getWorlds()) {
 			try {
-				File file = new File("plugins\\ThePlugin\\" + world.getName() + "-chunk.txt");
+				File file = getFile(world.getName());
 				Scanner sc = new Scanner(file);
 				String speedString = sc.nextLine();
 				String keyString = sc.nextLine();
@@ -224,7 +217,7 @@ public class FillWorld {
 				catch (NumberFormatException e) {
 				}
 				info("Fortsetter med generering av [" + world.getName() + "]");
-				generateChunks(Bukkit.getServer().getConsoleSender(), world.getName(), speedString);
+				generateChunks(Bukkit.getServer().getConsoleSender(), world, speedString);
 				file.delete();
 			}
 			catch (IOException e) {
@@ -235,9 +228,9 @@ public class FillWorld {
 	public void cancelSave() {
 		for (String key : save.keySet()) {
 			try {
-				File file = new File("plugins\\ThePlugin\\" + key + "-chunk" + ".txt");
+				File file = getFile(key);
 				if (file.createNewFile()) {
-					PrintWriter writer = new PrintWriter("plugins\\ThePlugin\\" + key + "-chunk.txt");
+					PrintWriter writer = new PrintWriter(file);
 					writer.println(save.get(key).speedString);
 					writer.println(save.get(key).key);
 					writer.close();
@@ -247,5 +240,13 @@ public class FillWorld {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private File getFile(String worldName) {
+		String fileName = ThePlugin.getPlugin().getDataFolder().getPath();
+		fileName = fileName + File.separatorChar;
+		fileName = fileName + worldName + "-chunk.txt";
+		File file = new File(fileName);
+		return file;
 	}
 }

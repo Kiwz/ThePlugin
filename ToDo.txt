@@ -12,9 +12,10 @@ Tester som må utføres:
 
 
 Bugs:
-consolfilter funker ikke...
 spillere er usynlig for andre etter en teleport
-event.setJoinMessage() instead of the other shit
+Spillere kan ta ut items fra itemFrame
+Spillere kan i noen tilfeller tømme vann/lava i andre sine plasser
+Spillere kan komme seg utenfor verdenen ved bruk av enderpearl
 
 
 Kommandoer:

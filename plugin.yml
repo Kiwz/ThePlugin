@@ -100,8 +100,8 @@ commands:
     permission: ThePlugin.mute
     permission-message: §cDu har ikke tilgang!
     usage: |
+      /mute
       /mute <player>
-      /mute list
   unmute:
     description: Spilleren kan chatte igjen
     aliases: []
@@ -182,7 +182,7 @@ commands:
     aliases: [chunk]
     permission: ThePlugin.tpchunk
     permission-message: §cDu har ikke tilgang!
-    usage: /tp <world> <x y z>
+    usage: /tpchunk <world> <x y z>
   ticks:
     description: Tiks pr sekund (skal være 20)
     aliases: [lag, tick]
@@ -236,6 +236,8 @@ permissions:
   ThePlugin.tid:
     default: true
   ThePlugin.ticks:
+    default: true
+  ThePlugin.whois:
     default: true
   bukkit.command.kill:
     default: op

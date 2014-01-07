@@ -2,11 +2,11 @@ package net.kiwz.ThePlugin.listeners;
 
 import java.util.List;
 
-import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.utils.HandlePlaces;
-import net.kiwz.ThePlugin.utils.HandleWorlds;
-import net.kiwz.ThePlugin.utils.Log;
-import net.kiwz.ThePlugin.utils.Permissions;
+import net.kiwz.ThePlugin.utils.Color;
+import net.kiwz.ThePlugin.utils.Place;
+import net.kiwz.ThePlugin.utils.MyWorld;
+import net.kiwz.ThePlugin.utils.Perm;
+import net.kiwz.ThePlugin.utils.ServerManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,33 +25,36 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlockListener implements Listener {
-	private HandlePlaces places = new HandlePlaces();
-	private HandleWorlds worlds = new HandleWorlds();
-    private Permissions perm = new Permissions();
-	private String denyString = ThePlugin.c2 + "Du har ingen tilgang her";
+	private String denyString = Color.WARNING + "Du har ingen tilgang her";
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		Location loc = event.getBlock().getLocation();
 		Material mat = event.getBlock().getType();
+		Place place = Place.getPlace(loc);
 		
-		if (!places.hasAccess(player, loc)) {
+		if (place != null) {
+			if (!place.hasAccess(player)) {
+				event.setCancelled(true);
+				player.sendMessage(denyString);
+			}
+		} else if (!player.isOp() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}
+		
 		if (mat.equals(Material.DIAMOND_ORE) || mat.equals(Material.EMERALD_ORE)) {
 			for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
-				if (perm.isAdmin(thisPlayer) || thisPlayer.isOp()) {
-					thisPlayer.sendMessage(ThePlugin.c1 + player.getName() + ThePlugin.c3 + " fant en " + mat);
+				if (Perm.isAdmin(thisPlayer) || thisPlayer.isOp()) {
+					thisPlayer.sendMessage(Color.PLAYER + player.getName() + Color.INFO + " fant en " + Color.VARIABLE + mat);
 				}
 			}
 			String world = loc.getWorld().getName();
 			int x = loc.getBlockX();
 			int y = loc.getBlockY();
 			int z = loc.getBlockZ();
-			Log log = new Log();
-			log.logString(" [MINING] " + player.getName() + ": " + mat + " ([" + world + "] " + x + ", " + y + ", " + z + ")");
+			ServerManager.logString("[MINING] " + player.getName() + ": " + mat + " (" + world + " " + x + ", " + y + ", " + z + ")");
 		}
     }
 
@@ -59,39 +62,33 @@ public class BlockListener implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		Location loc = event.getBlock().getLocation();
-		
-		if (!places.hasAccess(player, loc)) {
+		Place place = Place.getPlace(loc);
+
+		if (place != null) {
+			if (!place.hasAccess(player)) {
+				event.setCancelled(true);
+				player.sendMessage(denyString);
+			}
+		} else if (!player.isOp() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}
-    }
+	}
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockIgnite(BlockIgniteEvent event) {
-		Block block = event.getBlock();
-		
-		if (!worlds.isFireSpread(block.getWorld()) && event.getCause().equals(IgniteCause.SPREAD)) {
-			event.setCancelled(true);
-			return;
-		}
 		
 		if (event.getCause().equals(IgniteCause.LAVA)) {
 			Location fromLoc = event.getIgnitingBlock().getLocation();
 			Location toLoc = event.getBlock().getLocation();
-			int fromID = places.getIDWithCoords(fromLoc);
-			int toID = places.getIDWithCoords(toLoc);
+			Place fromPlace = Place.getPlace(fromLoc);
+			Place toPlace = Place.getPlace(toLoc);
 			String fromOwner = "";
 			String toOwner = "";
-			if (fromID != toID) {
-				if (fromID != 0) {
-					fromOwner = places.getOwner(fromID);
-				}
-				if (toID != 0) {
-					toOwner = places.getOwner(toID);
-				}
-				if (!fromOwner.equals(toOwner)) {
-					event.setCancelled(true);
-				}
+			if (fromPlace != null) fromOwner = fromPlace.getOwner();
+			if (toPlace != null) toOwner = toPlace.getOwner();
+			if (!fromOwner.equals(toOwner)) {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -107,20 +104,14 @@ public class BlockListener implements Listener {
 		if (!block.getRelative(event.getDirection()).getType().equals(Material.AIR) && !block.isLiquid()) {
 			Location fromLoc = block.getRelative(event.getDirection()).getLocation();
 			Location toLoc = block.getLocation();
-			int fromID = places.getIDWithCoords(fromLoc);
-			int toID = places.getIDWithCoords(toLoc);
+			Place fromPlace = Place.getPlace(fromLoc);
+			Place toPlace = Place.getPlace(toLoc);
 			String fromOwner = "";
 			String toOwner = "";
-			if (fromID != toID) {
-				if (fromID != 0) {
-					fromOwner = places.getOwner(fromID);
-				}
-				if (toID != 0) {
-					toOwner = places.getOwner(toID);
-				}
-				if (!fromOwner.equals(toOwner)) {
-					event.setCancelled(true);
-				}
+			if (fromPlace != null) fromOwner = fromPlace.getOwner();
+			if (toPlace != null) toOwner = toPlace.getOwner();
+			if (!fromOwner.equals(toOwner)) {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -132,20 +123,14 @@ public class BlockListener implements Listener {
 			for (Block block : blocks) {
 				Location fromLoc = block.getLocation();
 				Location toLoc = block.getRelative(event.getDirection()).getLocation();
-				int fromID = places.getIDWithCoords(fromLoc);
-				int toID = places.getIDWithCoords(toLoc);
+				Place fromPlace = Place.getPlace(fromLoc);
+				Place toPlace = Place.getPlace(toLoc);
 				String fromOwner = "";
 				String toOwner = "";
-				if (fromID != toID) {
-					if (fromID != 0) {
-						fromOwner = places.getOwner(fromID);
-					}
-					if (toID != 0) {
-						toOwner = places.getOwner(toID);
-					}
-					if (!fromOwner.equals(toOwner)) {
-						event.setCancelled(true);
-					}
+				if (fromPlace != null) fromOwner = fromPlace.getOwner();
+				if (toPlace != null) toOwner = toPlace.getOwner();
+				if (!fromOwner.equals(toOwner)) {
+					event.setCancelled(true);
 				}
 			}
 		}
@@ -155,20 +140,14 @@ public class BlockListener implements Listener {
 	public void onBlockMove(BlockFromToEvent event) {
 		Location fromLoc = event.getBlock().getLocation();
 		Location toLoc = event.getToBlock().getLocation();
-		int fromID = places.getIDWithCoords(fromLoc);
-		int toID = places.getIDWithCoords(toLoc);
+		Place fromPlace = Place.getPlace(fromLoc);
+		Place toPlace = Place.getPlace(toLoc);
 		String fromOwner = "";
 		String toOwner = "";
-		if (fromID != toID) {
-			if (fromID != 0) {
-				fromOwner = places.getOwner(fromID);
-			}
-			if (toID != 0) {
-				toOwner = places.getOwner(toID);
-			}
-			if (!fromOwner.equals(toOwner)) {
-				event.setCancelled(true);
-			}
+		if (fromPlace != null) fromOwner = fromPlace.getOwner();
+		if (toPlace != null) toOwner = toPlace.getOwner();
+		if (!fromOwner.equals(toOwner)) {
+			event.setCancelled(true);
 		}
 	}
 }

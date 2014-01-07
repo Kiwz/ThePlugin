@@ -1,214 +1,80 @@
 package net.kiwz.ThePlugin;
 
-import net.kiwz.ThePlugin.commands.EntityCommand;
-import net.kiwz.ThePlugin.commands.GameModeCommand;
-import net.kiwz.ThePlugin.commands.FeedCommand;
-import net.kiwz.ThePlugin.commands.FlyCommand;
-import net.kiwz.ThePlugin.commands.HealCommand;
-import net.kiwz.ThePlugin.commands.HelpCommand;
-import net.kiwz.ThePlugin.commands.HomeCommand;
-import net.kiwz.ThePlugin.commands.IgnoreCommand;
-import net.kiwz.ThePlugin.commands.MemCommand;
-import net.kiwz.ThePlugin.commands.MuteCommand;
-import net.kiwz.ThePlugin.commands.OpenInvCommand;
-import net.kiwz.ThePlugin.commands.PlaceCommand;
-import net.kiwz.ThePlugin.commands.PvpCommand;
-import net.kiwz.ThePlugin.commands.ReplayCommand;
-import net.kiwz.ThePlugin.commands.RulesCommand;
-import net.kiwz.ThePlugin.commands.SpawnCommand;
-import net.kiwz.ThePlugin.commands.TPChunkCommand;
-import net.kiwz.ThePlugin.commands.TPCommand;
-import net.kiwz.ThePlugin.commands.TPSCommand;
-import net.kiwz.ThePlugin.commands.TellCommand;
-import net.kiwz.ThePlugin.commands.TimeCommand;
-import net.kiwz.ThePlugin.commands.ListCommand;
-import net.kiwz.ThePlugin.commands.WhoisCommand;
-import net.kiwz.ThePlugin.commands.WorldCommand;
+import net.kiwz.ThePlugin.commands.EntityCmd;
+import net.kiwz.ThePlugin.commands.FeedCmd;
+import net.kiwz.ThePlugin.commands.FlyCmd;
+import net.kiwz.ThePlugin.commands.GmCmd;
+import net.kiwz.ThePlugin.commands.HealCmd;
+import net.kiwz.ThePlugin.commands.HelpCmd;
+import net.kiwz.ThePlugin.commands.HomeCmd;
+import net.kiwz.ThePlugin.commands.IgnoreCmd;
+import net.kiwz.ThePlugin.commands.ListCmd;
+import net.kiwz.ThePlugin.commands.MemCmd;
+import net.kiwz.ThePlugin.commands.MuteCmd;
+import net.kiwz.ThePlugin.commands.OiCmd;
+import net.kiwz.ThePlugin.commands.PlaceCmd;
+import net.kiwz.ThePlugin.commands.PvpCmd;
+import net.kiwz.ThePlugin.commands.ReplayCmd;
+import net.kiwz.ThePlugin.commands.RulesCmd;
+import net.kiwz.ThePlugin.commands.SpawnCmd;
+import net.kiwz.ThePlugin.commands.TellCmd;
+import net.kiwz.ThePlugin.commands.TimeCmd;
+import net.kiwz.ThePlugin.commands.TpCmd;
+import net.kiwz.ThePlugin.commands.TpchunkCmd;
+import net.kiwz.ThePlugin.commands.TpsCmd;
+import net.kiwz.ThePlugin.commands.WhoisCmd;
+import net.kiwz.ThePlugin.commands.WorldCmd;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-
 public class Commands implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		String cmdName = cmd.getName();
-		
-		if (cmdName.equalsIgnoreCase("entity")) {
-			EntityCommand entity = new EntityCommand();
-			entity.entity(sender, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("feed")) {
-			FeedCommand feed = new FeedCommand();
-			feed.feed(sender, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("fly")) {
-			FlyCommand fly = new FlyCommand();
-			fly.fly(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("gm")) {
-			GameModeCommand gm = new GameModeCommand();
-			gm.gameMode(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("heal")) {
-			HealCommand heal = new HealCommand();
-			heal.heal(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("help")) {
-			HelpCommand help = new HelpCommand();
-			help.help(sender, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("home")) {
-			HomeCommand home = new HomeCommand();
-			home.home(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("ignore")) {
-			IgnoreCommand ignore = new IgnoreCommand();
-			ignore.ignore(sender, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("sethome")) {
-			HomeCommand home = new HomeCommand();
-			home.setHome(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("list")) {
-			ListCommand list = new ListCommand();
-			list.list(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("minne")) {
-			MemCommand mem = new MemCommand();
-			mem.mem(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("mute")) {
-			MuteCommand mute = new MuteCommand();
-			mute.mute(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("unmute")) {
-			MuteCommand mute = new MuteCommand();
-			mute.unMute(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("oi")) {
-			OpenInvCommand openinv = new OpenInvCommand();
-			openinv.openInv(sender, cmd, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("plass")) {
-			PlaceCommand place = new PlaceCommand();
-			place.place(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("pvp")) {
-			PvpCommand pvp = new PvpCommand();
-			pvp.pvp(sender);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("replay")) {
-			ReplayCommand replay = new ReplayCommand();
-			replay.replay(sender, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("rules")) {
-			RulesCommand rules = new RulesCommand();
-			rules.rules(sender);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("spawn")) {
-			SpawnCommand spawn = new SpawnCommand();
-			spawn.spawn(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("setspawn")) {
-			SpawnCommand spawn = new SpawnCommand();
-			spawn.setSpawn(sender, cmd, args);
-			return true;
-		}
-		
-		else if (cmdName.equalsIgnoreCase("tell")) {
-			TellCommand tell = new TellCommand();
-			tell.tell(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("tid")) {
-			TimeCommand time = new TimeCommand();
-			time.time(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("tp")) {
-			TPCommand tp = new TPCommand();
-			tp.tp(sender, cmd, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("tpchunk")) {
-			TPChunkCommand tpChunk = new TPChunkCommand();
-			tpChunk.tp(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("ticks")) {
-			TPSCommand tps = new TPSCommand();
-			tps.tps(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("whois")) {
-			WhoisCommand whois = new WhoisCommand();
-			whois.whois(sender, args);
-			return true;
-	    }
-		
-		else if (cmdName.equalsIgnoreCase("world")) {
-			WorldCommand world = new WorldCommand();
-			world.world(sender, cmd, args);
-			return true;
-	    }
-	    
-		else if (cmdName.equalsIgnoreCase("test")) {
-			
+		String c = cmd.getName().toLowerCase();
+
+		if (c.equalsIgnoreCase("test")) {
 			// Test her:
-			
+			/*
+			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
+				public void run() {
+					Refactor.start();
+				}
+			});*/
 			// Test slutter!
 
 			return true;
 		}
-		else {
-			sender.sendMessage(ThePlugin.c2 + "Noe fryktelig galt skjedde, kontakt en Admin");
-			return false;
-		}
+		
+		else if (c.equals("entity")) return EntityCmd.exec(sender, args);
+		else if (c.equals("feed")) return FeedCmd.exec(sender, args);
+		else if (c.equals("fly")) return FlyCmd.exec(sender, args);
+		else if (c.equals("gm")) return GmCmd.exec(sender, args);
+		else if (c.equals("heal")) return HealCmd.exec(sender, args);
+		else if (c.equals("help")) return HelpCmd.exec(sender, args);
+		else if (c.equals("home")) return HomeCmd.execGet(sender, args);
+		else if (c.equals("sethome")) return HomeCmd.execSet(sender, args);
+		else if (c.equals("ignore")) return IgnoreCmd.exec(sender, args);
+		else if (c.equals("list")) return ListCmd.exec(sender, args);
+		else if (c.equals("mem")) return MemCmd.exec(sender, args);
+		else if (c.equals("mute")) return MuteCmd.execSet(sender, args);
+		else if (c.equals("unmute")) return MuteCmd.execUnSet(sender, args);
+		else if (c.equals("oi")) return OiCmd.exec(sender, args);
+		else if (c.equals("plass")) return PlaceCmd.exec(sender, args);
+		else if (c.equals("pvp")) return PvpCmd.exec(sender);
+		else if (c.equals("replay")) return ReplayCmd.exec(sender, args);
+		else if (c.equals("rules")) return RulesCmd.exec(sender, args);
+		else if (c.equals("spawn")) return SpawnCmd.execGet(sender, args);
+		else if (c.equals("setspawn")) return SpawnCmd.execSet(sender);
+		else if (c.equals("tell")) return TellCmd.exec(sender, args);
+		else if (c.equals("tid")) return TimeCmd.exec(sender, args);
+		else if (c.equals("tp")) return TpCmd.exec(sender, args);
+		else if (c.equals("tpchunk")) return TpchunkCmd.exec(sender, args);
+		else if (c.equals("ticks")) return TpsCmd.exec(sender, args);
+		else if (c.equals("whois")) return WhoisCmd.exec(sender, args);
+		else if (c.equals("world")) return WorldCmd.exec(sender, cmd, args);
+		else return false;
 	}
 }

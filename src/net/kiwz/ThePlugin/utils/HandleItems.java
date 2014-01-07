@@ -7,7 +7,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class HandleItems {
 
-	public boolean removeItem(Player player, Material material, int amount) {
+	public static boolean removeItem(Player player, Material material, int amount) {
 		PlayerInventory inventory = player.getInventory();
 		if (inventory.containsAtLeast(new ItemStack(material), amount)) {
 			inventory.removeItem(new ItemStack(material, amount));
@@ -16,7 +16,7 @@ public class HandleItems {
 		return false;
 	}
 	
-	public void giveItem(Player player, Material material, int amount) {
+	public static void giveItem(Player player, Material material, int amount) {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack itemstack = new ItemStack(material, amount);
 		inventory.addItem(itemstack);

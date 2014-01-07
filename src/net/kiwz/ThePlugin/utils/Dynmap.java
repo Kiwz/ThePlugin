@@ -4,11 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.mysql.Places;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.Marker;
@@ -16,10 +15,7 @@ import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
 public class Dynmap {
-	private HashMap<Integer, Places> places = ThePlugin.getPlaces;
-	private PluginManager pm = Bukkit.getPluginManager();
-	private Plugin dynmap = pm.getPlugin("dynmap");
-	private Plugin thePlugin = pm.getPlugin("ThePlugin");
+	private Plugin dynmap = Bukkit.getServer().getPluginManager().getPlugin("dynmap");
 	private DynmapAPI api;
 	private MarkerAPI markerApi;
 	private MarkerSet set;
@@ -50,7 +46,7 @@ public class Dynmap {
         if (set == null) {
             return;
         }
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(thePlugin, new Runnable() {
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(ThePlugin.getPlugin(), new Runnable() {
 			@Override
             public void run() {
 				handlePlaces();
@@ -61,20 +57,23 @@ public class Dynmap {
     private void handlePlaces() {
         Map<String, AreaMarker> newAreaMarkers = new HashMap<String, AreaMarker>();
         Map<String, Marker> newMarkers = new HashMap<String, Marker>();
-        for (int id : places.keySet()) {
-        	String markerID = "ThePlugin_" + id;
-        	String label = places.get(id).name + " (" + places.get(id).owner + ")";
-        	String world = places.get(id).world;
-        	String name = places.get(id).name;
-        	String owner = places.get(id).owner;
-        	String members = places.get(id).members.replace(" ", ", ");
+        for (Place place : Place.getPlaces()) {
+        	String markerID = "ThePlugin_" + place.getId();
+        	String label = place.getName() + " (" + place.getOwner() + ")";
+        	String name = place.getName();
+        	Location loc = place.getCenter();
+        	String world = loc.getWorld().getName();
+        	String owner = place.getOwner();
+        	String members = "";
+        	for (String member : place.getMembers()) {
+        		members = members + member + ", ";
+        	}
         	if (!members.isEmpty()) {
         		members = members.substring(0, members.length() - 2);
         	}
-        	double[] x = getX(places.get(id).x, places.get(id).size + 1);
-        	double[] z = getZ(places.get(id).z, places.get(id).size + 1);
-        	boolean pvp = true;
-        	if (places.get(id).pvp == 0) pvp = false;
+        	double[] x = getX(loc.getBlockX(), place.getRadius() + 1);
+        	double[] z = getZ(loc.getBlockZ(), place.getRadius() + 1);
+        	boolean pvp = place.getPvP();
 	        StringBuilder str = new StringBuilder();
 	        str.append("<b>");
 	        str.append("Plass: ");
@@ -89,10 +88,9 @@ public class Dynmap {
 	        String desc = str.toString();
 	        setAreaMarker(markerID, label, world, desc, x, z, pvp, newAreaMarkers);
 	        
-	        String[] spawn = places.get(id).spawnCoords.split(" ");
-	        double SpawnX = Double.parseDouble(spawn[0]);
-	        double SpawnY = Double.parseDouble(spawn[1]);
-	        double SpawnZ = Double.parseDouble(spawn[2]);
+	        double SpawnX = place.getSpawn().getX();
+	        double SpawnY = place.getSpawn().getY();
+	        double SpawnZ = place.getSpawn().getZ();
 	        setMarker(markerID, label, world, desc, SpawnX, SpawnY, SpawnZ, newMarkers);
         }
         

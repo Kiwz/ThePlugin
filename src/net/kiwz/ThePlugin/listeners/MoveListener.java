@@ -11,16 +11,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.utils.HandlePlaces;
-import net.kiwz.ThePlugin.utils.HandleWorlds;
+import net.kiwz.ThePlugin.utils.Color;
+import net.kiwz.ThePlugin.utils.Place;
+import net.kiwz.ThePlugin.utils.MyWorld;
 import net.kiwz.ThePlugin.utils.TPRune;
-import net.kiwz.ThePlugin.utils.WarnPvP;
 
 public class MoveListener implements Listener {
-	private HandlePlaces places = new HandlePlaces();
-	private HandleWorlds worlds = new HandleWorlds();
-	private WarnPvP warnPvP = new WarnPvP();
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerMove(PlayerMoveEvent event) {
@@ -35,15 +31,42 @@ public class MoveListener implements Listener {
 		if (fromX == toX && fromZ == toZ) {
 			return;
 		}
-		int fromID = places.getIDWithCoords(fromLoc);
-		int toID = places.getIDWithCoords(toLoc);
-		places.sendEnterLeave(player, fromID, toID);
-		warnPvP.warnPvP(player, player.getWorld(), player.getWorld(), fromID, toID);
-		int border = worlds.getBorder(event.getPlayer().getWorld());
-		if (border < toX || -border + 1 > toX || border < toZ || -border + 1 > toZ) {
-			player.teleport(fromLoc);
-			player.sendMessage(ThePlugin.c2 + "Du har nådd enden av denne verden");
+		
+		Place fromPlace = Place.getPlace(fromLoc);
+		Place toPlace = Place.getPlace(toLoc);
+		if (fromPlace != toPlace) {
+			if (toPlace == null) {
+				if (MyWorld.getWorld(player.getWorld()).getPvp()) {
+					player.sendMessage(Color.UNSAFE + fromPlace.getLeave());
+				} else {
+					player.sendMessage(Color.SAFE + fromPlace.getLeave());
+				}
+			} else if (fromPlace == null) {
+				if (toPlace.getPvP()) {
+					player.sendMessage(Color.UNSAFE + toPlace.getEnter());
+				} else {
+					player.sendMessage(Color.SAFE + toPlace.getEnter());
+				}
+			} else {
+				if (fromPlace.getPvP()) {
+					player.sendMessage(Color.UNSAFE + fromPlace.getLeave());
+				} else {
+					player.sendMessage(Color.SAFE + fromPlace.getLeave());
+				}
+
+				if (toPlace.getPvP()) {
+					player.sendMessage(Color.UNSAFE + toPlace.getEnter());
+				} else {
+					player.sendMessage(Color.SAFE + toPlace.getEnter());
+				}
+			}
 		}
+		
+		if (MyWorld.getWorld(toLoc.getWorld()).reachedBorder(toLoc)) {
+			player.teleport(fromLoc);
+			player.sendMessage(Color.WARNING + "Du har nådd enden av denne verden");
+		}
+		
 		if (block.getRelative(0, -2, 0).getType().equals(Material.DIAMOND_BLOCK)) {
 			TPRune tpRune = new TPRune();
 			tpRune.teleportRune1(player, block.getRelative(0, -2, 0), Material.GOLD_BLOCK);
@@ -59,11 +82,47 @@ public class MoveListener implements Listener {
 		Player player = event.getPlayer();
 		Location fromLoc = event.getFrom();
 		Location toLoc = event.getTo();
+		
 		World fromWorld = event.getFrom().getWorld();
 		World toWorld = event.getTo().getWorld();
-		int fromID = places.getIDWithCoords(fromLoc);
-		int toID = places.getIDWithCoords(toLoc);
-		places.sendEnterLeave(player, fromID, toID);
-		warnPvP.warnPvP(player, fromWorld, toWorld, fromID, toID);
+		Place fromPlace = Place.getPlace(fromLoc);
+		Place toPlace = Place.getPlace(toLoc);
+		
+		if (MyWorld.getWorld(fromLoc.getWorld()).reachedBorder(toLoc)) {
+			event.setCancelled(true);
+			player.sendMessage(Color.WARNING + "Du kan ikke teleportere deg hit");
+		} else if (fromPlace != toPlace) {
+			if (toPlace == null) {
+				if (MyWorld.getWorld(player.getWorld()).getPvp()) {
+					player.sendMessage(Color.UNSAFE + fromPlace.getLeave());
+				} else {
+					player.sendMessage(Color.SAFE + fromPlace.getLeave());
+				}
+			} else if (fromPlace == null) {
+				if (toPlace.getPvP()) {
+					player.sendMessage(Color.UNSAFE + toPlace.getEnter());
+				} else {
+					player.sendMessage(Color.SAFE + toPlace.getEnter());
+				}
+			} else {
+				if (fromPlace.getPvP()) {
+					player.sendMessage(Color.UNSAFE + fromPlace.getLeave());
+				} else {
+					player.sendMessage(Color.SAFE + fromPlace.getLeave());
+				}
+
+				if (toPlace.getPvP()) {
+					player.sendMessage(Color.UNSAFE + toPlace.getEnter());
+				} else {
+					player.sendMessage(Color.SAFE + toPlace.getEnter());
+				}
+			}
+		} else if (fromWorld != toWorld) {
+			if (MyWorld.getWorld(toWorld).getPvp()) {
+				player.sendMessage(Color.UNSAFE + "PvP er aktivert for denne verden");
+			} else {
+				player.sendMessage(Color.SAFE + "PvP er deaktivert for denne verden");
+			}
+		}
 	}
 }
