@@ -48,7 +48,7 @@ public class SqlQuery {
 		Home.clearRemovedHomes();
 		
 		for (Home home : Home.getHomes()) {
-			String query = "INSERT INTO places VALUES (?, ?, ?, ?) "
+			String query = "INSERT INTO homes VALUES (?, ?, ?, ?) "
 					+ "ON DUPLICATE KEY UPDATE "
 					+ "Coords=values(Coords), "
 					+ "Direction=values(Direction);";
@@ -73,7 +73,7 @@ public class SqlQuery {
 				String uuid = res.getString("ID");
 				String name = res.getString("Player");
 				String ip = res.getString("IP");
-				long lastPlayed = res.getLong("LastLogin");
+				long lastPlayed = res.getLong("LastPlayed");
 				long timePlayed = res.getLong("TimePlayed");
 				boolean muted = res.getBoolean("Mute");
 				
@@ -87,11 +87,11 @@ public class SqlQuery {
 	
 	public void insertPlayers() {
 		for (MyPlayer myPlayer : MyPlayer.getPlayers()) {
-			String query = "INSERT INTO places VALUES (?, ?, ?, ?, ?, ?) "
+			String query = "INSERT INTO players VALUES (?, ?, ?, ?, ?, ?) "
 					+ "ON DUPLICATE KEY UPDATE "
 					+ "Player=values(Player), "
 					+ "IP=values(IP), "
-					+ "LastLogin=values(LastLogin), "
+					+ "LastPlayed=values(LastPlayed), "
 					+ "TimePlayed=values(TimePlayed), "
 					+ "Mute=values(Mute);";
 			try {
