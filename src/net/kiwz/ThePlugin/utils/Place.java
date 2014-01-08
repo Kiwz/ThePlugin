@@ -178,7 +178,7 @@ public class Place {
 	public static List<String> getPlaceList() {
 		List<String> list = new ArrayList<String>();
 		for (Place place : getPlaces()) {
-			list.add(Color.VARIABLE + place.getName() + Color.INFO + " [" + Color.PLAYER + MyPlayer.getPlayerById(place.getOwner()).getName() + Color.INFO + "] ");
+			list.add(Color.PLACE + place.getName() + Color.INFO + " [" + Color.PLAYER + MyPlayer.getPlayerById(place.getOwner()).getName() + Color.INFO + "] ");
 		}
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		return list;
@@ -189,11 +189,11 @@ public class Place {
 		for (Place place : getPlaces()) {
 			if (map.containsKey(place.getOwner())) {
 				String name = map.get(place.getOwner());
-				name = name + " [" + Color.VARIABLE + place.getName() + Color.INFO + "]";
+				name = name + " [" + Color.PLACE + place.getName() + Color.INFO + "]";
 				map.put(place.getOwner(), name);
 			}
 			else {
-				String name = " [" + Color.VARIABLE + place.getName() + Color.INFO + "]";
+				String name = " [" + Color.PLACE + place.getName() + Color.INFO + "]";
 				map.put(place.getOwner(), name);
 			}
 		}
@@ -405,8 +405,8 @@ public class Place {
 			if (!player.isOp() && !place.getOwner().equals(player.getUniqueId().toString().replace("-", ""))) return "Dette er ikke din plass";
 			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
 			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
-				if (getPlace(this.spawn) == null) return "Du må stå i " + this.name + " når du setter spawn";
-				if (getPlace(this.spawn).getId() != (this.id)) return "Du må stå i " + this.name + " når du setter spawn";
+				if (getPlace(this.spawn) == null) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";
+				if (getPlace(this.spawn).getId() != (this.id)) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";
 			}
 		} else {
 			if (!player.isOp() && getPlacesByOwner(player).size() >= 3) return "Du kan ikke lage flere enn 3 plasser";
@@ -421,7 +421,7 @@ public class Place {
 		if (!player.isOp() && this.radius > 70) return "Plassen du lager må ha en radius mindre enn 71";
 		if (!available(this).isEmpty()) {
 			String error = "Du er for nærme følgende plasser: ";
-			for (Place otherPlace : available(this)) error = error + "[" + Color.VARIABLE + otherPlace.getName() + Color.WARNING + "] ";
+			for (Place otherPlace : available(this)) error = error + Color.INFO + "[" + Color.PLACE + otherPlace.getName() + Color.INFO + "] ";
 			return error;
 		}
 		if (!player.isOp() && this.isChargeAble) return "Det koster 5 gullbarer for å lage eller flytte en plass";

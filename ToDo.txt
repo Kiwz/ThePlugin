@@ -1,31 +1,33 @@
-Opprydding:
-Må fikse banen til filene som lages + en felles class for alle filer istedefor en fil i forskjellige classes
-Rydde litt i playerinteractevent angående action=physical
-Rydde i world hjelpe teksten så den er på samme måte som plass hjelpen
-
-
-Tilegg:
-Chat-sensurering (hent ord fra *.txt)
-
-
-Tester som må utføres:
-
-
 Bugs:
+Sørge for at homes uten verden ikke blir lagt til i HashMappet (trur jeg har fiksa dette for plasser)
+MySql: Endre seed i Tablet "worlds" fra VARCHAR til BIGINT (long)
 spillere er usynlig for andre etter en teleport
-Spillere kan ta ut items fra itemFrame
-Spillere kan i noen tilfeller tømme vann/lava i andre sine plasser
-Spillere kan komme seg utenfor verdenen ved bruk av enderpearl
+
+
+Opprydding:
+Rydde litt i playerinteractevent angående action=physical
+
+
+Tillegg:
+Spillere skal miste 50% av sin XP ved død istedefor ingenting
+TP cooldown på ca 3 sek etter en spiller har tatt skade av en annen spiller
+Dersom en spiller logger ut innen 2 sekunder fra han har tatt skade fra annen spiller så skal han droppe itemsa sine
+MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
 
 
 Kommandoer:
+/tp <spiller-navn> for vanlige spillere
+/tpa target må akseptere ved å skrive /tpa
 
 
-Dynmap:
-
-
-Places:
+Plasser:
+Beskytte itemframe (andre spillere kan ta ut itemsa)
+Spillere kan i noen tilfeller tømme vann/lava i andre sine plasser (emptyBucketEvent??)
+Private kister med skilt
 Auto-claim
+
+
+Tester som må utføres:
 
 
 HungerGames:

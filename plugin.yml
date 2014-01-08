@@ -52,48 +52,48 @@ commands:
     usage: |
       /heal
       /heal <player>
-  help:
+  hjelp:
     description: Viser deg hjelpe menyen
-    aliases: [hjelp]
+    aliases: [help]
     permission: ThePlugin.help
     permission-message: §cDu har ikke tilgang!
     usage: |
-      /help
-      /help <side-nummer>
-      /help <emne>
-      /help <emne> <side-nummer>
-  home:
+      /hjelp
+      /hjelp <side-nummer>
+      /hjelp <emne>
+      /hjelp <emne> <side-nummer>
+  hjem:
     description: Teleporterer deg hjem
-    aliases: [hjem, h]
+    aliases: [h, home]
     permission: ThePlugin.home
     permission-message: §cDu har ikke tilgang!
-    usage: /home
-  ignore:
+    usage: /hjem
+  ignorer:
     description: Du slipper mas fra spesifiserte spillere
-    aliases: [i, ignorer, c, chat]
+    aliases: [ignore, i, chat, c]
     permission: ThePlugin.ignore
     permission-message: §cDu har ikke tilgang!
     usage: |
-      /ignore
-      /ignore <spiller-navn>
-  sethome:
+      /ignorer
+      /ignorer <spiller-navn>
+  setthjem:
     description: Setter ditt hjem der du står
-    aliases: [setthjem, sh]
+    aliases: [sethjem, sethome, sh]
     permission: ThePlugin.sethome
     permission-message: §cDu har ikke tilgang!
-    usage: /homeset
-  list:
+    usage: /sethjem
+  online:
     description: Hvem er online
-    aliases: [who, online]
+    aliases: [who, list]
     permission: ThePlugin.list
     permission-message: §cDu har ikke tilgang!
-    usage: /list
+    usage: /online
   minne:
     description: Minne bruk
     aliases: [mem]
     permission: ThePlugin.minne
     permission-message: §cDu har ikke tilgang!
-    usage: /mem
+    usage: /minne
   mute:
     description: Nekter en spiller i å chatte
     aliases: []
@@ -112,7 +112,7 @@ commands:
       /unmute all
   oi:
     description: Åpner inventaret til en spiller
-    aliases: []
+    aliases: [openinv]
     permission: ThePlugin.openinv
     permission-message: §cDu har ikke tilgang!
     usage: /openinv <player>
@@ -128,15 +128,15 @@ commands:
     permission: ThePlugin.pvp
     permission-message: §cDu har ikke tilgang!
     usage: /pvp
-  replay:
+  svar:
     description: Skriv privat melding tilbake
-    aliases: [r, svar]
+    aliases: [replay, r]
     permission: ThePlugin.replay
     permission-message: §cDu har ikke tilgang!
-    usage: /replay
-  rules:
+    usage: /svar
+  regler:
     description: Viser deg våres regler
-    aliases: [regler]
+    aliases: [rules]
     permission: ThePlugin.rules
     permission-message: §cDu har ikke tilgang!
     usage: /regler
@@ -152,12 +152,12 @@ commands:
     permission: ThePlugin.setspawn
     permission-message: §cDu har ikke tilgang!
     usage: /setspawn
-  tell:
+  melde:
     description: Skriv privat melding
-    aliases: [msg, m, melde]
+    aliases: [tell, msg, m, whisper]
     permission: ThePlugin.tell
     permission-message: §cDu har ikke tilgang!
-    usage: /tell <player>
+    usage: /melde <player>
   tid:
     description: Sett din egen tid
     aliases: []
@@ -191,12 +191,12 @@ commands:
     usage: |
       /ticks
       /ticks <seconds>
-  whois:
+  hvem:
     description: Spiller info
-    aliases: []
+    aliases: [whois, where]
     permission: ThePlugin.whois
     permission-message: §cDu har ikke tilgang!
-    usage: /whois <player>
+    usage: /hvem <player>
   world:
     description: World spesifikke kommandoer
     aliases: [w]

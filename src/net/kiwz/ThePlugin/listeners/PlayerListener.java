@@ -232,7 +232,10 @@ public class PlayerListener implements Listener {
         	myPlayer.setIp(ip);
         	myPlayer.setLastPlayed(System.currentTimeMillis() / 1000);
 	        log = playerName + " logget inn (" + worldName + " " + coords + ") [" + ip + "]";
-			event.setJoinMessage(Color.HEADER + playerName + " logget inn");
+			event.setJoinMessage(playerName + Color.HEADER + " logget inn");
+	    	if (Perm.isAdmin(player)) {
+	    		event.setJoinMessage(Color.UNSAFE + playerName + Color.HEADER + " logget inn");
+	    	}
 			player.sendMessage(Color.INFO + "############################################");
 	        player.sendMessage(Color.INFO + "Velkommen til LarvikGaming");
 	        player.sendMessage(Color.INFO + "Hjemmeside:" + Color.HEADER + " http://larvikgaming.net");
@@ -243,7 +246,10 @@ public class PlayerListener implements Listener {
 			player.sendMessage(Color.INFO + "############################################");
         } else {
 	        log = playerName + " logget inn for første gang (" + worldName + " " + coords + ") [" + ip + "]";
-			event.setJoinMessage(Color.HEADER + playerName + " logget inn for første gang");
+			event.setJoinMessage(playerName + Color.HEADER + " logget inn for første gang");
+	    	if (Perm.isAdmin(player)) {
+	    		event.setJoinMessage(Color.UNSAFE + playerName + Color.HEADER + " logget inn for første gang");
+	    	}
 			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 				public void run() {
@@ -284,7 +290,10 @@ public class PlayerListener implements Listener {
 		long login = myPlayer.getLastPlayed();
 		long tot = myPlayer.getTimePlayed();
 		myPlayer.setTimePlayed(curr - login + tot);
-		event.setQuitMessage(Color.UNSAFE + event.getPlayer().getName() + " logget ut");
+		event.setQuitMessage(event.getPlayer().getName() + Color.HEADER + " logget ut");
+    	if (Perm.isAdmin(event.getPlayer())) {
+    		event.setQuitMessage(Color.UNSAFE + event.getPlayer().getName() + " logget ut");
+    	}
 		ServerManager.logString("[CONN] " + event.getPlayer().getName() + " logget ut");
 		/*for (Player players : Bukkit.getServer().getOnlinePlayers()) {
 			players.getLocation().getWorld().strikeLightningEffect(players.getLocation());
