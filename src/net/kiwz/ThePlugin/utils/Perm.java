@@ -12,11 +12,13 @@ import org.bukkit.plugin.Plugin;
 public class Perm {
 	
 	public static boolean isAdmin(Player player) {
+		if (player.isOp()) return true;
 		if (Config.getAdmins().contains(player.getName())) return true;
         return false;
 	}
 	
 	public static boolean isAdmin(String name) {
+		if (Bukkit.getServer().getPlayer(name).isOp()) return true;
 		if (Config.getAdmins().contains(name)) return true;
         return false;
 	}

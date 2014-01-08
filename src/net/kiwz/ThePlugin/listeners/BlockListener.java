@@ -39,7 +39,7 @@ public class BlockListener implements Listener {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
-		} else if (!player.isOp() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+		} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}
@@ -63,13 +63,13 @@ public class BlockListener implements Listener {
 		Player player = event.getPlayer();
 		Location loc = event.getBlock().getLocation();
 		Place place = Place.getPlace(loc);
-
+		
 		if (place != null) {
 			if (!place.hasAccess(player)) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
-		} else if (!player.isOp() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+		} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}

@@ -1,28 +1,28 @@
 Bugs:
+/entity sletter ALT
+/feed må også gi saturation
 MySql: Endre seed i Tablet "worlds" fra VARCHAR til BIGINT (long)
 spillere er usynlig for andre etter en teleport
 
 
 Opprydding:
 Noen linjer i /hjelp er på engelsk (f.eks den første gråe linjen)
-Rydde litt i playerinteractevent angående action=physical
+Bygge listeners mye bedre!
 
 
 Tillegg:
-Spillere skal miste 50% av sin XP ved død istedefor ingenting
 TP cooldown på ca 3 sek etter en spiller har tatt skade av en annen spiller
 Dersom en spiller logger ut innen 2 sekunder fra han har tatt skade fra annen spiller så skal han droppe itemsa sine
 MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
 
 
 Kommandoer:
+/spymsg (trenger ikke lagres, bare holdes i minne)
 /tp <spiller-navn> for vanlige spillere
 /tpa target må akseptere ved å skrive /tpa
 
 
 Plasser:
-Beskytte itemframe (andre spillere kan ta ut itemsa)
-Spillere kan i noen tilfeller tømme vann/lava i andre sine plasser (emptyBucketEvent??)
 Private kister med skilt
 Auto-claim
 

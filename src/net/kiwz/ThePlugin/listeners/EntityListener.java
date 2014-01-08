@@ -1,5 +1,7 @@
 package net.kiwz.ThePlugin.listeners;
 
+import java.util.List;
+
 import net.kiwz.ThePlugin.commands.PvpCmd;
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.Perm;
@@ -12,10 +14,12 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,7 +27,9 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 
 public class EntityListener implements Listener {
@@ -43,11 +49,28 @@ public class EntityListener implements Listener {
 					event.setCancelled(true);
 					player.sendMessage(denyString);
 				}
-			} else if (!(player.isOp() || Perm.isAdmin(player)) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+			} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
 		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onEntityInteract(EntityInteractEvent event) {
+		Block block = event.getBlock();
+
+		if (!MyWorld.getWorld(block.getWorld()).getTrample()) {
+			if ((block.getType() == Material.SOIL) || (block.getType() == Material.CROPS)) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onHangingPlace(HangingPlaceEvent event) {
+		
 	}
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -105,6 +128,14 @@ public class EntityListener implements Listener {
 				}
 			}
 			
+			if (attacker instanceof Player && victim instanceof Hanging) {
+				playerAttacker = (Player) attacker;
+				if (!place.hasAccess(playerAttacker)) {
+					event.setCancelled(true);
+					playerAttacker.sendMessage(denyString);
+				}
+			}
+			
 			if (attacker instanceof Projectile && victim instanceof Ageable) {
 				LivingEntity shooter = ((Projectile) attacker).getShooter();
 				if (shooter instanceof Player) {
@@ -114,18 +145,6 @@ public class EntityListener implements Listener {
 						playerAttacker.sendMessage(denyString);
 					}
 				}
-			}
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void onEntityInteract(EntityInteractEvent event) {
-		Block block = event.getBlock();
-
-		if (!MyWorld.getWorld(block.getWorld()).getTrample()) {
-			if ((block.getType() == Material.SOIL) || (block.getType() == Material.CROPS)) {
-				event.setCancelled(true);
-				return;
 			}
 		}
 	}
@@ -162,5 +181,17 @@ public class EntityListener implements Listener {
 				event.setCancelled(!place.getAnimals());
 			}
 		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onPotionSplashEvent(PotionSplashEvent event) {
+		List<LivingEntity> affectedEntities = (List<LivingEntity>) event.getAffectedEntities();
+		ThrownPotion potion = event.getPotion();
+		Entity attacker = potion.getShooter();
+		/*for (LivingEntity victim : affectedEntities) {
+			if (attacker != victim) {
+				event.setIntensity(victim, -1.0);
+			}
+		}*/
 	}
 }

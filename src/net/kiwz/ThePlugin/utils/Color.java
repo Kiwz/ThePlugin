@@ -4,6 +4,11 @@ import org.bukkit.ChatColor;
 
 public enum Color {
 	/**
+	 * WHITE
+	 */
+	WHITE,
+	
+	/**
 	 * GOLD
 	 */
 	INFO,
@@ -64,7 +69,8 @@ public enum Color {
 	WHISPER;
 	
 	public String toString(){
-		if(this == INFO) return ChatColor.GOLD.toString();
+		if (this == WHITE) return ChatColor.WHITE.toString();
+		else if(this == INFO) return ChatColor.GOLD.toString();
 		else if (this == HEADER) return ChatColor.YELLOW.toString();
 		else if (this == WARNING) return ChatColor.DARK_RED.toString();
 		else if (this == SAFE) return ChatColor.GREEN.toString();

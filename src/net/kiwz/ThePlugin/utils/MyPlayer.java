@@ -83,6 +83,11 @@ public class MyPlayer {
 		return this.name;
 	}
 	
+	public String getColorName() {
+		if (Perm.isAdmin(this.name)) return Color.ADMIN + this.name + Color.INFO;
+		return Color.PLAYER + this.name + Color.INFO;
+	}
+	
 	public void setIp(String ip) {
 		this.ip = ip;
 	}

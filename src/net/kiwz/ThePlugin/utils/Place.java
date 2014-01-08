@@ -219,7 +219,7 @@ public class Place {
 	}
 	
 	public boolean hasAccess(Player player) {
-		if (player.isOp() || Perm.isAdmin(player)) return true;
+		if (Perm.isAdmin(player)) return true;
 		if (this.owner.equals(player.getUniqueId().toString().replace("-", ""))) return true;
 		if (this.members.contains(player.getUniqueId().toString().replace("-", ""))) return true;
 		return false;
@@ -240,6 +240,10 @@ public class Place {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public String getColorName() {
+		return Color.PLACE + this.name + Color.INFO;
 	}
 	
 	public void setOwner(Player player) {

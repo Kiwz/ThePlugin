@@ -46,9 +46,9 @@ public class MyWorld {
 	
 	public MyWorld(String name, String env, String type, String seed) {
 		this.name = name.toLowerCase();
-		this.env = Util.getEnvironment(env);
-		this.type = Util.getWorldType(type);
-		this.seed = Util.getSeed(seed);
+		this.env = getEnvironment(env);
+		this.type = getWorldType(type);
+		this.seed = getSeed(seed);
 		this.spawn = null;
 		this.keepSpawn = true;
 		this.pvp = false;
@@ -80,12 +80,12 @@ public class MyWorld {
 		this.border = 1000;
 	}
 	
-	public MyWorld(String name, String env, String type, String seed, String coords, String direction, boolean keepSpawn, boolean pvp,
+	public MyWorld(String name, String env, String type, long seed, String coords, String direction, boolean keepSpawn, boolean pvp,
 			boolean monsters, boolean animals, boolean monsterGrief, boolean fireSpread, boolean claimable, boolean explosions, boolean trample, int border) {
 		this.name = name;
-		this.env = Util.getEnvironment(env);
-		this.type = Util.getWorldType(type);
-		this.seed = Util.getSeed(seed);
+		this.env = getEnvironment(env);
+		this.type = getWorldType(type);
+		this.seed = seed;
 		this.spawn = null;
 		this.keepSpawn = keepSpawn;
 		this.pvp = pvp;
@@ -265,6 +265,33 @@ public class MyWorld {
 		if (worlds.containsKey(this.name)) return false;
 		worlds.put(name, this);
 		return true;
+	}
+	
+	private Environment getEnvironment(String envString) {
+		Environment env = Environment.NORMAL;
+		if (envString.equalsIgnoreCase("NETHER")) env = Environment.NETHER;
+		if (envString.equalsIgnoreCase("THE_END")) env = Environment.THE_END;
+		return env;
+	}
+	
+	private WorldType getWorldType(String typeString) {
+		WorldType type = WorldType.NORMAL;
+		if (typeString.equalsIgnoreCase("AMPLIFIED")) type = WorldType.AMPLIFIED;
+		if (typeString.equalsIgnoreCase("FLAT")) type = WorldType.FLAT;
+		if (typeString.equalsIgnoreCase("LARGE_BIOMES")) type = WorldType.LARGE_BIOMES;
+		if (typeString.equalsIgnoreCase("VERSION_1_1")) type = WorldType.VERSION_1_1;
+		return type;
+	}
+	
+	private long getSeed(String seedString) {
+		if (seedString == "") seedString = "a" + System.currentTimeMillis() + "z";
+		long seed = 0;
+		try {
+			seed = Long.parseLong(seedString);
+		} catch (NumberFormatException e) {
+			seed = (long) seedString.hashCode();
+		}
+		return seed;
 	}
 	
 	

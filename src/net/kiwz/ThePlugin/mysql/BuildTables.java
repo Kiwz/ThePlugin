@@ -46,7 +46,7 @@ public class BuildTables {
 			+ "(World VARCHAR(255), "
 			+ "Environment VARCHAR(255), "
 			+ "Type VARCHAR(255), "
-			+ "Seed VARCHAR(255), "
+			+ "Seed BIGINT, "
 			+ "Coords VARCHAR(255), "
 			+ "Direction VARCHAR(255), "
 			+ "KeepSpawn BOOLEAN, "

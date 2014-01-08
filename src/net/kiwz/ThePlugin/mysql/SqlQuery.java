@@ -207,7 +207,7 @@ public class SqlQuery {
 				String name = res.getString("World");
 				String environment = res.getString("Environment");
 				String type = res.getString("Type");
-				String seed = res.getString("Seed");
+				Long seed = res.getLong("Seed");
 				String coords = res.getString("Coords");
 				String direction = res.getString("Direction");
 				boolean keepSpawn = res.getBoolean("KeepSpawn");
@@ -263,7 +263,7 @@ public class SqlQuery {
 				prep.setString(1, myWorld.getName());
 				prep.setString(2, myWorld.getEnv().toString());
 				prep.setString(3, myWorld.getType().toString());
-				prep.setString(4, myWorld.getSeed() + "");
+				prep.setLong(4, myWorld.getSeed());
 				String[] spawn = Util.convertLocation(myWorld.getSpawn());
 				prep.setString(5, spawn[1]);
 				prep.setString(6, spawn[2]);

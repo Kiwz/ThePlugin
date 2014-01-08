@@ -8,41 +8,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.WorldType;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
 
 public class Util {
-	
-	public static Environment getEnvironment(String envString) {
-		Environment env = Environment.NORMAL;
-		if (envString.equalsIgnoreCase("NETHER")) env = Environment.NETHER;
-		if (envString.equalsIgnoreCase("THE_END")) env = Environment.THE_END;
-		return env;
-	}
-	
-	public static WorldType getWorldType(String typeString) {
-		WorldType type = WorldType.NORMAL;
-		if (typeString.equalsIgnoreCase("AMPLIFIED")) type = WorldType.AMPLIFIED;
-		if (typeString.equalsIgnoreCase("FLAT")) type = WorldType.FLAT;
-		if (typeString.equalsIgnoreCase("LARGE_BIOMES")) type = WorldType.LARGE_BIOMES;
-		if (typeString.equalsIgnoreCase("VERSION_1_1")) type = WorldType.VERSION_1_1;
-		return type;
-	}
-	
-	public static long getSeed(String seedString) {
-		if (seedString == "") seedString = "a" + System.currentTimeMillis() + "z";
-		long seed = 0;
-		try {
-			seed = Long.parseLong(seedString);
-		} catch (NumberFormatException e) {
-			seed = (long) seedString.hashCode();
-		}
-		return seed;
-	}
 	
 	public static String getTimeLogDate(long unix) {
 		Date date = new Date(unix*1000L);
@@ -82,17 +53,10 @@ public class Util {
     	if (playerName.length() + 4 > 16) {
     		playerName = playerName.substring(0, 12);
     	}
-        if (player.isOp() || Perm.isAdmin(player)) {
-            player.setPlayerListName(ChatColor.RED + playerName + ChatColor.WHITE);
-        }
-        else {
-        	int roll = (int) (Math.random() * 5);
-        	if (roll == 0) player.setPlayerListName(ChatColor.DARK_BLUE + playerName + ChatColor.WHITE);
-        	if (roll == 1) player.setPlayerListName(ChatColor.DARK_GREEN + playerName + ChatColor.WHITE);
-        	if (roll == 2) player.setPlayerListName(ChatColor.DARK_AQUA + playerName + ChatColor.WHITE);
-        	if (roll == 3) player.setPlayerListName(ChatColor.DARK_PURPLE + playerName + ChatColor.WHITE);
-        	if (roll == 4) player.setPlayerListName(ChatColor.GOLD + playerName + ChatColor.WHITE);
-        	if (roll == 5) player.setPlayerListName(ChatColor.DARK_GRAY + playerName + ChatColor.WHITE);
+        if (Perm.isAdmin(player)) {
+            player.setPlayerListName(Color.ADMIN + playerName + ChatColor.WHITE);
+        } else {
+        	player.setPlayerListName(Color.PLAYER + playerName + ChatColor.WHITE);
         }
 	}
 	

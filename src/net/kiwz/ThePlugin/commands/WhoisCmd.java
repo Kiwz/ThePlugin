@@ -49,7 +49,7 @@ public class WhoisCmd {
 		long timePlayed = Util.getTimeHours(myPlayer.getTimePlayed());
 		String plasser = "";
 		for (Place p : Place.getPlacesByOwner(player)) {
-			plasser = plasser + "[" + Color.VARIABLE + p.getName() + Color.INFO + "] ";
+			plasser = plasser + "[" + p.getColorName() + "] ";
 		}
 		String muted = "Nei";
 		if (myPlayer.isMuted()) muted = "Ja";
@@ -57,9 +57,8 @@ public class WhoisCmd {
 		StringBuilder header = new StringBuilder();
 		header.append(ChatColor.YELLOW);
 		header.append("----- ");
-		header.append(ChatColor.WHITE);
-		header.append(myPlayer.getName());
-		if (sender.isOp() || Perm.isAdmin(sender.getName())) {
+		header.append(myPlayer.getColorName());
+		if (Perm.isAdmin(sender.getName())) {
 			header.append(ChatColor.GRAY);
 			header.append(" (ip: " + myPlayer.getIp() + ")");
 		}
@@ -74,7 +73,9 @@ public class WhoisCmd {
 		sender.sendMessage(Color.INFO + "Eier av: " + plasser);
 		sender.sendMessage(Color.INFO + "Muted: " + Color.VARIABLE + muted);
 		sender.sendMessage(Color.INFO + "GameMode: " + Color.VARIABLE + player.getGameMode());
+		sender.sendMessage(Color.INFO + "Level: " + Color.VARIABLE + player.getLevel());
 		sender.sendMessage(Color.INFO + "Experience: " + Color.VARIABLE + player.getTotalExperience());
+		sender.sendMessage(Color.INFO + "Saturation: " + Color.VARIABLE + player.getSaturation());
 		sender.sendMessage(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() +
 				" X: " + loc.getBlockX() + " Y: " + loc.getBlockY() + " Z: " + loc.getBlockZ());
 	}
