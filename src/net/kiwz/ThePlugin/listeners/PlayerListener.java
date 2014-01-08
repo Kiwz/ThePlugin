@@ -233,8 +233,8 @@ public class PlayerListener implements Listener {
         	myPlayer.setLastPlayed(System.currentTimeMillis() / 1000);
 	        log = playerName + " logget inn (" + worldName + " " + coords + ") [" + ip + "]";
 			event.setJoinMessage(playerName + Color.HEADER + " logget inn");
-	    	if (Perm.isAdmin(player)) {
-	    		event.setJoinMessage(Color.UNSAFE + playerName + Color.HEADER + " logget inn");
+	    	if (event.getPlayer().isOp() || Perm.isAdmin(player)) {
+	    		event.setJoinMessage(Color.ADMIN + playerName + Color.HEADER + " logget inn");
 	    	}
 			player.sendMessage(Color.INFO + "############################################");
 	        player.sendMessage(Color.INFO + "Velkommen til LarvikGaming");
@@ -246,9 +246,9 @@ public class PlayerListener implements Listener {
 			player.sendMessage(Color.INFO + "############################################");
         } else {
 	        log = playerName + " logget inn for første gang (" + worldName + " " + coords + ") [" + ip + "]";
-			event.setJoinMessage(playerName + Color.HEADER + " logget inn for første gang");
-	    	if (Perm.isAdmin(player)) {
-	    		event.setJoinMessage(Color.UNSAFE + playerName + Color.HEADER + " logget inn for første gang");
+			event.setJoinMessage(Color.PLAYER + playerName + Color.HEADER + " logget inn for første gang");
+	    	if (event.getPlayer().isOp() || Perm.isAdmin(player)) {
+	    		event.setJoinMessage(Color.ADMIN + playerName + Color.HEADER + " logget inn for første gang");
 	    	}
 			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
@@ -290,9 +290,9 @@ public class PlayerListener implements Listener {
 		long login = myPlayer.getLastPlayed();
 		long tot = myPlayer.getTimePlayed();
 		myPlayer.setTimePlayed(curr - login + tot);
-		event.setQuitMessage(event.getPlayer().getName() + Color.HEADER + " logget ut");
-    	if (Perm.isAdmin(event.getPlayer())) {
-    		event.setQuitMessage(Color.UNSAFE + event.getPlayer().getName() + " logget ut");
+		event.setQuitMessage(Color.PLAYER + event.getPlayer().getName() + Color.HEADER + " logget ut");
+    	if (event.getPlayer().isOp() || Perm.isAdmin(event.getPlayer())) {
+    		event.setQuitMessage(Color.ADMIN + event.getPlayer().getName() + " logget ut");
     	}
 		ServerManager.logString("[CONN] " + event.getPlayer().getName() + " logget ut");
 		/*for (Player players : Bukkit.getServer().getOnlinePlayers()) {

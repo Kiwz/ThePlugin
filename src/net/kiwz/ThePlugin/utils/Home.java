@@ -27,7 +27,7 @@ public class Home {
 		World world = Bukkit.getServer().getWorld(worldName);
 		Location loc = Util.parseLocation(world, coords, direction);
 		
-		this.key = uuid + " " + loc.getWorld().getName();
+		this.key = uuid + " " + worldName;
 		this.uuid = uuid;
 		this.loc = loc;
 	}
@@ -73,6 +73,7 @@ public class Home {
 	}
 	
 	public void save() {
+		if (this.loc.getWorld() == null) return;
 		homes.put(this.key, this);
 	}
 }

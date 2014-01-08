@@ -1,10 +1,10 @@
 Bugs:
-Sørge for at homes uten verden ikke blir lagt til i HashMappet (trur jeg har fiksa dette for plasser)
 MySql: Endre seed i Tablet "worlds" fra VARCHAR til BIGINT (long)
 spillere er usynlig for andre etter en teleport
 
 
 Opprydding:
+Noen linjer i /hjelp er på engelsk (f.eks den første gråe linjen)
 Rydde litt i playerinteractevent angående action=physical
 
 

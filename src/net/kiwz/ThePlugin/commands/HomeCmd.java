@@ -27,7 +27,7 @@ public class HomeCmd {
 		
 		Home home;
 		if (player == null) {
-			sender.sendMessage(Color.WARNING + "/home kan bare brukes av spillere");
+			sender.sendMessage(Color.COMMAND + "/hjem " + Color.WARNING + "kan bare brukes av spillere");
 			return true;
 		} else if (args.length == 0) {
 			home = Home.getHome(player);
@@ -36,7 +36,7 @@ public class HomeCmd {
 		}
 		
 		if (home == null) {
-			sender.sendMessage(Color.WARNING + "Fant ikke ditt hjem, bruk " + Color.VARIABLE + "/sethjem" + Color.WARNING + " for å lage nytt hjem");
+			sender.sendMessage(Color.WARNING + "Fant ikke ditt hjem, bruk " + Color.VARIABLE + "/setthjem" + Color.WARNING + " for å lage nytt hjem");
 		} else {
 			player.teleport(home.getLocation());
 		}
@@ -50,7 +50,7 @@ public class HomeCmd {
 		}
 		
 		if (player == null) {
-			sender.sendMessage(Color.WARNING + "/sethome kan bare brukes av spillere");
+			sender.sendMessage(Color.COMMAND + "/setthjem " + Color.WARNING + "kan bare brukes av spillere");
 			return true;
 		}
 		Home home = new Home(player);
