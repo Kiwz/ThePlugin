@@ -2,55 +2,48 @@ package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class GmCmd {
-	private Server server = Bukkit.getServer();
 	
 	public static boolean exec(CommandSender sender, String[] args) {
 		return new GmCmd().gm(sender, args);
 	}
 	
 	public boolean gm(CommandSender sender, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = server.getPlayer(sender.getName());
-		}
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
+		GameMode survival = GameMode.SURVIVAL;
+		GameMode creative = GameMode.CREATIVE;
 		
-		if (args.length == 0 && player == null) {
+		if (args.length == 0 && mySender == null) {
 			sender.sendMessage(Color.WARNING + "Spesifiser en spiller");
-			return true;
 		} else if (args.length == 0) {
-			if (player.getGameMode().equals(GameMode.SURVIVAL)) {
-				player.setGameMode(GameMode.CREATIVE);
+			if (mySender.getOnlinePlayer().getGameMode().equals(survival)) {
+				mySender.getOnlinePlayer().setGameMode(creative);
 				sender.sendMessage(Color.INFO + "Du er nå i Creative modus");
-			}
-			else {
-				player.setGameMode(GameMode.SURVIVAL);
+			} else {
+				mySender.getOnlinePlayer().setGameMode(survival);
 				sender.sendMessage(Color.INFO + "Du er nå i Survival modus");
 			}
-			return true;
 		} else {
-			Player target = MyPlayer.getOnlinePlayer(args[0]);
-			if (target == null) {
-				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke online");
-				return true;
+			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
+			if (myTarget == null) {
+				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
+			} else if (myTarget.getOnlinePlayer() == null) {
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
+			} else {
+				if (myTarget.getOnlinePlayer().getGameMode().equals(survival)) {
+					myTarget.getOnlinePlayer().setGameMode(creative);
+					myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " endret modusen din til Creative");
+					sender.sendMessage(MyPlayer.getColorName(myTarget) + " er nå i Creative modus");
+				} else {
+					myTarget.getOnlinePlayer().setGameMode(survival);
+					myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(myTarget) + " endret modusen din til Survival");
+					sender.sendMessage(MyPlayer.getColorName(myTarget) + " er nå i Survival modus");
+				}
 			}
-			if (target.getGameMode().equals(GameMode.SURVIVAL)) {
-				target.setGameMode(GameMode.CREATIVE);
-				target.sendMessage(Color.PLAYER + sender.getName() + Color.INFO + " endret modusen din til Creative");
-				sender.sendMessage(Color.PLAYER + target.getName() + Color.INFO + " er nå i Creative modus");
-			}
-			else {
-				target.setGameMode(GameMode.SURVIVAL);
-				target.sendMessage(Color.PLAYER + sender.getName() + Color.INFO + " endret modusen din til Survival");
-				sender.sendMessage(Color.PLAYER + target.getName() + Color.INFO + " er nå i Survival modus");
-			}
-			return true;
 		}
+		return true;
 	}
 }

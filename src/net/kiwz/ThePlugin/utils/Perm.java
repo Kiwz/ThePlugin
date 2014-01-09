@@ -11,18 +11,6 @@ import org.bukkit.plugin.Plugin;
 
 public class Perm {
 	
-	public static boolean isAdmin(Player player) {
-		if (player.isOp()) return true;
-		if (Config.getAdmins().contains(player.getName())) return true;
-        return false;
-	}
-	
-	public static boolean isAdmin(String name) {
-		if (Bukkit.getServer().getPlayer(name).isOp()) return true;
-		if (Config.getAdmins().contains(name)) return true;
-        return false;
-	}
-	
 	public static void setOpPerm(Player player) {
 		PermissionAttachment atch = player.addAttachment(ThePlugin.getPlugin());
 		if (player.getName().equals("Kiwz") || player.getName().equals("zacker")) {
@@ -43,7 +31,6 @@ public class Perm {
 		atch.setPermission("ThePlugin.openinv", true);
 		atch.setPermission("ThePlugin.pvp", true);
 		atch.setPermission("ThePlugin.tp", true);
-		atch.setPermission("ThePlugin.whois", true);
 	}
 	
 	public static void setPermissions() {

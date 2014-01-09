@@ -3,31 +3,27 @@ package net.kiwz.ThePlugin.commands;
 import java.util.HashMap;
 
 import net.kiwz.ThePlugin.utils.Color;
+import net.kiwz.ThePlugin.utils.MyPlayer;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class ReplayCmd {
-	private Server server = Bukkit.getServer();
-	public static HashMap<String, String> replays = new HashMap<String, String>();
+	public static HashMap<MyPlayer, MyPlayer> replays = new HashMap<MyPlayer, MyPlayer>();
 	
 	public static boolean exec(CommandSender sender, String[] args) {
 		return new ReplayCmd().replay(sender, args);
 	}
 	
 	private boolean replay(CommandSender sender, String[] args) {
-		String targetName = ReplayCmd.replays.get(sender.getName());
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
+		MyPlayer myTarget = replays.get(mySender);
 		
-		if (targetName == null) {
+		if (mySender == null) {
+			sender.sendMessage(Color.COMMAND + "/replay " + Color.WARNING + "kan bare brukes av spillere");
+		} else if (myTarget == null) {
 			sender.sendMessage(Color.WARNING + "Det er ingen du kan svare");
-			return true;
-		}
-
-		Player target = server.getPlayer(targetName);
-		if (target == null) {
-			sender.sendMessage(Color.WARNING + targetName + " er ikke online");
+		} else if (myTarget.getOnlinePlayer() == null) {
+			sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
 		} else if (args.length == 0) {
 			sender.sendMessage(Color.WARNING + "Du må skrive en melding");
 		} else {
@@ -35,10 +31,10 @@ public class ReplayCmd {
 			for (String s : args) {
 				message = message + s + " ";
 			}
-			message = Color.WHISPER + sender.getName() + " -> " + target.getName() + ": " + message;
+			message = MyPlayer.getColorName(mySender) + Color.WHISPER + " -> " + MyPlayer.getColorName(myTarget) + Color.WHISPER + ": " + message;
+			myTarget.getOnlinePlayer().sendMessage(message);
 			sender.sendMessage(message);
-			target.sendMessage(message);
-			ReplayCmd.replays.put(target.getName(), sender.getName());
+			replays.put(myTarget, mySender);
 		}
 		return true;
 	}

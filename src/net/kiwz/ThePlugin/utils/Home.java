@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 public class Home {
 	private static HashMap<String, Home> homes = new HashMap<String, Home>();
@@ -17,10 +16,10 @@ public class Home {
 	private String uuid;
 	private Location loc;
 	
-	public Home(Player player) {
-		this.key = player.getUniqueId().toString().replace("-", "") + " " + player.getWorld().getName();
-		this.uuid = player.getUniqueId().toString().replace("-", "");
-		this.loc = player.getLocation();
+	public Home(MyPlayer myPlayer) {
+		this.key = myPlayer.getUUID() + " " + myPlayer.getOnlinePlayer().getWorld().getName();
+		this.uuid = myPlayer.getUUID();
+		this.loc = myPlayer.getOnlinePlayer().getLocation();
 	}
 	
 	public Home(String uuid, String worldName, String coords, String direction) {
@@ -32,12 +31,12 @@ public class Home {
 		this.loc = loc;
 	}
 	
-	public static Home getHome(Player player) {
-		return homes.get(player.getUniqueId().toString().replace("-", "") + " " + player.getWorld().getName());
+	public static Home getHome(MyPlayer myPlayer) {
+		return homes.get(myPlayer.getUUID() + " " + myPlayer.getOnlinePlayer().getWorld().getName());
 	}
 	
-	public static Home getHome(Player player, World world) {
-		return homes.get(player.getUniqueId().toString().replace("-", "") + " " + world.getName());
+	public static Home getHome(MyPlayer myPlayer, World world) {
+		return homes.get(myPlayer.getUUID() + " " + world.getName());
 	}
 	
 	public static List<Home> getHomes() {

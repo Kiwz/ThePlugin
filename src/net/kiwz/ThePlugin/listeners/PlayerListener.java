@@ -3,7 +3,7 @@ package net.kiwz.ThePlugin.listeners;
 import java.util.HashMap;
 
 import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.utils.ChatIgnore;
+import net.kiwz.ThePlugin.commands.IgnoreCmd;
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.HandleItems;
 import net.kiwz.ThePlugin.utils.Place;
@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -44,11 +45,13 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerListener implements Listener {
 	private static HashMap<Player, Integer> playerXp = new HashMap<Player, Integer>();
 	private String denyString = Color.WARNING + "Du har ingen tilgang her";
+	private Server server = Bukkit.getServer();
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
+		MyPlayer myPlayer = MyPlayer.getPlayer(player);
 		Block block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 		Material soil = Material.SOIL;
 		Material crops = Material.CROPS;
@@ -81,7 +84,7 @@ public class PlayerListener implements Listener {
 			}
 			
 			if (place != null) {
-				if (!place.hasAccess(player)) {
+				if (!place.hasAccess(myPlayer)) {
 					event.setCancelled(true);
 					/**
 					 * TODO iPlate og gPlate kaller ikke på denne eventen!
@@ -93,7 +96,7 @@ public class PlayerListener implements Listener {
 						player.sendMessage(denyString);
 					}
 				}
-			} else if (!Perm.isAdmin(player) && MyWorld.getWorld(clickedBlockLoc.getWorld()).getClaimable() && clickedBlockLoc.getBlockY() > 40) {
+			} else if (!myPlayer.isAdmin() && MyWorld.getWorld(clickedBlockLoc.getWorld()).getClaimable() && clickedBlockLoc.getBlockY() > 40) {
 				if (!(heldItem.equals(boat) || heldItem.equals(cart) || heldItem.equals(sCart) ||
 						heldItem.equals(pCart) || heldItem.equals(hCart))) {
 					event.setCancelled(true);
@@ -112,12 +115,13 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
+		MyPlayer myPlayer = MyPlayer.getPlayer(player);
 		
 		if (event.getRightClicked() != null) {
 			Location loc = event.getRightClicked().getLocation();
 			Place place = Place.getPlace(loc);
 			if (place != null) {
-				if (!place.hasAccess(player)) {
+				if (!place.hasAccess(myPlayer)) {
 					event.setCancelled(true);
 					player.sendMessage(denyString);
 				}
@@ -129,14 +133,15 @@ public class PlayerListener implements Listener {
 	public void onPlayerBucketFill(PlayerBucketFillEvent event) {
 		Player player = event.getPlayer();
 		Location loc = event.getBlockClicked().getLocation();
+		MyPlayer myPlayer = MyPlayer.getPlayer(player);
 		Place place = Place.getPlace(loc);
 		
 		if (place != null) {
-			if (!place.hasAccess(player)) {
+			if (!place.hasAccess(myPlayer)) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
-		} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+		} else if (!myPlayer.isAdmin() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}
@@ -146,15 +151,15 @@ public class PlayerListener implements Listener {
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
 		Player player = event.getPlayer();
 		Location loc = event.getBlockClicked().getLocation();
+		MyPlayer myPlayer = MyPlayer.getPlayer(player);
 		Place place = Place.getPlace(loc);
-		player.sendMessage("test");
 		
 		if (place != null) {
-			if (!place.hasAccess(player)) {
+			if (!place.hasAccess(myPlayer)) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
-		} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+		} else if (!myPlayer.isAdmin() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}
@@ -168,7 +173,7 @@ public class PlayerListener implements Listener {
 			Player holder = (Player) inv.getHolder();
 			if (!holder.isOnline()) {
 				ItemStack[] content = inv.getHolder().getInventory().getContents();
-				Player player = MyPlayer.getPlayer(holder.getName()).getBukkitPlayer();
+				Player player = MyPlayer.getPlayer(holder.getName()).getOfflinePlayer();
 				player.getInventory().setContents(content);
 				player.saveData();
 			}
@@ -183,12 +188,12 @@ public class PlayerListener implements Listener {
 			String cmd = msg[0];
 			String arg = "";
 			if (msg.length > 1) arg = msg[1];
-	    	HelpTopic topic = Bukkit.getServer().getHelpMap().getHelpTopic(cmd);
+	    	HelpTopic topic = server.getHelpMap().getHelpTopic(cmd);
 	    	if (topic != null) {
 	    		ServerManager.logString("[COMMAND] " + player.getName() + ": " + event.getMessage());
-		    	if (cmd.equalsIgnoreCase("/op") || cmd.equalsIgnoreCase("/deop") && MyPlayer.getPlayer(arg) != null) {
-		    		final Player target = MyPlayer.getPlayer(arg).getBukkitPlayer();
-		    		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
+		    	if (server.getPlayer(arg) != null && (cmd.equalsIgnoreCase("/op") || cmd.equalsIgnoreCase("/deop"))) {
+		    		final Player target = server.getPlayer(arg);
+		    		server.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 		    			public void run() {
 		    				Util.setTabColor(target);
 		    			}
@@ -203,7 +208,7 @@ public class PlayerListener implements Listener {
 		//event.setFormat("%s: %s");
 		Player player = event.getPlayer();
 		MyPlayer myPlayer = MyPlayer.getPlayer(player);
-		String msg = myPlayer.getColorName() + Color.PLAYER + ": " + Color.WHITE + event.getMessage();
+		String msg = MyPlayer.getColorName(myPlayer) + Color.PLAYER + ": " + Color.WHITE + event.getMessage();
 		
 		if (myPlayer.isMuted()) {
 			player.sendMessage(Color.WARNING + "En admin har bestemt at du ikke får snakke av gode grunner");
@@ -211,14 +216,15 @@ public class PlayerListener implements Listener {
 			return;
 		}
 		
-		if (Perm.isAdmin(player)) {
+		if (myPlayer.isAdmin()) {
 			//event.setFormat(ChatColor.RED + "%s: " + ChatColor.WHITE + "%s");
-			msg = myPlayer.getColorName() + Color.ADMIN + ": " + ChatColor.WHITE + event.getMessage();
+			msg = MyPlayer.getColorName(myPlayer) + Color.ADMIN + ": " + ChatColor.WHITE + event.getMessage();
 		}
 		
-		for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
-			if (ChatIgnore.getPlayers(thisPlayer) != null) {
-				if (!ChatIgnore.getPlayers(thisPlayer).contains(player.getName())) {
+		for (Player thisPlayer : server.getOnlinePlayers()) {
+			MyPlayer myThis = MyPlayer.getPlayer(thisPlayer);
+			if (IgnoreCmd.getPlayers(myThis) != null) {
+				if (!IgnoreCmd.getPlayers(myThis).contains(myPlayer)) {
 					thisPlayer.sendMessage(msg);
 				}
 			} else {
@@ -271,16 +277,6 @@ public class PlayerListener implements Listener {
         String coords = player.getLocation().getBlockX() + ", " + player.getLocation().getBlockY() + ", " + player.getLocation().getBlockZ();
         String log;
         
-        Perm.setOpPerm(player);
-    	if (Perm.isAdmin(player)) {
-    		Perm.setAdminPermissions(player);
-    	}
-    	
-        if (!player.isOp()) {
-        	player.setGameMode(GameMode.SURVIVAL);
-        	player.setAllowFlight(false);
-        }
-        
         MyPlayer myPlayer = new MyPlayer(player);
         
         if (!myPlayer.save()) {
@@ -289,7 +285,7 @@ public class PlayerListener implements Listener {
         	myPlayer.setIp(ip);
         	myPlayer.setLastPlayed(System.currentTimeMillis() / 1000);
 	        log = playerName + " logget inn (" + worldName + " " + coords + ") [" + ip + "]";
-			event.setJoinMessage(myPlayer.getColorName() + Color.HEADER + " logget inn");
+			event.setJoinMessage(MyPlayer.getColorName(myPlayer) + Color.HEADER + " logget inn");
 			player.sendMessage(Color.INFO + "############################################");
 	        player.sendMessage(Color.INFO + "Velkommen til LarvikGaming");
 	        player.sendMessage(Color.INFO + "Hjemmeside:" + Color.HEADER + " http://larvikgaming.net");
@@ -300,7 +296,7 @@ public class PlayerListener implements Listener {
 			player.sendMessage(Color.INFO + "############################################");
         } else {
 	        log = playerName + " logget inn for første gang (" + worldName + " " + coords + ") [" + ip + "]";
-			event.setJoinMessage(myPlayer.getColorName() + Color.HEADER + " logget inn for første gang");
+			event.setJoinMessage(MyPlayer.getColorName(myPlayer) + Color.HEADER + " logget inn for første gang");
 			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 				public void run() {
@@ -329,9 +325,21 @@ public class PlayerListener implements Listener {
 			player.sendMessage(Color.INFO + "############################################");
         }
         
+        myPlayer = MyPlayer.getPlayer(player);
+        
+        Perm.setOpPerm(player);
+    	if (myPlayer.isAdmin()) {
+    		Perm.setAdminPermissions(player);
+    	}
+    	
+        if (!player.isOp()) {
+        	player.setGameMode(GameMode.SURVIVAL);
+        	player.setAllowFlight(false);
+        }
+        
         Util.setTabColor(player);
 		ServerManager.logString("[CONN] " + log);
-        Bukkit.getServer().getLogger().info(log);
+        server.getLogger().info(log);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -342,9 +350,9 @@ public class PlayerListener implements Listener {
 		long login = myPlayer.getLastPlayed();
 		long tot = myPlayer.getTimePlayed();
 		myPlayer.setTimePlayed(curr - login + tot);
-		event.setQuitMessage(myPlayer.getColorName() + Color.HEADER + " logget ut");
+		event.setQuitMessage(MyPlayer.getColorName(myPlayer) + Color.HEADER + " logget ut");
 		ServerManager.logString("[CONN] " + event.getPlayer().getName() + " logget ut");
-		/*for (Player players : Bukkit.getServer().getOnlinePlayers()) {
+		/*for (Player players : server.getOnlinePlayers()) {
 			players.getLocation().getWorld().strikeLightningEffect(players.getLocation());
 		}*/
 	}

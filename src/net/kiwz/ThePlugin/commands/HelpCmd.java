@@ -27,20 +27,18 @@ public class HelpCmd {
         if (args.length == 0) {
         	command = "";
         	pageNumber = 1;
-        }
-        else if (NumberUtils.isDigits(args[args.length - 1])) {
+        } else if (NumberUtils.isDigits(args[args.length - 1])) {
         	command = StringUtils.join(ArrayUtils.subarray(args, 0, args.length - 1), " ");
         	try {
         		pageNumber = NumberUtils.createInteger(args[args.length - 1]);
-        	}
-        	catch (NumberFormatException exception) {
+        	} catch (NumberFormatException exception) {
         		pageNumber = 1;
         	}
-        	if (pageNumber <= 0) {
+        	
+        	if (pageNumber < 1) {
         		pageNumber = 1;
-        		}
-        }
-        else {
+    		}
+        } else {
         	command = StringUtils.join(args, " ");
         	pageNumber = 1;
         }
@@ -59,7 +57,7 @@ public class HelpCmd {
     	
     	List<String> list = new ArrayList<String>();
     	list.add(topic.getFullText(sender));
-    	Util.sendAsPages(sender, pageNumber + "", 0, "Hjelp: " + topic.getName(), list);
+    	Util.sendAsPages(sender, pageNumber + "", 0, "Hjelp: " + topic.getName(), "", list);
 		return true;
 	}
 }

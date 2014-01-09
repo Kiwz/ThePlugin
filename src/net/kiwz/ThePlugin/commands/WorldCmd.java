@@ -17,7 +17,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.util.ChatPaginator;
 
 public class WorldCmd {
 	private Server server = Bukkit.getServer();
@@ -49,14 +48,14 @@ public class WorldCmd {
 		}
 		
 		if (args.length == 0) {
-			Util.sendAsPages(sender, "1", 0, "Hjelp: /plass", help());
+			Util.sendAsPages(sender, "1", 0, "Hjelp: /plass", "", help());
 		} else if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("liste")) {
 				sendWorldList(sender);
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender);
 			} else if (args[0].length() == 1 && args[0].matches("[0-9]+")) {
-				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", help());
+				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
 			} else {
 				if (MyWorld.getWorld(args[0]) == null) {
 					sendWarning(sender, args[0] + " finnes ikke");
@@ -128,7 +127,7 @@ public class WorldCmd {
 				if (myWorld.delete()) sendInfo(sender, Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet");
 				else sendWarning(sender, Color.VARIABLE + myWorld.getName() + Color.WARNING + " kunne ikke slettes");
 			} else {
-				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", help());
+				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
 			}
 			new MultiWorld().loadWorlds();
 		} else if (args.length == 3) {
@@ -141,10 +140,10 @@ public class WorldCmd {
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1], args[2]);
 			} else {
-				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", help());
+				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
 			}
 		} else {
-			Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", help());
+			Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
 		}
 		return true;
 	}
@@ -158,6 +157,7 @@ public class WorldCmd {
 	}
 	
 	private void sendWorld(CommandSender sender, MyWorld myWorld) {
+		List<String> list = new ArrayList<String>();
 		int size = myWorld.getBorder() * 2;
 		String claimable = "Nei";
 		if (myWorld.getClaimable()) claimable = "Ja";
@@ -181,60 +181,33 @@ public class WorldCmd {
 		String type = myWorld.getType().toString();
 		String seed = myWorld.getSeed() + "";
 		
-		StringBuilder header = new StringBuilder();
-		header.append(ChatColor.YELLOW);
-		header.append("----- ");
-		header.append(ChatColor.WHITE);
-		header.append(myWorld.getName().toUpperCase());
-		header.append(ChatColor.GRAY);
-		header.append(" (" + environment + ", " + type + ")");
-		header.append(ChatColor.YELLOW);
-		header.append(" -----");
-		for (int i = header.length(); i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
-			header.append("-");
-		}
-		sender.sendMessage(header.toString());
-		sender.sendMessage(Color.INFO + "Størrelse: " + Color.VARIABLE + size);
-		sender.sendMessage(Color.INFO + "Plasser: " + Color.VARIABLE + claimable);
-		sender.sendMessage(Color.INFO + "Ill spredning: " + Color.VARIABLE + fireSpread);
-		sender.sendMessage(Color.INFO + "Eksplosjoner: " + Color.VARIABLE + explosions);
-		sender.sendMessage(Color.INFO + "Monster grifing: " + Color.VARIABLE + monsterGrief);
-		sender.sendMessage(Color.INFO + "Tråkking: " + Color.VARIABLE + trample);
-		sender.sendMessage(Color.INFO + "PvP: " + Color.VARIABLE + pvp);
-		sender.sendMessage(Color.INFO + "Monstre: " + Color.VARIABLE + monsters);
-		sender.sendMessage(Color.INFO + "Dyr: " + Color.VARIABLE + animals);
-		sender.sendMessage(Color.INFO + "Behold spawn i minne: " + Color.VARIABLE + keepSpawn);
-		sender.sendMessage(Color.INFO + "Frø: " + Color.VARIABLE + seed);
+		list.add(Color.INFO + "Størrelse: " + Color.VARIABLE + size);
+		list.add(Color.INFO + "Plasser: " + Color.VARIABLE + claimable);
+		list.add(Color.INFO + "Ill spredning: " + Color.VARIABLE + fireSpread);
+		list.add(Color.INFO + "Eksplosjoner: " + Color.VARIABLE + explosions);
+		list.add(Color.INFO + "Monster grifing: " + Color.VARIABLE + monsterGrief);
+		list.add(Color.INFO + "Tråkking: " + Color.VARIABLE + trample);
+		list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp);
+		list.add(Color.INFO + "Monstre: " + Color.VARIABLE + monsters);
+		list.add(Color.INFO + "Dyr: " + Color.VARIABLE + animals);
+		list.add(Color.INFO + "Behold spawn i minne: " + Color.VARIABLE + keepSpawn);
+		list.add(Color.INFO + "Frø: " + Color.VARIABLE + seed);
+
+		String about = (myWorld.getName().toUpperCase());
+		String adminInfo = (environment + ", " + type);
+		Util.sendAsPages(sender, "1", 10, about, adminInfo, list);
 	}
 	
 	private void sendWorldList(CommandSender sender) {
-		List<String> worldList = new ArrayList<String>();
+		List<String> list = new ArrayList<String>();
 		for (World world : server.getWorlds()) {
-			worldList.add(Color.VARIABLE + world.getName());
+			list.add(Color.VARIABLE + world.getName().toUpperCase());
 		}
-		
-		StringBuilder header = new StringBuilder();
-		header.append(ChatColor.YELLOW);
-		header.append("----- ");
-		header.append(ChatColor.WHITE);
-		header.append("Liste over alle verdener på denne server");
-		header.append(ChatColor.YELLOW);
-		header.append(" -----");
-		for (int i = header.length(); i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
-			header.append("-");
-		}
-		sender.sendMessage(header.toString());
-		
-		Collections.sort(worldList, String.CASE_INSENSITIVE_ORDER);
-		for (String worldName : worldList) {
-			sender.sendMessage(worldName);
-		}
+		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+		String about = ("Liste over alle verdener på denne server");
+		Util.sendAsPages(sender, "1", 10, about, "", list);
 	}
 	
-	/**
-	 * 
-	 * @return Help entries for /plass
-	 */
 	private List<String> help() {
 		ChatColor white = ChatColor.WHITE;
 		ChatColor gold = ChatColor.GOLD;

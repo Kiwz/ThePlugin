@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.kiwz.ThePlugin.commands.PvpCmd;
 import net.kiwz.ThePlugin.utils.Color;
-import net.kiwz.ThePlugin.utils.Perm;
+import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.MyWorld;
 
@@ -42,14 +42,15 @@ public class EntityListener implements Listener {
 		if (event.getCause() == RemoveCause.ENTITY) {
 			Player player = (Player) event.getRemover();
 			Location loc = event.getEntity().getLocation();
+			MyPlayer myPlayer = MyPlayer.getPlayer(player);
 			Place place = Place.getPlace(loc);
 			
 			if (place != null) {
-				if (!place.hasAccess(player)) {
+				if (!place.hasAccess(myPlayer)) {
 					event.setCancelled(true);
 					player.sendMessage(denyString);
 				}
-			} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+			} else if (!myPlayer.isAdmin() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
@@ -122,7 +123,8 @@ public class EntityListener implements Listener {
 		if (place != null) {
 			if (attacker instanceof Player && victim instanceof Ageable) {
 				playerAttacker = (Player) attacker;
-				if (!place.hasAccess(playerAttacker)) {
+				MyPlayer myPlayer = MyPlayer.getPlayer(playerAttacker);
+				if (!place.hasAccess(myPlayer)) {
 					event.setCancelled(true);
 					playerAttacker.sendMessage(denyString);
 				}
@@ -130,7 +132,8 @@ public class EntityListener implements Listener {
 			
 			if (attacker instanceof Player && victim instanceof Hanging) {
 				playerAttacker = (Player) attacker;
-				if (!place.hasAccess(playerAttacker)) {
+				MyPlayer myPlayer = MyPlayer.getPlayer(playerAttacker);
+				if (!place.hasAccess(myPlayer)) {
 					event.setCancelled(true);
 					playerAttacker.sendMessage(denyString);
 				}
@@ -140,7 +143,8 @@ public class EntityListener implements Listener {
 				LivingEntity shooter = ((Projectile) attacker).getShooter();
 				if (shooter instanceof Player) {
 					playerAttacker = (Player) shooter;
-					if (!place.hasAccess(playerAttacker)) {
+					MyPlayer myPlayer = MyPlayer.getPlayer(playerAttacker);
+					if (!place.hasAccess(myPlayer)) {
 						event.setCancelled(true);
 						playerAttacker.sendMessage(denyString);
 					}

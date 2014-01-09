@@ -58,7 +58,7 @@ public class Commands implements CommandExecutor {
 		else if (c.equals("setthjem")) return HomeCmd.execSet(sender, args);
 		else if (c.equals("ignorer")) return IgnoreCmd.exec(sender, args);
 		else if (c.equals("online")) return ListCmd.exec(sender, args);
-		else if (c.equals("minne")) return MemCmd.exec(sender, args);
+		else if (c.equals("minne")) return MemCmd.exec(sender);
 		else if (c.equals("mute")) return MuteCmd.execSet(sender, args);
 		else if (c.equals("unmute")) return MuteCmd.execUnSet(sender, args);
 		else if (c.equals("oi")) return OiCmd.exec(sender, args);

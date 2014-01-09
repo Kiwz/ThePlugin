@@ -22,19 +22,19 @@ public class MuteCmd {
 	private boolean mute(CommandSender sender, String[] args) {
 		List<String> list = new ArrayList<String>();
 		for (MyPlayer myPlayer : MyPlayer.getPlayers()) {
-			if (myPlayer.isMuted()) list.add(Color.PLAYER + myPlayer.getName());
+			if (myPlayer.isMuted()) list.add(MyPlayer.getColorName(myPlayer));
 		}
 		if (args.length == 0) {
-			Util.sendAsPages(sender, "1", 0, "Liste over alle spillere som er muted:", list);
+			Util.sendAsPages(sender, "1", 0, "Liste over alle spillere som er muted:", "", list);
 		} else if (args[0].length() <= 1) {
-			Util.sendAsPages(sender, args[0], 0, "Liste over alle spillere som er muted:", list);
+			Util.sendAsPages(sender, args[0], 0, "Liste over alle spillere som er muted:", "", list);
 		} else {
-			MyPlayer myPlayer = MyPlayer.getPlayer(args[0]);
-			if (myPlayer == null) {
-				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " har aldri spilt her");
+			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
+			if (myTarget == null) {
+				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
 			} else {
-				myPlayer.setMuted(true);
-				sender.sendMessage(Color.PLAYER + myPlayer.getName() + Color.INFO + " er muted");
+				myTarget.setMuted(true);
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + " er muted");
 			}
 		}
 		return true;
@@ -50,12 +50,12 @@ public class MuteCmd {
 			}
 			sender.sendMessage(Color.INFO + "Alle spillere er unmuted");
 		} else {
-			MyPlayer myPlayer = MyPlayer.getPlayer(args[0]);
-			if (myPlayer == null) {
-				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " har aldri spilt her");
+			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
+			if (myTarget == null) {
+				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
 			} else {
-				myPlayer.setMuted(false);
-				sender.sendMessage(Color.PLAYER + myPlayer.getName() + Color.INFO + " er muted");
+				myTarget.setMuted(false);
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + " er unmuted");
 			}
 		}
 		return true;

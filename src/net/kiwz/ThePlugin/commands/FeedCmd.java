@@ -2,41 +2,36 @@ package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class FeedCmd {
-	private Server server = Bukkit.getServer();
 	
 	public static boolean exec(CommandSender sender, String[] args) {
 		return new FeedCmd().feed(sender, args);
 	}
 	
 	public boolean feed(CommandSender sender, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = server.getPlayer(sender.getName());
-		}
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
 		
-		if (args.length == 0 && player == null) {
+		if (args.length == 0 && mySender == null) {
 			sender.sendMessage(Color.WARNING + "Spesifiser en spiller");
-			return true;
 		} else if (args.length == 0) {
-			player.setFoodLevel(20);
+			mySender.getOnlinePlayer().setFoodLevel(20);
+			mySender.getOnlinePlayer().setSaturation(20);
 			sender.sendMessage(Color.INFO + "Du ble mett");
-			return true;
 		} else {
-			Player target = MyPlayer.getOnlinePlayer(args[0]);
-			if (target == null) {
-				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke online");
-				return true;
+			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
+			if (myTarget == null) {
+				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
+			} else if (myTarget.getOnlinePlayer() == null) {
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
+			} else {
+				myTarget.getOnlinePlayer().setFoodLevel(20);
+				myTarget.getOnlinePlayer().setSaturation(20);
+				myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " gjorde deg mett");
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + " ble mett");
 			}
-			target.setFoodLevel(20);
-			target.sendMessage(Color.PLAYER + sender.getName() + Color.INFO + " gjorde deg mett");
-			sender.sendMessage(Color.PLAYER + target.getName() + Color.INFO + " ble mett");
-			return true;
 		}
+		return true;
 	}
 }

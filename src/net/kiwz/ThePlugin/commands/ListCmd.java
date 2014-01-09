@@ -1,10 +1,8 @@
 package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.utils.Color;
-import net.kiwz.ThePlugin.utils.Perm;
-
+import net.kiwz.ThePlugin.utils.MyPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,15 +20,7 @@ public class ListCmd {
 		sender.sendMessage(Color.INFO + "Det er " + players.length + "/" + server.getMaxPlayers() + " spillere online");
 		StringBuilder header = new StringBuilder();
 		for (Player player : players) {
-			String playerName = player.getName();
-			if (player.isOp() || Perm.isAdmin(player)) {
-				header.append(ChatColor.RED + playerName + ChatColor.WHITE);
-				header.append(", ");
-			}
-			else {
-				header.append(playerName);
-				header.append(", ");
-			}
+			header.append(MyPlayer.getColorName(MyPlayer.getPlayer(player)) + ", ");
 		}
 		String playerNames = header.toString();
 		if (playerNames.length() > 0) {

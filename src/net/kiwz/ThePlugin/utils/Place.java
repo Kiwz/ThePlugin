@@ -41,14 +41,15 @@ public class Place {
 	public Place() {
 	}
 	
-	public Place(Player player, String name, String radius) {
+	public Place(MyPlayer myPlayer, String name, String radius) {
 		int id = 1;
 		while (usedIDs.contains(id)) id++;
+		Player player = myPlayer.getOnlinePlayer();
 		
 		this.id = id;
 		this.time = (int) (System.currentTimeMillis() / 1000);
 		this.name = name;
-		this.owner = player.getUniqueId().toString().replace("-", "");
+		this.owner = myPlayer.getUUID();
 		this.members = new HashSet<String>();
 		this.center = new Location(player.getWorld(), player.getLocation().getBlockX(), 100, player.getLocation().getBlockZ());
 		this.radius = Util.parseInt(radius);
@@ -112,15 +113,15 @@ public class Place {
 		return places.get(id);
 	}
 	
-	public static Place getPlace(Player player, String name) {
+	public static Place getPlace(MyPlayer myPlayer, String name) {
 		for (int key : places.keySet()) {
 			if (places.get(key).name.equalsIgnoreCase(name)) {
 				return places.get(key);
 			}
 		}
-		if (player != null) {
+		if (myPlayer != null) {
 			for (int key : places.keySet()) {
-				if (places.get(key).owner.equals(player.getUniqueId().toString().replace("-", ""))
+				if (places.get(key).owner.equals(myPlayer.getUUID())
 						&& places.get(key).name.toLowerCase().startsWith(name.toLowerCase())) {
 					return places.get(key);
 				}
@@ -147,20 +148,20 @@ public class Place {
 		return null;
 	}
 	
-	public static List<Place> getPlacesByOwner(Player player) {
+	public static List<Place> getPlacesByOwner(MyPlayer myPlayer) {
 		List<Place> list = new ArrayList<Place>();
 		for (Place place : getPlaces()) {
-			if (place.getOwner().equals(player.getUniqueId().toString().replace("-", ""))) {
+			if (place.getOwner().equals(myPlayer.getUUID())) {
 				list.add(place);
 			}
 		}
 		return list;
 	}
 	
-	public static List<Place> getPlacesByMember(Player player) {
+	public static List<Place> getPlacesByMember(MyPlayer myPlayer) {
 		List<Place> list = new ArrayList<Place>();
 		for (Place place : getPlaces()) {
-			if (place.getMembers().contains(player.getUniqueId().toString().replace("-", ""))) {
+			if (place.getMembers().contains(myPlayer.getUUID())) {
 				list.add(place);
 			}
 		}
@@ -178,7 +179,7 @@ public class Place {
 	public static List<String> getPlaceList() {
 		List<String> list = new ArrayList<String>();
 		for (Place place : getPlaces()) {
-			list.add(Color.PLACE + place.getName() + Color.INFO + " [" + Color.PLAYER + MyPlayer.getPlayerById(place.getOwner()).getName() + Color.INFO + "] ");
+			list.add(place.getColorName() + " [" + MyPlayer.getColorName(MyPlayer.getPlayerById(place.getOwner())) + "] ");
 		}
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		return list;
@@ -189,18 +190,18 @@ public class Place {
 		for (Place place : getPlaces()) {
 			if (map.containsKey(place.getOwner())) {
 				String name = map.get(place.getOwner());
-				name = name + " [" + Color.PLACE + place.getName() + Color.INFO + "]";
+				name = name + " [" + place.getColorName() + "]";
 				map.put(place.getOwner(), name);
 			}
 			else {
-				String name = " [" + Color.PLACE + place.getName() + Color.INFO + "]";
+				String name = " [" + place.getColorName() + "]";
 				map.put(place.getOwner(), name);
 			}
 		}
 		
 		List<String> list = new ArrayList<String>();
 		for (String key : map.keySet()) {
-			list.add(Color.PLAYER + MyPlayer.getPlayerById(key).getName() + Color.INFO + map.get(key));
+			list.add(MyPlayer.getColorName(MyPlayer.getPlayerById(key)) + map.get(key));
 		}
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		return list;
@@ -218,10 +219,10 @@ public class Place {
 		removedPlaces.clear();
 	}
 	
-	public boolean hasAccess(Player player) {
-		if (Perm.isAdmin(player)) return true;
-		if (this.owner.equals(player.getUniqueId().toString().replace("-", ""))) return true;
-		if (this.members.contains(player.getUniqueId().toString().replace("-", ""))) return true;
+	public boolean hasAccess(MyPlayer myPlayer) {
+		if (myPlayer.isAdmin()) return true;
+		if (this.owner.equals(myPlayer.getUUID())) return true;
+		if (this.members.contains(myPlayer.getUUID())) return true;
 		return false;
 	}
 	
@@ -246,22 +247,22 @@ public class Place {
 		return Color.PLACE + this.name + Color.INFO;
 	}
 	
-	public void setOwner(Player player) {
+	public void setOwner(MyPlayer myPlayer) {
 		this.members.add(getOwner());
-		this.members.remove(player.getUniqueId().toString().replace("-", ""));
-		this.owner = player.getUniqueId().toString().replace("-", "");
+		this.members.remove(myPlayer.getUUID());
+		this.owner = myPlayer.getUUID();
 	}
 	
 	public String getOwner() {
 		return this.owner;
 	}
 	
-	public boolean setMember(Player player) {
-		return this.members.add(player.getUniqueId().toString().replace("-", ""));
+	public boolean setMember(MyPlayer myPlayer) {
+		return this.members.add(myPlayer.getUUID());
 	}
 	
-	public boolean removeMember(Player player) {
-		return this.members.remove(player.getUniqueId().toString().replace("-", ""));
+	public boolean removeMember(MyPlayer myPlayer) {
+		return this.members.remove(myPlayer.getUUID());
 	}
 	
 	public Set<String> getMembers() {
@@ -344,13 +345,13 @@ public class Place {
 		this.isChargeAble = isChargeAble;
 	}
 	
-	public boolean deletePlace(Player player) {
-		if (player == null) {
+	public boolean deletePlace(MyPlayer myPlayer) {
+		if (myPlayer == null) {
 			usedNames.remove(this.name.toLowerCase());
 			removedPlaces.put(this.id, places.remove(this.id));
 			return true;
 		}
-		if (player.isOp() || this.owner.equals(player.getUniqueId().toString().replace("-", ""))) {
+		if (myPlayer.getOfflinePlayer().isOp() || this.owner.equals(myPlayer.getUUID())) {
 			usedNames.remove(this.name.toLowerCase());
 			removedPlaces.put(this.id, places.remove(this.id));
 			return true;
@@ -365,8 +366,8 @@ public class Place {
 		places.put(this.id, this);
 	}
 	
-	public boolean savePlace(Player player) {
-		if (error(player)) return false;
+	public boolean savePlace(MyPlayer myPlayer) {
+		if (error(myPlayer)) return false;
 		if (getPlace(this.id) != null) usedNames.remove(getPlace(this.id).getName().toLowerCase());
 		usedIDs.add(this.id);
 		usedNames.add(this.name.toLowerCase());
@@ -374,61 +375,64 @@ public class Place {
 		return true;
 	}
 	
-	private boolean error(Player player) {
-		if (player == null) player = MyPlayer.getPlayerById("b1b6a9e8e077492e85ab22983e4213e7").getBukkitPlayer();
+	private boolean error(MyPlayer myPlayer) {
+		boolean op = false;
+		if (myPlayer == null) op = true;
 		Place place = getPlace(this.id);
 		if (place != null) {
-			if (!player.isOp() && !place.getOwner().equals(player.getUniqueId().toString().replace("-", ""))) return true;
+			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return true;
 			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return true;
 			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
 				if (getPlace(this.spawn) == null) return true;
 				if (getPlace(this.spawn).getId() != (this.id)) return true;
 			}
 		} else {
-			if (!player.isOp() && getPlacesByOwner(player).size() >= 3) return true;
+			if (!op && getPlacesByOwner(myPlayer).size() >= 3) return true;
 			if (usedNames.contains(this.name.toLowerCase())) return true;
 		}
 		
 		if (this.name.equalsIgnoreCase("liste") || this.name.equalsIgnoreCase("her") || this.name.equalsIgnoreCase("spiller")) return true;
 		if (this.name.length() < 2 || this.name.length() > 16) return true;
-		if (!player.isOp() && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return true;
-		if (!player.isOp() && this.radius < 10) return true;
-		if (!player.isOp() && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return true;
-		if (!player.isOp() && this.radius > 70) return true;
+		if (!op && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return true;
+		if (!op && this.radius < 10) return true;
+		if (!op && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return true;
+		if (!op && this.radius > 70) return true;
 		if (!available(this).isEmpty()) return true;
-		if (!player.isOp() && this.isChargeAble) {
-			if (!HandleItems.removeItem(player, Material.GOLD_INGOT, 5)) return true;
+		if (!op && this.isChargeAble) {
+			if (!HandleItems.removeItem(myPlayer.getOnlinePlayer(), Material.GOLD_INGOT, 5)) return true;
 		}
 		return false;
 	}
 
-	public String getError(Player player) {
-		if (player == null) player = MyPlayer.getPlayerById("b1b6a9e8e077492e85ab22983e4213e7").getBukkitPlayer();
+	public String getError(MyPlayer myPlayer) {
+		boolean op = false;
+		if (myPlayer == null) op = true;
+		else op = myPlayer.getOfflinePlayer().isOp();
 		Place place = getPlace(this.id);
 		if (place != null) {
-			if (!player.isOp() && !place.getOwner().equals(player.getUniqueId().toString().replace("-", ""))) return "Dette er ikke din plass";
+			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";
 			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
 			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
 				if (getPlace(this.spawn) == null) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";
 				if (getPlace(this.spawn).getId() != (this.id)) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";
 			}
 		} else {
-			if (!player.isOp() && getPlacesByOwner(player).size() >= 3) return "Du kan ikke lage flere enn 3 plasser";
+			if (!op && getPlacesByOwner(myPlayer).size() >= 3) return "Du kan ikke lage flere enn 3 plasser";
 			if (usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
 		}
 		
 		if (this.name.equalsIgnoreCase("liste") || this.name.equalsIgnoreCase("her") || this.name.equalsIgnoreCase("spiller")) return "Dette navnet er reservert, prøv ett annet navn";
 		if (this.name.length() < 2 || this.name.length() > 16) return "Navnet må være mellom 2 og 20 bokstaver";
-		if (!player.isOp() && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return "Du kan ikke lage plass i denne verdenen";
-		if (!player.isOp() && this.radius < 10) return "Plassen du lager må ha en radius større enn 9";
-		if (!player.isOp() && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return "Plasser nære spawn (innenfor 300 blokker) må ha en radius mindre enn 16";
-		if (!player.isOp() && this.radius > 70) return "Plassen du lager må ha en radius mindre enn 71";
+		if (!op && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return "Du kan ikke lage plass i denne verdenen";
+		if (!op && this.radius < 10) return "Plassen du lager må ha en radius større enn 9";
+		if (!op && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return "Plasser nære spawn (innenfor 300 blokker) må ha en radius mindre enn 16";
+		if (!op && this.radius > 70) return "Plassen du lager må ha en radius mindre enn 71";
 		if (!available(this).isEmpty()) {
 			String error = "Du er for nærme følgende plasser: ";
 			for (Place otherPlace : available(this)) error = error + Color.INFO + "[" + Color.PLACE + otherPlace.getName() + Color.INFO + "] ";
 			return error;
 		}
-		if (!player.isOp() && this.isChargeAble) return "Det koster 5 gullbarer for å lage eller flytte en plass";
+		if (!op && this.isChargeAble) return "Det koster 5 gullbarer for å lage eller flytte en plass";
 		return "Det skjedde en feil, henvend deg til en Admin";
 	}
 	

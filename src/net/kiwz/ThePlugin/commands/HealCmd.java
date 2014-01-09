@@ -2,41 +2,38 @@ package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class HealCmd {
-	private Server server = Bukkit.getServer();
 	
 	public static boolean exec(CommandSender sender, String[] args) {
 		return new HealCmd().heal(sender, args);
 	}
 	
 	public boolean heal(CommandSender sender, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = server.getPlayer(sender.getName());
-		}
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
 		
-		if (args.length == 0 && player == null) {
+		if (args.length == 0 && mySender == null) {
 			sender.sendMessage(Color.WARNING + "Spesifiser en spiller");
-			return true;
 		} else if (args.length == 0) {
-			player.setHealth(20);
-			sender.sendMessage(Color.INFO + "Du fikk fullt liv");
-			return true;
+			mySender.getOnlinePlayer().setHealth(20);
+			mySender.getOnlinePlayer().setFoodLevel(20);
+			mySender.getOnlinePlayer().setSaturation(20);
+			sender.sendMessage(Color.INFO + "Du fikk fullt liv og masse mat");
 		} else {
-			Player target = MyPlayer.getOnlinePlayer(args[0]);
-			if (target == null) {
-				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke online");
-				return true;
+			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
+			if (myTarget == null) {
+				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
+			} else if (myTarget.getOnlinePlayer() == null) {
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
+			} else {
+				myTarget.getOnlinePlayer().setHealth(20);
+				myTarget.getOnlinePlayer().setFoodLevel(20);
+				myTarget.getOnlinePlayer().setSaturation(20);
+				myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " ga deg fullt liv og masse mat");
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + " har fått fullt liv og masse mat");
 			}
-			target.setHealth(20);
-			target.sendMessage(Color.PLAYER + sender.getName() + Color.INFO + " ga deg fullt liv");
-			sender.sendMessage(Color.PLAYER + target.getName() + Color.INFO + " har fått fullt liv");
-			return true;
 		}
+		return true;
 	}
 }

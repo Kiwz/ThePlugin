@@ -15,23 +15,20 @@ public class TimeCmd {
 	}
 	
 	private boolean time(CommandSender sender, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = server.getPlayer(sender.getName());
-		}
+		Player player = server.getPlayer(sender.getName());
 		
 		if (player == null) {
-			sender.sendMessage(Color.WARNING + "/tid kan bare brukes av spillere");
+			sender.sendMessage(Color.COMMAND + "/tid " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length == 0) {
 			player.resetPlayerTime();
 			sender.sendMessage(Color.INFO + "Din tid er lik serveren sin tid");
 		} else {
 			if (args[0].equalsIgnoreCase("dag")) {
 				player.setPlayerTime(6000L, false);
-				sender.sendMessage(Color.INFO + "Din tid er dag");
+				sender.sendMessage(Color.INFO + "Din tid er alltid dag");
 			} else if (args[0].equalsIgnoreCase("natt")) {
 				player.setPlayerTime(18000L, false);
-				sender.sendMessage(Color.INFO + "Din tid er natt");
+				sender.sendMessage(Color.INFO + "Din tid er alltid natt");
 			} else {
 				player.resetPlayerTime();
 				sender.sendMessage(Color.INFO + "Din tid er lik serveren sin tid");

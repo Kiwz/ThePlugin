@@ -20,13 +20,10 @@ public class SpawnCmd {
 	}
 	
 	private boolean spawn(CommandSender sender, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = server.getPlayer(sender.getName());
-		}
+		Player player = server.getPlayer(sender.getName());
 		
 		if (player == null) {
-			sender.sendMessage(Color.WARNING + "/spawn kan bare brukes av spillere");
+			sender.sendMessage(Color.COMMAND + "/spawn " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length == 0) {
 			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 		} else {
@@ -41,13 +38,10 @@ public class SpawnCmd {
 	}
 	
 	private boolean setSpawn(CommandSender sender) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = server.getPlayer(sender.getName());
-		}
+		Player player = server.getPlayer(sender.getName());
 		
 		if (player == null) {
-			sender.sendMessage(Color.WARNING + "/spawn kan bare brukes av spillere");
+			sender.sendMessage(Color.COMMAND + "/setspawn " + Color.WARNING + "kan bare brukes av spillere");
 		} else {
 			MyWorld.getWorld(player.getWorld()).setSpawn(player.getLocation());;
 			sender.sendMessage(Color.INFO + "Ny spawn for " + Color.VARIABLE + player.getWorld().getName() + Color.INFO + " er satt her");

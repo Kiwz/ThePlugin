@@ -11,6 +11,7 @@ import net.minecraft.server.v1_7_R1.WorldServer;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.entity.Player;
 
@@ -42,13 +43,8 @@ public class MyPlayer {
 		this.muted = muted;
 	}
 	
-	public static MyPlayer getPlayer(String name) {
-		for (String key : players.keySet()) {
-			if (players.get(key).name.equalsIgnoreCase(name)) return players.get(key);
-		}
-		for (String key : players.keySet()) {
-			if (players.get(key).name.toLowerCase().startsWith(name.toLowerCase())) return players.get(key);
-		}
+	public static MyPlayer getPlayerById(String id) {
+		if (players.containsKey(id)) return players.get(id);
 		return null;
 	}
 	
@@ -58,8 +54,26 @@ public class MyPlayer {
 		return null;
 	}
 	
-	public static MyPlayer getPlayerById(String id) {
-		if (players.containsKey(id)) return players.get(id);
+	public static MyPlayer getPlayer(CommandSender sender) {
+		for (String key : players.keySet()) {
+			if (players.get(key).name.equals(sender.getName())) return players.get(key);
+		}
+		return null;
+	}
+	
+	public static MyPlayer getPlayer(String name) {
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+			if (player.getName().equalsIgnoreCase(name)) return MyPlayer.getPlayer(player);
+		}
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+			if (player.getName().toLowerCase().startsWith(name.toLowerCase())) return MyPlayer.getPlayer(player);
+		}
+		for (String key : players.keySet()) {
+			if (players.get(key).name.equalsIgnoreCase(name)) return players.get(key);
+		}
+		for (String key : players.keySet()) {
+			if (players.get(key).name.toLowerCase().startsWith(name.toLowerCase())) return players.get(key);
+		}
 		return null;
 	}
 	
@@ -83,8 +97,13 @@ public class MyPlayer {
 		return this.name;
 	}
 	
-	public String getColorName() {
-		if (Perm.isAdmin(this.name)) return Color.ADMIN + this.name + Color.INFO;
+	public static String getColorName(MyPlayer myPlayer) {
+		if (myPlayer == null) return Color.SERVER + "SERVER" + Color.INFO;
+		else return myPlayer.getColorName();
+	}
+	
+	private String getColorName() {
+		if (this.isAdmin()) return Color.ADMIN + this.name + Color.INFO;
 		return Color.PLAYER + this.name + Color.INFO;
 	}
 	
@@ -120,13 +139,23 @@ public class MyPlayer {
 		return this.muted;
 	}
 	
+	public boolean isAdmin() {
+		if (Config.getAdmins().contains(this.name)) return true;
+		if (this.getOfflinePlayer().isOp()) return true;
+        return false;
+	}
+	
+	public Player getOnlinePlayer() {
+		return Bukkit.getServer().getPlayer(this.name);
+	}
+	
 	public boolean save() {
 		if (players.containsKey(this.uuid)) return false;
 		players.put(this.uuid, this);
 		return true;
 	}
 	
-    public Player getBukkitPlayer() {
+    public Player getOfflinePlayer() {
         if (Bukkit.getServer().getPlayer(this.name) != null) {
         	return Bukkit.getServer().getPlayer(this.name);
         }
@@ -146,15 +175,6 @@ public class MyPlayer {
         }
         return player;
     }
-	
-	public static Player getOnlinePlayer(String playerName) {
-		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			if (player.getName().toLowerCase().startsWith(playerName.toLowerCase())) {
-				return Bukkit.getServer().getPlayer(player.getName());
-			}
-		}
-		return null;
-	}
     
     public static void broadcastMsg(String string) {
     	for (Player player : Bukkit.getServer().getOnlinePlayers()) {

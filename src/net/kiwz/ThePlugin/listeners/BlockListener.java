@@ -3,9 +3,9 @@ package net.kiwz.ThePlugin.listeners;
 import java.util.List;
 
 import net.kiwz.ThePlugin.utils.Color;
+import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.MyWorld;
-import net.kiwz.ThePlugin.utils.Perm;
 import net.kiwz.ThePlugin.utils.ServerManager;
 
 import org.bukkit.Bukkit;
@@ -32,22 +32,23 @@ public class BlockListener implements Listener {
 		Player player = event.getPlayer();
 		Location loc = event.getBlock().getLocation();
 		Material mat = event.getBlock().getType();
+		MyPlayer myPlayer = MyPlayer.getPlayer(player);
 		Place place = Place.getPlace(loc);
 		
 		if (place != null) {
-			if (!place.hasAccess(player)) {
+			if (!place.hasAccess(myPlayer)) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
-		} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+		} else if (!myPlayer.isAdmin() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}
 		
 		if (mat.equals(Material.DIAMOND_ORE) || mat.equals(Material.EMERALD_ORE)) {
 			for (Player thisPlayer : Bukkit.getServer().getOnlinePlayers()) {
-				if (Perm.isAdmin(thisPlayer) || thisPlayer.isOp()) {
-					thisPlayer.sendMessage(Color.PLAYER + player.getName() + Color.INFO + " fant en " + Color.VARIABLE + mat);
+				if (MyPlayer.getPlayer(thisPlayer).isAdmin()) {
+					thisPlayer.sendMessage(MyPlayer.getColorName(myPlayer) + " fant en " + Color.VARIABLE + mat);
 				}
 			}
 			String world = loc.getWorld().getName();
@@ -62,14 +63,15 @@ public class BlockListener implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		Location loc = event.getBlock().getLocation();
+		MyPlayer myPlayer = MyPlayer.getPlayer(player);
 		Place place = Place.getPlace(loc);
 		
 		if (place != null) {
-			if (!place.hasAccess(player)) {
+			if (!place.hasAccess(myPlayer)) {
 				event.setCancelled(true);
 				player.sendMessage(denyString);
 			}
-		} else if (!Perm.isAdmin(player) && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+		} else if (!myPlayer.isAdmin() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 			event.setCancelled(true);
 			player.sendMessage(denyString);
 		}

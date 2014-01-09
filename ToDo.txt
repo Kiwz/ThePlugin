@@ -1,7 +1,4 @@
 Bugs:
-/entity sletter ALT
-/feed må også gi saturation
-MySql: Endre seed i Tablet "worlds" fra VARCHAR til BIGINT (long)
 spillere er usynlig for andre etter en teleport
 
 

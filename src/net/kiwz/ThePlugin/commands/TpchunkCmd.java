@@ -19,27 +19,25 @@ public class TpchunkCmd {
 	}
 	
 	private boolean tp(CommandSender sender, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = server.getPlayer(sender.getName());
-		}
+		Player player = server.getPlayer(sender.getName());
 		
-		if (args.length != 4 || player == null) {
+		if (player == null) {
+			sender.sendMessage(Color.COMMAND + "/tpchunk " + Color.WARNING + "kan bare brukes av spillere");
+		} else if (args.length < 4 ) {
 			sender.sendMessage(Color.WARNING + "Du må skrive navnet på verdenen, chunk x, koordinat y og chunk z");
-			return true;
-		}
-		
-		MyWorld myWorld = MyWorld.getWorld(args[0]);
-		int x = Util.parseInt(args[1]);
-		int y = Util.parseInt(args[2]);
-		int z = Util.parseInt(args[3]);
-		if (myWorld == null) {
-			sender.sendMessage(Color.WARNING + args[0] + " finnes ikke");
-		} else {	
-			Chunk chunk = server.getWorld(myWorld.getName()).getChunkAt(x, z);
-			Location loc = chunk.getBlock(8, y, 8).getLocation();
-			player.teleport(loc);
-			sender.sendMessage(Color.INFO + "Du ble teleportert til ønsket chunk");
+		} else {
+			MyWorld myWorld = MyWorld.getWorld(args[0]);
+			int x = Util.parseInt(args[1]);
+			int y = Util.parseInt(args[2]);
+			int z = Util.parseInt(args[3]);
+			if (myWorld == null) {
+				sender.sendMessage(Color.VARIABLE + args[0] + Color.WARNING + " finnes ikke");
+			} else {	
+				Chunk chunk = server.getWorld(myWorld.getName()).getChunkAt(x, z);
+				Location loc = chunk.getBlock(8, y, 8).getLocation();
+				player.teleport(loc);
+				sender.sendMessage(Color.INFO + "Du ble teleportert til ønsket chunk");
+			}
 		}
 		return true;
 	}

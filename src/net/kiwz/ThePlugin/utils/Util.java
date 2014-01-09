@@ -53,7 +53,7 @@ public class Util {
     	if (playerName.length() + 4 > 16) {
     		playerName = playerName.substring(0, 12);
     	}
-        if (Perm.isAdmin(player)) {
+        if (MyPlayer.getPlayer(player).isAdmin()) {
             player.setPlayerListName(Color.ADMIN + playerName + ChatColor.WHITE);
         } else {
         	player.setPlayerListName(Color.PLAYER + playerName + ChatColor.WHITE);
@@ -100,7 +100,13 @@ public class Util {
 		return true;
 	}
 	
-	public static void sendAsPages(CommandSender sender, String pageN, int pageHeight, String about, List<String> messages) {
+	public static void sendAsPages(CommandSender sender, String pageN, int pageHeight, String about, String adminInfo, List<String> list) {
+		if (adminInfo != "") adminInfo = ChatColor.GRAY + "(" + adminInfo + ") ";
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
+		if (mySender != null) {
+			if (!mySender.isAdmin()) adminInfo = "";
+		}
+		
         int pageNumber;
         try {
         	pageNumber = Integer.parseInt(pageN);
@@ -122,7 +128,7 @@ public class Util {
     		pageWidth = ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH;
     	}
     	StringBuilder stringBuilder = new StringBuilder();
-    	for (String message : messages) {
+    	for (String message : list) {
     		stringBuilder.append(message + "\n");
     	}
     	String msg = stringBuilder.toString();
@@ -131,9 +137,11 @@ public class Util {
         
 		StringBuilder header = new StringBuilder();
 		header.append(ChatColor.YELLOW);
-		header.append("--------- ");
+		header.append("----- ");
 		header.append(ChatColor.WHITE);
 		header.append(about + " ");
+		header.append(adminInfo);
+		header.append(ChatColor.WHITE);
 		if (page.getTotalPages() > 1) {
 			header.append("(");
 			header.append(page.getPageNumber());
@@ -188,14 +196,14 @@ public class Util {
 	/**
 	 * 
 	 * @param s numbers as String
-	 * @return numbers as Int (1 if string is no number)
+	 * @return numbers as Int (0 if string is no number)
 	 */
 	public static int parseInt(String s) {
 		int i;
 		try {
 			i = Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			i = 1;
+			i = 0;
 		}
 		return i;
 	}
