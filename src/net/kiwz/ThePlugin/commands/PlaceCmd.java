@@ -75,7 +75,7 @@ public class PlaceCmd {
 					Util.sendAsPages(sender, args[1], 6, Color.PLAYER + "Eier " + Color.INFO + "[" + Color.PLACE + "Plass-Navn" + Color.INFO + "]", "", Place.getPlayerList());
 				} else {
 					myTarget = MyPlayer.getPlayer(args[1]);
-					if (mySender == null) {
+					if (myTarget == null) {
 						sendWarning(sender, Color.PLAYER + args[1] + Color.WARNING + " er ikke en spiller her");
 					} else {
 						String ownerOf = MyPlayer.getColorName(myTarget) + " eier følgende plasser: ";
@@ -410,7 +410,7 @@ public class PlaceCmd {
 		String animals = "NEI";
 		if (place.getAnimals()) animals = "JA";
 		
-		list.add(Color.INFO + "Eier: " + Color.VARIABLE + MyPlayer.getPlayerById(place.getOwner()).getName());
+		list.add(Color.INFO + "Eier: " + Color.VARIABLE + MyPlayer.getColorName(MyPlayer.getPlayerById(place.getOwner())));
 		list.add(Color.INFO + "Medlemmer: " + Color.VARIABLE + members + " ");
 		list.add(Color.INFO + "Verden: " + Color.VARIABLE + place.getCenter().getWorld().getName());
 		list.add(Color.INFO + "Sentrum: " + Color.VARIABLE + center);

@@ -1,7 +1,6 @@
 package net.kiwz.ThePlugin;
 
 import net.kiwz.ThePlugin.commands.EntityCmd;
-import net.kiwz.ThePlugin.commands.FeedCmd;
 import net.kiwz.ThePlugin.commands.FlyCmd;
 import net.kiwz.ThePlugin.commands.GmCmd;
 import net.kiwz.ThePlugin.commands.HealCmd;
@@ -49,7 +48,6 @@ public class Commands implements CommandExecutor {
 		}
 		
 		else if (c.equals("entity")) return EntityCmd.exec(sender, args);
-		else if (c.equals("feed")) return FeedCmd.exec(sender, args);
 		else if (c.equals("fly")) return FlyCmd.exec(sender, args);
 		else if (c.equals("gm")) return GmCmd.exec(sender, args);
 		else if (c.equals("heal")) return HealCmd.exec(sender, args);
@@ -61,7 +59,8 @@ public class Commands implements CommandExecutor {
 		else if (c.equals("minne")) return MemCmd.exec(sender);
 		else if (c.equals("mute")) return MuteCmd.execSet(sender, args);
 		else if (c.equals("unmute")) return MuteCmd.execUnSet(sender, args);
-		else if (c.equals("oi")) return OiCmd.exec(sender, args);
+		else if (c.equals("oe")) return OiCmd.execEnder(sender, args);
+		else if (c.equals("oi")) return OiCmd.execPlayer(sender, args);
 		else if (c.equals("plass")) return PlaceCmd.exec(sender, args);
 		else if (c.equals("pvp")) return PvpCmd.exec(sender);
 		else if (c.equals("svar")) return ReplayCmd.exec(sender, args);
@@ -71,6 +70,7 @@ public class Commands implements CommandExecutor {
 		else if (c.equals("melde")) return TellCmd.exec(sender, args);
 		else if (c.equals("tid")) return TimeCmd.exec(sender, args);
 		else if (c.equals("tp")) return TpCmd.exec(sender, args);
+		else if (c.equals("tpa")) return TpCmd.exec(sender);
 		else if (c.equals("tpchunk")) return TpchunkCmd.exec(sender, args);
 		else if (c.equals("ticks")) return TpsCmd.exec(sender, args);
 		else if (c.equals("hvem")) return WhoisCmd.exec(sender, args);

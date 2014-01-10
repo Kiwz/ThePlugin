@@ -43,7 +43,10 @@ public class SpawnCmd {
 		if (player == null) {
 			sender.sendMessage(Color.COMMAND + "/setspawn " + Color.WARNING + "kan bare brukes av spillere");
 		} else {
-			MyWorld.getWorld(player.getWorld()).setSpawn(player.getLocation());;
+			player.getWorld().setSpawnLocation(player.getLocation().getBlockX(),
+					player.getLocation().getBlockY(),
+					player.getLocation().getBlockZ());
+			MyWorld.getWorld(player.getWorld()).setSpawn(player.getLocation());
 			sender.sendMessage(Color.INFO + "Ny spawn for " + Color.VARIABLE + player.getWorld().getName() + Color.INFO + " er satt her");
 			return true;
 		}

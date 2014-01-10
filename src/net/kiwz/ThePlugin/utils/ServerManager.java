@@ -9,6 +9,7 @@ import java.util.Calendar;
 
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.ConnectToMySQL;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Marker;
@@ -52,10 +53,10 @@ public class ServerManager {
 					int sec = Calendar.getInstance().get(Calendar.SECOND);
 					if ((hour == 01 || hour == 13 || hour == 17) && (min == 55 && sec == 00 && !ServerManager.warning)) {
 						ServerManager.warning = true;
-						MyPlayer.broadcastMsg(Color.SERVER + "*** Server restarter om 5 minutter ***");
+						broadcastMsg(Color.SERVER + "*** Server restarter om 5 minutter ***");
 					}
 					if ((hour == 01 || hour == 13 || hour == 17) && (min == 59 && sec == 57 && ServerManager.warning)) {
-						MyPlayer.broadcastMsg(Color.SERVER + "*** Server restarter ***");
+						broadcastMsg(Color.SERVER + "*** Server restarter ***");
 					}
 					if ((hour == 02 || hour == 14 || hour == 18) && (min == 00 && sec == 00 && ServerManager.warning)) {
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -73,7 +74,7 @@ public class ServerManager {
 				@Override
                 public void run() {
 					long time = System.currentTimeMillis();
-					MyPlayer.broadcastMsg(Color.SERVER + "Lagrer...");
+					broadcastMsg(Color.SERVER + "Lagrer...");
 
 					new ConnectToMySQL().saveTables();
 					Bukkit.getServer().savePlayers();
@@ -82,7 +83,7 @@ public class ServerManager {
 					}
 					
 					time = System.currentTimeMillis() - time;
-					MyPlayer.broadcastMsg(Color.SERVER + "Lagring fullført (" + time + "ms)");
+					broadcastMsg(Color.SERVER + "Lagring fullført (" + time + "ms)");
 				}
 		}, period, period);
 	}
@@ -130,4 +131,10 @@ public class ServerManager {
 			}
 		});
 	}
+    
+    private static void broadcastMsg(String string) {
+    	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+    		player.sendMessage(string);
+    	}
+    }
 }

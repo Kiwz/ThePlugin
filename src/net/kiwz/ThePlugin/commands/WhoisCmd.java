@@ -8,6 +8,7 @@ import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.Util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,14 +20,14 @@ public class WhoisCmd {
 	}
 	
 	private boolean whois(CommandSender sender, String[] args) {
-		MyPlayer myPlayer = MyPlayer.getPlayer(sender);
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
 		
-		if (args.length == 0 && myPlayer == null) {
+		if (args.length == 0 && mySender == null) {
 			sender.sendMessage(Color.WARNING + "Du må skrive navnet på en spiller");
 		} else if (args.length == 0) {
-			String about = MyPlayer.getColorName(myPlayer);
-			String adminInfo = "ip: " + myPlayer.getIp();
-			List<String> list = getPlayerInfo(myPlayer);
+			String about = MyPlayer.getColorName(mySender);
+			String adminInfo = "ip: " + mySender.getIp();
+			List<String> list = getPlayerInfo(mySender, mySender);
 			Util.sendAsPages(sender, "1", 10, about, adminInfo, list);
 		} else {
 			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
@@ -35,25 +36,25 @@ public class WhoisCmd {
 			} else {
 				String about = MyPlayer.getColorName(myTarget);
 				String adminInfo = "ip: " + myTarget.getIp();
-				List<String> list = getPlayerInfo(myTarget);
+				List<String> list = getPlayerInfo(mySender, myTarget);
 				Util.sendAsPages(sender, "1", 10, about, adminInfo, list);
 			}
 		}
 		return true;
 	}
 	
-	private List<String> getPlayerInfo(MyPlayer myPlayer) {
+	private List<String> getPlayerInfo(MyPlayer mySender, MyPlayer myTarget) {
 		List<String> list = new ArrayList<String>();
-		Player player = myPlayer.getOfflinePlayer();
+		Player player = myTarget.getOfflinePlayer();
 		Location loc = player.getLocation();
-		String lastLogin = Util.getTimeFullDate(myPlayer.getLastPlayed());
-		long timePlayed = Util.getTimeHours(myPlayer.getTimePlayed());
+		String lastLogin = Util.getTimeFullDate(myTarget.getLastPlayed());
+		long timePlayed = Util.getTimeHours(myTarget.getTimePlayed());
 		String plasser = "";
-		for (Place p : Place.getPlacesByOwner(myPlayer)) {
+		for (Place p : Place.getPlacesByOwner(myTarget)) {
 			plasser = plasser + "[" + p.getColorName() + "] ";
 		}
 		String muted = "Nei";
-		if (myPlayer.isMuted()) muted = "Ja";
+		if (myTarget.isMuted()) muted = "Ja";
 		
 		list.add(Color.INFO + "Siste innlogging: " + Color.VARIABLE + lastLogin);
 		list.add(Color.INFO + "Tid spilt: " + Color.VARIABLE + timePlayed + " timer");
@@ -65,10 +66,17 @@ public class WhoisCmd {
 		list.add(Color.INFO + "Helse: " + Color.VARIABLE + player.getHealth() +  Color.INFO
 				+ " Sult: " + Color.VARIABLE + player.getFoodLevel() +  Color.INFO
 				+ " Metning: " + Color.VARIABLE + player.getSaturation());
-		list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
-				+ " X: " + Color.VARIABLE + loc.getBlockX() + Color.INFO
-				+ " Y: " + Color.VARIABLE + loc.getBlockY() + Color.INFO
-				+ " Z: " + Color.VARIABLE + loc.getBlockZ());
+		if (mySender == null || mySender.equals(myTarget) || mySender.isAdmin() || loc.getWorld().equals(Bukkit.getServer().getWorlds().get(0))) {
+			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
+					+ " X: " + Color.VARIABLE + loc.getBlockX() + Color.INFO
+					+ " Y: " + Color.VARIABLE + loc.getBlockY() + Color.INFO
+					+ " Z: " + Color.VARIABLE + loc.getBlockZ());
+		} else {
+			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
+					+ " X: " + Color.VARIABLE + "??" + Color.INFO
+					+ " Y: " + Color.VARIABLE + "??" + Color.INFO
+					+ " Z: " + Color.VARIABLE + "??");
+		}
 		return list;
 	}
 }

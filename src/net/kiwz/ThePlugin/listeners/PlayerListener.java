@@ -5,7 +5,6 @@ import java.util.HashMap;
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.commands.IgnoreCmd;
 import net.kiwz.ThePlugin.utils.Color;
-import net.kiwz.ThePlugin.utils.HandleItems;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.MyWorld;
@@ -41,6 +40,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class PlayerListener implements Listener {
 	private static HashMap<Player, Integer> playerXp = new HashMap<Player, Integer>();
@@ -303,15 +303,15 @@ public class PlayerListener implements Listener {
 					player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 				}
 			}, 10L);
-			HandleItems.giveItem(player, Material.IRON_PICKAXE, 1);
-			HandleItems.giveItem(player, Material.IRON_AXE, 1);
-			HandleItems.giveItem(player, Material.IRON_PICKAXE, 1);
-			HandleItems.giveItem(player, Material.IRON_AXE, 1);
-			HandleItems.giveItem(player, Material.COOKED_BEEF, 20);
-			HandleItems.giveItem(player, Material.GOLD_INGOT, 5);
-			HandleItems.giveItem(player, Material.WOOD, 64);
-			HandleItems.giveItem(player, Material.IRON_HELMET, 1);
-			HandleItems.giveItem(player, Material.IRON_CHESTPLATE, 1);
+			giveItem(player, Material.IRON_PICKAXE, 1);
+			giveItem(player, Material.IRON_AXE, 1);
+			giveItem(player, Material.IRON_PICKAXE, 1);
+			giveItem(player, Material.IRON_AXE, 1);
+			giveItem(player, Material.COOKED_BEEF, 20);
+			giveItem(player, Material.GOLD_INGOT, 5);
+			giveItem(player, Material.WOOD, 64);
+			giveItem(player, Material.IRON_HELMET, 1);
+			giveItem(player, Material.IRON_CHESTPLATE, 1);
 			player.sendMessage(Color.INFO + "############################################");
 			player.sendMessage(Color.INFO + "Velkommen som ny spiller på LarvikGaming.net");
 			player.sendMessage(Color.INFO + "Kjekt om du vil lese Info-Tavlen i spawnen og " + Color.HEADER + "/regler");
@@ -350,10 +350,16 @@ public class PlayerListener implements Listener {
 		long login = myPlayer.getLastPlayed();
 		long tot = myPlayer.getTimePlayed();
 		myPlayer.setTimePlayed(curr - login + tot);
-		event.setQuitMessage(MyPlayer.getColorName(myPlayer) + Color.HEADER + " logget ut");
+		event.setQuitMessage(MyPlayer.getColorName(myPlayer) + Color.WARNING + " logget ut");
 		ServerManager.logString("[CONN] " + event.getPlayer().getName() + " logget ut");
 		/*for (Player players : server.getOnlinePlayers()) {
 			players.getLocation().getWorld().strikeLightningEffect(players.getLocation());
 		}*/
+	}
+	
+	private void giveItem(Player player, Material material, int amount) {
+		PlayerInventory inventory = player.getInventory();
+		ItemStack itemstack = new ItemStack(material, amount);
+		inventory.addItem(itemstack);
 	}
 }

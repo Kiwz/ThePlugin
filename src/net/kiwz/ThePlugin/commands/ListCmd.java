@@ -17,7 +17,7 @@ public class ListCmd {
 	
 	private boolean list(CommandSender sender, String[] args) {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
-		sender.sendMessage(Color.INFO + "Det er " + players.length + "/" + server.getMaxPlayers() + " spillere online");
+		sender.sendMessage(Color.INFO + "Det er " + Color.VARIABLE + players.length + "/" + server.getMaxPlayers() + Color.INFO + " spillere online");
 		StringBuilder header = new StringBuilder();
 		for (Player player : players) {
 			header.append(MyPlayer.getColorName(MyPlayer.getPlayer(player)) + ", ");

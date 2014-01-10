@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -95,7 +94,9 @@ public class Place {
 		place.time = places.get(id).time;
 		place.name = places.get(id).name;
 		place.owner = places.get(id).owner;
-		place.members = places.get(id).members;
+		Set<String> members = new HashSet<String>();
+		members.addAll(places.get(id).members);
+		place.members = members;
 		place.center = places.get(id).center;
 		place.radius = places.get(id).radius;
 		place.spawn = places.get(id).spawn;
@@ -378,6 +379,7 @@ public class Place {
 	private boolean error(MyPlayer myPlayer) {
 		boolean op = false;
 		if (myPlayer == null) op = true;
+		else op = myPlayer.getOfflinePlayer().isOp();
 		Place place = getPlace(this.id);
 		if (place != null) {
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return true;
@@ -399,7 +401,7 @@ public class Place {
 		if (!op && this.radius > 70) return true;
 		if (!available(this).isEmpty()) return true;
 		if (!op && this.isChargeAble) {
-			if (!HandleItems.removeItem(myPlayer.getOnlinePlayer(), Material.GOLD_INGOT, 5)) return true;
+			if (!myPlayer.charge(5)) return true;
 		}
 		return false;
 	}
@@ -410,7 +412,7 @@ public class Place {
 		else op = myPlayer.getOfflinePlayer().isOp();
 		Place place = getPlace(this.id);
 		if (place != null) {
-			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";
+			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";//problemer!
 			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
 			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
 				if (getPlace(this.spawn) == null) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";

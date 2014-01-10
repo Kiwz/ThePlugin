@@ -35,13 +35,13 @@ public class EntityCmd {
 		return true;
 	}
 	
-	private int remEntities(MyPlayer myPlayer, String type, String distString) {
+	private int remEntities(MyPlayer mySender, String type, String distString) {
 		int dist = Util.parseInt(distString);
 		int amount = 0;
 		
 		Location loc = server.getWorlds().get(0).getSpawnLocation();
-		if (myPlayer != null) {
-			loc = myPlayer.getOnlinePlayer().getLocation();
+		if (mySender != null) {
+			loc = mySender.getOnlinePlayer().getLocation();
 		}
 		
 		for (Entity e : loc.getWorld().getEntities()) {

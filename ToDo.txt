@@ -1,4 +1,5 @@
 Bugs:
+Får ikke melding om at man går inn/ut av en plass dersom grensen er på x/z 0!
 spillere er usynlig for andre etter en teleport
 
 
@@ -15,8 +16,6 @@ MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
 
 Kommandoer:
 /spymsg (trenger ikke lagres, bare holdes i minne)
-/tp <spiller-navn> for vanlige spillere
-/tpa target må akseptere ved å skrive /tpa
 
 
 Plasser:

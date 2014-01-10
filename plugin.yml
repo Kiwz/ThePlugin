@@ -20,14 +20,6 @@ commands:
       /entity a <distance>
       /entity m <distance>
       /entity d <distance>
-  feed:
-    description: Mater
-    aliases: []
-    permission: ThePlugin.feed
-    permission-message: §cDu har ikke tilgang!
-    usage: |
-      /feed
-      /feed <player>
   fly:
     description: Endre flymodus
     aliases: []
@@ -35,7 +27,7 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: |
       /fly
-      /fly <player>
+      /fly <spiller-navn>
   gm:
     description: Endre GameMode
     aliases: []
@@ -43,7 +35,7 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: |
       /gm
-      /gm <player>
+      /gm <spiller-navn>
   heal:
     description: Sett til full helse
     aliases: []
@@ -51,7 +43,7 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: |
       /heal
-      /heal <player>
+      /heal <spiller-navn>
   hjelp:
     description: Viser deg hjelpe menyen
     aliases: [help]
@@ -89,7 +81,7 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: /online
   minne:
-    description: Minne bruk
+    description: Minne-bruk
     aliases: [mem]
     permission: ThePlugin.minne
     permission-message: §cDu har ikke tilgang!
@@ -101,21 +93,27 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: |
       /mute
-      /mute <player>
+      /mute <spiller-navn>
   unmute:
     description: Spilleren kan chatte igjen
     aliases: []
     permission: ThePlugin.unmute
     permission-message: §cDu har ikke tilgang!
     usage: |
-      /unmute <player>
+      /unmute <spiller-navn>
       /unmute all
+  oe:
+    description: Åpner enderchesten til en spiller
+    aliases: [openender]
+    permission: ThePlugin.openender
+    permission-message: §cDu har ikke tilgang!
+    usage: /openinv <spiller-navn>
   oi:
     description: Åpner inventaret til en spiller
     aliases: [openinv]
     permission: ThePlugin.openinv
     permission-message: §cDu har ikke tilgang!
-    usage: /openinv <player>
+    usage: /openinv <spiller-navn>
   plass:
     description: Plass kommandoer
     aliases: [p]
@@ -157,7 +155,7 @@ commands:
     aliases: [tell, msg, m, whisper]
     permission: ThePlugin.tell
     permission-message: §cDu har ikke tilgang!
-    usage: /melde <player>
+    usage: /melde <spiller-navn>
   tid:
     description: Sett din egen tid
     aliases: []
@@ -169,20 +167,25 @@ commands:
       /tid server
   tp:
     description: Teleportering
-    aliases: [t]
+    aliases: []
     permission: ThePlugin.tp
     permission-message: §cDu har ikke tilgang!
     usage: |
-      /tp <player>
-      /tp <x y z>
-      /tp <player player>
-      /tp <player x y z>
+      /tp <spiller-navn>
+      /tp <x> <y> <z>
+      /tp <spiller-navn> <spiller-navn>
+  tpa:
+    description: Akseptere en teleportering
+    aliases: []
+    permission: ThePlugin.tpa
+    permission-message: §cDu har ikke tilgang!
+    usage: /tpa
   tpchunk:
     description: Teleportering til angitt chunk
     aliases: [chunk]
     permission: ThePlugin.tpchunk
     permission-message: §cDu har ikke tilgang!
-    usage: /tpchunk <world> <x y z>
+    usage: /tpchunk <world> <Chunk-x> <y> <Chunk-z>
   ticks:
     description: Tiks pr sekund (skal være 20)
     aliases: [lag, tick]
@@ -190,13 +193,13 @@ commands:
     permission-message: §cDu har ikke tilgang!
     usage: |
       /ticks
-      /ticks <seconds>
+      /ticks <sekunder>
   hvem:
     description: Spiller info
     aliases: [whois, where]
     permission: ThePlugin.whois
     permission-message: §cDu har ikke tilgang!
-    usage: /hvem <player>
+    usage: /hvem <spiller-navn>
   world:
     description: World spesifikke kommandoer
     aliases: [w]
@@ -236,6 +239,10 @@ permissions:
   ThePlugin.tid:
     default: true
   ThePlugin.ticks:
+    default: true
+  ThePlugin.tp:
+    default: true
+  ThePlugin.tpa:
     default: true
   ThePlugin.whois:
     default: true

@@ -22,6 +22,7 @@ public class HomeCmd {
 		
 		if (mySender == null) {
 			sender.sendMessage(Color.COMMAND + "/hjem " + Color.WARNING + "kan bare brukes av spillere");
+			return true;
 		} else if (args.length == 0) {
 			home = Home.getHome(mySender);
 		} else {

@@ -11,9 +11,12 @@ import net.minecraft.server.v1_7_R1.WorldServer;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class MyPlayer {
 	private static HashMap<String, MyPlayer> players = new HashMap<String, MyPlayer>();
@@ -63,10 +66,10 @@ public class MyPlayer {
 	
 	public static MyPlayer getPlayer(String name) {
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			if (player.getName().equalsIgnoreCase(name)) return MyPlayer.getPlayer(player);
+			if (player.getName().equalsIgnoreCase(name)) return getPlayer(player);
 		}
 		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			if (player.getName().toLowerCase().startsWith(name.toLowerCase())) return MyPlayer.getPlayer(player);
+			if (player.getName().toLowerCase().startsWith(name.toLowerCase())) return getPlayer(player);
 		}
 		for (String key : players.keySet()) {
 			if (players.get(key).name.equalsIgnoreCase(name)) return players.get(key);
@@ -155,6 +158,33 @@ public class MyPlayer {
 		return true;
 	}
 	
+	public boolean canBeCharged(int amount) {
+		return this.canBeCharged(Material.GOLD_INGOT, amount);
+	}
+
+	public boolean canBeCharged(Material material, int amount) {
+		PlayerInventory inventory = this.getOfflinePlayer().getInventory();
+		if (inventory.containsAtLeast(new ItemStack(material), amount)) return true;
+		return false;
+	}
+	
+	public boolean charge(int amount) {
+		return this.charge(Material.GOLD_INGOT, amount);
+	}
+
+	public boolean charge(Material material, int amount) {
+		PlayerInventory inventory = this.getOfflinePlayer().getInventory();
+		if (inventory.containsAtLeast(new ItemStack(material), amount)) {
+			inventory.removeItem(new ItemStack(material, amount));
+			if (this.getOnlinePlayer() != null) {
+				this.getOnlinePlayer().sendMessage(Color.WARNING + "Denne handlingen kostet "
+						+ Color.VARIABLE + amount + " " + material.toString());
+			}
+			return true;
+		}
+		return false;
+	}
+	
     public Player getOfflinePlayer() {
         if (Bukkit.getServer().getPlayer(this.name) != null) {
         	return Bukkit.getServer().getPlayer(this.name);
@@ -174,11 +204,5 @@ public class MyPlayer {
         	}
         }
         return player;
-    }
-    
-    public static void broadcastMsg(String string) {
-    	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-    		player.sendMessage(string);
-    	}
     }
 }

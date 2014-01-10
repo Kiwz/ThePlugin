@@ -28,9 +28,9 @@ public class Perm {
 		atch.setPermission("ThePlugin.mute", true);
 		atch.setPermission("ThePlugin.unmute", true);
 		atch.setPermission("ThePlugin.fly", true);
+		atch.setPermission("ThePlugin.openender", true);
 		atch.setPermission("ThePlugin.openinv", true);
 		atch.setPermission("ThePlugin.pvp", true);
-		atch.setPermission("ThePlugin.tp", true);
 	}
 	
 	public static void setPermissions() {
