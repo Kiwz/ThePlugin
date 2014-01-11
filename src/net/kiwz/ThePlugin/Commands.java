@@ -16,6 +16,7 @@ import net.kiwz.ThePlugin.commands.PvpCmd;
 import net.kiwz.ThePlugin.commands.ReplayCmd;
 import net.kiwz.ThePlugin.commands.RulesCmd;
 import net.kiwz.ThePlugin.commands.SpawnCmd;
+import net.kiwz.ThePlugin.commands.SpyCmd;
 import net.kiwz.ThePlugin.commands.TellCmd;
 import net.kiwz.ThePlugin.commands.TimeCmd;
 import net.kiwz.ThePlugin.commands.TpCmd;
@@ -36,12 +37,7 @@ public class Commands implements CommandExecutor {
 
 		if (c.equalsIgnoreCase("test")) {
 			// Test her:
-			/*
-			Bukkit.getServer().getScheduler().scheduleAsyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
-				public void run() {
-					Refactor.start();
-				}
-			});*/
+			
 			// Test slutter!
 
 			return true;
@@ -63,6 +59,7 @@ public class Commands implements CommandExecutor {
 		else if (c.equals("oi")) return OiCmd.execPlayer(sender, args);
 		else if (c.equals("plass")) return PlaceCmd.exec(sender, args);
 		else if (c.equals("pvp")) return PvpCmd.exec(sender);
+		else if (c.equals("spy")) return SpyCmd.exec(sender);
 		else if (c.equals("svar")) return ReplayCmd.exec(sender, args);
 		else if (c.equals("regler")) return RulesCmd.exec(sender, args);
 		else if (c.equals("spawn")) return SpawnCmd.execGet(sender, args);

@@ -29,6 +29,7 @@ public class OiCmd {
 			} else {
 				Inventory inventory = myTarget.getOfflinePlayer().getEnderChest();
 				mySender.getOnlinePlayer().openInventory(inventory);
+				sender.sendMessage(MyPlayer.getColorName(myTarget));
 			}
 		}
 		return true;
@@ -48,6 +49,7 @@ public class OiCmd {
 			} else {
 				Inventory inventory = myTarget.getOfflinePlayer().getInventory();
 				mySender.getOnlinePlayer().openInventory(inventory);
+				sender.sendMessage(MyPlayer.getColorName(myTarget));
 			}
 		}
 		return true;

@@ -44,6 +44,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class PlayerListener implements Listener {
 	private static HashMap<Player, Integer> playerXp = new HashMap<Player, Integer>();
+	public static HashMap<String, Integer> playerDmg = new HashMap<String, Integer>();
 	private String denyString = Color.WARNING + "Du har ingen tilgang her";
 	private Server server = Bukkit.getServer();
 	
@@ -238,6 +239,10 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (playerDmg.containsKey(event.getEntity().getName())) {
+			Bukkit.getServer().getScheduler().cancelTask(playerDmg.get(event.getEntity().getName()));
+			playerDmg.remove(event.getEntity().getName());
+		}
 		playerXp.put(event.getEntity(), event.getEntity().getTotalExperience());
 		event.setDroppedExp(0);
 		event.setDeathMessage("");
@@ -345,6 +350,14 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void OnPlayerQuit(PlayerQuitEvent event) {
 		playerXp.remove(event.getPlayer());
+		if (playerDmg.containsKey(event.getPlayer().getName())) {
+			ItemStack[] items = event.getPlayer().getInventory().getContents();
+			event.getPlayer().getInventory().clear();
+			/**
+			 * TODO
+			 * items need to be dropped on ground at the players logout location
+			 */
+		}
 		MyPlayer myPlayer = MyPlayer.getPlayer(event.getPlayer());
 		long curr = (System.currentTimeMillis() / 1000);
 		long login = myPlayer.getLastPlayed();

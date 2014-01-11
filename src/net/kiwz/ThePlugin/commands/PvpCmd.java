@@ -19,11 +19,11 @@ public class PvpCmd {
 	}
 	
 	private boolean pvp(CommandSender sender) {
-		if (PvpCmd.pvpPlayers.contains(sender.getName())) {
-			PvpCmd.pvpPlayers.remove(sender.getName());
+		if (pvpPlayers.contains(sender.getName())) {
+			pvpPlayers.remove(sender.getName());
 			sender.sendMessage(Color.UNSAFE + "PvP er PÅ");
 		} else {
-			PvpCmd.pvpPlayers.add(sender.getName());
+			pvpPlayers.add(sender.getName());
 			sender.sendMessage(Color.SAFE + "PvP er AV");
 		}
 		return true;

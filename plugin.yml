@@ -126,6 +126,12 @@ commands:
     permission: ThePlugin.pvp
     permission-message: §cDu har ikke tilgang!
     usage: /pvp
+  spy:
+    description: Skru av/på mottak av ALLE private meldinger
+    aliases: [spymsg]
+    permission: ThePlugin.spy
+    permission-message: §cDu har ikke tilgang!
+    usage: /spy
   svar:
     description: Skriv privat melding tilbake
     aliases: [replay, r]

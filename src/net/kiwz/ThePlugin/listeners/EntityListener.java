@@ -2,12 +2,14 @@ package net.kiwz.ThePlugin.listeners;
 
 import java.util.List;
 
+import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.commands.PvpCmd;
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.MyWorld;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
@@ -98,6 +100,20 @@ public class EntityListener implements Listener {
 					playerAttacker.sendMessage(pvpDenyString);
 				}
 			}
+			
+			if (!event.isCancelled()) {
+				final String victimName = playerVictim.getName();
+				if (PlayerListener.playerDmg.containsKey(victimName)) {
+					Bukkit.getServer().getScheduler().cancelTask(PlayerListener.playerDmg.get(victimName));
+					PlayerListener.playerDmg.remove(victimName);
+				}
+				int scheId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
+					public void run() {
+						PlayerListener.playerDmg.remove(victimName);
+					}
+				}, 60);
+				PlayerListener.playerDmg.put(victimName, scheId);
+			}
 		}
 		
 		if (attacker instanceof Projectile && victim instanceof Player) {
@@ -116,6 +132,20 @@ public class EntityListener implements Listener {
 						event.setCancelled(true);
 						playerAttacker.sendMessage(pvpDenyString);
 					}
+				}
+				
+				if (!event.isCancelled()) {
+					final String victimName = playerVictim.getName();
+					if (PlayerListener.playerDmg.containsKey(victimName)) {
+						Bukkit.getServer().getScheduler().cancelTask(PlayerListener.playerDmg.get(victimName));
+						PlayerListener.playerDmg.remove(victimName);
+					}
+					int scheId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
+						public void run() {
+							PlayerListener.playerDmg.remove(victimName);
+						}
+					}, 60);
+					PlayerListener.playerDmg.put(victimName, scheId);
 				}
 			}
 		}

@@ -31,6 +31,7 @@ public class Perm {
 		atch.setPermission("ThePlugin.openender", true);
 		atch.setPermission("ThePlugin.openinv", true);
 		atch.setPermission("ThePlugin.pvp", true);
+		atch.setPermission("ThePlugin.spy", true);
 	}
 	
 	public static void setPermissions() {

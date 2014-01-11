@@ -34,6 +34,11 @@ public class ReplayCmd {
 			message = MyPlayer.getColorName(mySender) + Color.WHISPER + " -> " + MyPlayer.getColorName(myTarget) + Color.WHISPER + ": " + message;
 			myTarget.getOnlinePlayer().sendMessage(message);
 			sender.sendMessage(message);
+			for (MyPlayer spies : SpyCmd.getSpyPlayers()) {
+				if (!mySender.equals(spies) && !myTarget.equals(spies)) {
+					spies.getOnlinePlayer().sendMessage(Color.WARNING + "[SPY] " + message);
+				}
+			}
 			replays.put(myTarget, mySender);
 		}
 		return true;

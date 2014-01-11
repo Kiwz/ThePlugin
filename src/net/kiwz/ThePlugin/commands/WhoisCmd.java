@@ -55,11 +55,16 @@ public class WhoisCmd {
 		}
 		String muted = "Nei";
 		if (myTarget.isMuted()) muted = "Ja";
+		String spy = "Nei";
+		if (SpyCmd.getSpyPlayers().contains(myTarget)) spy = "Ja";
 		
 		list.add(Color.INFO + "Siste innlogging: " + Color.VARIABLE + lastLogin);
 		list.add(Color.INFO + "Tid spilt: " + Color.VARIABLE + timePlayed + " timer");
 		list.add(Color.INFO + "Eier av: " + plasser);
 		list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted);
+		if (mySender.isAdmin()) {
+			list.add(Color.INFO + "Spionering: " + Color.VARIABLE + spy);
+		}
 		list.add(Color.INFO + "GameMode: " + Color.VARIABLE + player.getGameMode());
 		list.add(Color.INFO + "Level: " + Color.VARIABLE + player.getLevel() +Color.INFO
 				+ " Experience: " + Color.VARIABLE + player.getTotalExperience());

@@ -15,7 +15,6 @@ MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
 
 
 Kommandoer:
-/spymsg (trenger ikke lagres, bare holdes i minne)
 
 
 Plasser:
