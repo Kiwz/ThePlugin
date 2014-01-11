@@ -1,9 +1,6 @@
 package net.kiwz.ThePlugin.listeners;
 
-import java.util.HashMap;
-
 import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.commands.IgnoreCmd;
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.MyPlayer;
@@ -43,8 +40,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class PlayerListener implements Listener {
-	private static HashMap<Player, Integer> playerXp = new HashMap<Player, Integer>();
-	public static HashMap<String, Integer> playerDmg = new HashMap<String, Integer>();
 	private String denyString = Color.WARNING + "Du har ingen tilgang her";
 	private Server server = Bukkit.getServer();
 	
@@ -222,14 +217,10 @@ public class PlayerListener implements Listener {
 			msg = MyPlayer.getColorName(myPlayer) + Color.ADMIN + ": " + ChatColor.WHITE + event.getMessage();
 		}
 		
-		for (Player thisPlayer : server.getOnlinePlayers()) {
-			MyPlayer myThis = MyPlayer.getPlayer(thisPlayer);
-			if (IgnoreCmd.getPlayers(myThis) != null) {
-				if (!IgnoreCmd.getPlayers(myThis).contains(myPlayer)) {
-					thisPlayer.sendMessage(msg);
-				}
-			} else {
-				thisPlayer.sendMessage(msg);
+		for (Player otherPlayer : server.getOnlinePlayers()) {
+			MyPlayer myOther = MyPlayer.getPlayer(otherPlayer);
+			if (!myOther.getIgnored().contains(myPlayer)) {
+				otherPlayer.sendMessage(msg);
 			}
 		}
 		
@@ -239,19 +230,20 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		if (playerDmg.containsKey(event.getEntity().getName())) {
-			Bukkit.getServer().getScheduler().cancelTask(playerDmg.get(event.getEntity().getName()));
-			playerDmg.remove(event.getEntity().getName());
+		MyPlayer myPlayer = MyPlayer.getPlayer(event.getEntity());
+		if (myPlayer.isDamaged()) {
+			Bukkit.getServer().getScheduler().cancelTask(myPlayer.getDamagedTaskId());
+			myPlayer.setDamaged(false, -1);
 		}
-		playerXp.put(event.getEntity(), event.getEntity().getTotalExperience());
+		myPlayer.setXP(event.getEntity().getTotalExperience());
 		event.setDroppedExp(0);
 		event.setDeathMessage("");
 		Location loc = event.getEntity().getLocation();
 		String world = loc.getWorld().getName();
-		String x = Double.toString(loc.getX()).replaceAll("\\..*","");
-		String y = Double.toString(loc.getY()).replaceAll("\\..*","");
-		String z = Double.toString(loc.getZ()).replaceAll("\\..*","");
-		event.getEntity().getPlayer().sendMessage(Color.WARNING + "Du døde i " + world
+		int x = loc.getBlockX();
+		int y = loc.getBlockY();
+		int z = loc.getBlockZ();
+		event.getEntity().sendMessage(Color.WARNING + "Du døde i " + Color.VARIABLE + world
 				+ Color.WARNING + " X: " + Color.VARIABLE + x + Color.WARNING + " Y: " + Color.VARIABLE + y + Color.WARNING + " Z: " + Color.VARIABLE + z);
 	}
 
@@ -260,14 +252,10 @@ public class PlayerListener implements Listener {
 		final Player player = event.getPlayer();
 		if (player.getBedSpawnLocation() == null) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
-					@Override
-	                public void run() {
+				@Override
+                public void run() {
 					player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
-					int xp = 0;
-					if (playerXp.containsKey(player)) {
-						xp = playerXp.remove(player);
-					}
-					player.giveExp(Math.min(1760, xp / 3));
+					player.giveExp(Math.min(1760, MyPlayer.getPlayer(player).getXP() / 3));
 				}
 			}, 1);
 		}
@@ -349,25 +337,16 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void OnPlayerQuit(PlayerQuitEvent event) {
-		playerXp.remove(event.getPlayer());
-		if (playerDmg.containsKey(event.getPlayer().getName())) {
-			ItemStack[] items = event.getPlayer().getInventory().getContents();
-			event.getPlayer().getInventory().clear();
-			/**
-			 * TODO
-			 * items need to be dropped on ground at the players logout location
-			 */
-		}
 		MyPlayer myPlayer = MyPlayer.getPlayer(event.getPlayer());
 		long curr = (System.currentTimeMillis() / 1000);
 		long login = myPlayer.getLastPlayed();
 		long tot = myPlayer.getTimePlayed();
 		myPlayer.setTimePlayed(curr - login + tot);
+		if (myPlayer.isDamaged()) {
+			event.getPlayer().damage(1000);
+		}
 		event.setQuitMessage(MyPlayer.getColorName(myPlayer) + Color.WARNING + " logget ut");
-		ServerManager.logString("[CONN] " + event.getPlayer().getName() + " logget ut");
-		/*for (Player players : server.getOnlinePlayers()) {
-			players.getLocation().getWorld().strikeLightningEffect(players.getLocation());
-		}*/
+		ServerManager.logString("[CONN] " + myPlayer.getName() + " logget ut");
 	}
 	
 	private void giveItem(Player player, Material material, int amount) {

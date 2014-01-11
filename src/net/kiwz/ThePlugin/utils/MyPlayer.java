@@ -2,7 +2,9 @@ package net.kiwz.ThePlugin.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.MinecraftServer;
@@ -27,6 +29,13 @@ public class MyPlayer {
 	private long lastPlayed;
 	private long timePlayed;
 	private boolean muted;
+	private MyPlayer replayTo;
+	private boolean spy;
+	private boolean pvp;
+	private Set<MyPlayer> ignored;
+	private int xp;
+	private boolean damaged;
+	private int damagedTaskId;
 	
 	public MyPlayer(Player player) {
 		this.uuid = player.getUniqueId().toString().replace("-", "");
@@ -35,6 +44,13 @@ public class MyPlayer {
 		this.lastPlayed = System.currentTimeMillis() / 1000;
 		this.timePlayed = 0;
 		this.muted = false;
+		this.replayTo = null;
+		this.spy = false;
+		this.pvp = true;
+		this.ignored = new HashSet<MyPlayer>();
+		this.xp = 0;
+		this.damaged = false;
+		this.damagedTaskId = -1;
 	}
 	
 	public MyPlayer(String uuid, String name, String ip, long lastPlayed, long timePlayed, boolean muted) {
@@ -44,6 +60,13 @@ public class MyPlayer {
 		this.lastPlayed = lastPlayed;
 		this.timePlayed = timePlayed;
 		this.muted = muted;
+		this.replayTo = null;
+		this.spy = false;
+		this.pvp = true;
+		this.ignored = new HashSet<MyPlayer>();
+		this.xp = 0;
+		this.damaged = false;
+		this.damagedTaskId = -1;
 	}
 	
 	public static MyPlayer getPlayerById(String id) {
@@ -134,12 +157,69 @@ public class MyPlayer {
 		return this.timePlayed;
 	}
 	
+	public void setReplayTo(MyPlayer replayTo) {
+		this.replayTo = replayTo;
+	}
+	
+	public MyPlayer getReplayTo() {
+		return this.replayTo;
+	}
+	
 	public void setMuted(boolean muted) {
 		this.muted = muted;
 	}
 	
 	public boolean isMuted() {
 		return this.muted;
+	}
+	
+	public void setSpy(boolean spy) {
+		this.spy = spy;
+	}
+	
+	public boolean isSpy() {
+		return this.spy;
+	}
+	
+	public void setPvp(boolean pvp) {
+		this.pvp = pvp;
+	}
+	
+	public boolean isPvp() {
+		return this.pvp;
+	}
+	
+	public boolean addIgnored(MyPlayer myIgnored) {
+		return this.ignored.add(myIgnored);
+	}
+	
+	public boolean remIgnored(MyPlayer myIgnored) {
+		return this.ignored.remove(myIgnored);
+	}
+	
+	public Set<MyPlayer> getIgnored() {
+		return this.ignored;
+	}
+	
+	public void setXP(int xp) {
+		this.xp = xp;
+	}
+	
+	public int getXP() {
+		return this.xp;
+	}
+	
+	public void setDamaged(boolean damaged, int taskId) {
+		this.damaged = damaged;
+		this.damagedTaskId = taskId;
+	}
+	
+	public boolean isDamaged() {
+		return this.damaged;
+	}
+	
+	public int getDamagedTaskId() {
+		return this.damagedTaskId;
 	}
 	
 	public boolean isAdmin() {

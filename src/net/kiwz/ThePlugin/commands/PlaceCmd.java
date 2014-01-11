@@ -118,6 +118,8 @@ public class PlaceCmd {
 			} else if (args[0].equalsIgnoreCase("spawn")) {
 				if (mySender == null) {
 					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
+				} else if (mySender.isDamaged()) {
+					sender.sendMessage(Color.WARNING + "Du kan ikke teleportere rett etter du har tatt skade");
 				} else {
 					if (place.hasAccess(mySender) || (!place.getPriv() && Util.isSpawnSafe(place.getSpawn()))) {
 						mySender.getOnlinePlayer().teleport(place.getSpawn());

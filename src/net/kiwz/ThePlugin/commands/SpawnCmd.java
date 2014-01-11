@@ -1,6 +1,7 @@
 package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.utils.Color;
+import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.MyWorld;
 
 import org.bukkit.Bukkit;
@@ -21,9 +22,12 @@ public class SpawnCmd {
 	
 	private boolean spawn(CommandSender sender, String[] args) {
 		Player player = server.getPlayer(sender.getName());
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
 		
 		if (player == null) {
 			sender.sendMessage(Color.COMMAND + "/spawn " + Color.WARNING + "kan bare brukes av spillere");
+		} else if (mySender.isDamaged()) {
+			sender.sendMessage(Color.WARNING + "Du kan ikke teleportere rett etter du har tatt skade");
 		} else if (args.length == 0) {
 			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 		} else {

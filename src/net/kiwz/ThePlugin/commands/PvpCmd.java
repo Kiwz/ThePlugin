@@ -1,30 +1,27 @@
 package net.kiwz.ThePlugin.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.kiwz.ThePlugin.utils.Color;
+import net.kiwz.ThePlugin.utils.MyPlayer;
 
 import org.bukkit.command.CommandSender;
 
 public class PvpCmd {
-	private static List<String> pvpPlayers = new ArrayList<String>();
-	
-	public static List<String> getPvpPlayers() {
-		return pvpPlayers;
-	}
 	
 	public static boolean exec(CommandSender sender) {
 		return new PvpCmd().pvp(sender);
 	}
 	
 	private boolean pvp(CommandSender sender) {
-		if (pvpPlayers.contains(sender.getName())) {
-			pvpPlayers.remove(sender.getName());
-			sender.sendMessage(Color.UNSAFE + "PvP er PÅ");
-		} else {
-			pvpPlayers.add(sender.getName());
+		MyPlayer mySender = MyPlayer.getPlayer(sender);
+		
+		if (mySender == null) {
+			sender.sendMessage(Color.COMMAND + "/pvp " + Color.WARNING + "kan bare brukes av spillere");
+		} else if (mySender.isPvp()) {
+			mySender.setPvp(false);
 			sender.sendMessage(Color.SAFE + "PvP er AV");
+		} else {
+			mySender.setPvp(true);
+			sender.sendMessage(Color.UNSAFE + "PvP er PÅ");
 		}
 		return true;
 	}

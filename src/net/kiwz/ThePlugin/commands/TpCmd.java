@@ -30,6 +30,8 @@ public class TpCmd {
 		
 		if (args.length != 2 && mySender == null) {
 			sender.sendMessage(Color.WARNING + "Spesifiser to spillere, hvem som skal bli teleportert til hvem");
+		} else if (mySender.isDamaged()) {
+			sender.sendMessage(Color.WARNING + "Du kan ikke teleportere rett etter du har tatt skade");
 		} else if (args.length == 0) {
 			sender.sendMessage(Color.WARNING + "Spesifiser en spiller");
 		} else if (args.length == 1) {

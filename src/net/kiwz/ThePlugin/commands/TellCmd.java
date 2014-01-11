@@ -2,7 +2,10 @@ package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class TellCmd {
 	public static boolean exec(CommandSender sender, String[] args) {
@@ -31,13 +34,16 @@ public class TellCmd {
 				message = MyPlayer.getColorName(mySender) + Color.WHISPER + " -> " + MyPlayer.getColorName(myTarget) + Color.WHISPER + ": " + message;
 				myTarget.getOnlinePlayer().sendMessage(message);
 				sender.sendMessage(message);
-				for (MyPlayer spies : SpyCmd.getSpyPlayers()) {
-					if (!mySender.equals(spies) && !myTarget.equals(spies)) {
-						spies.getOnlinePlayer().sendMessage(Color.WARNING + "[SPY] " + message);
+				for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+					MyPlayer mySpy = MyPlayer.getPlayer(player);
+					if (mySpy.isSpy()) {
+						player.sendMessage(Color.WARNING + "[SPY] " + message);
 					}
 				}
-				ReplayCmd.replays.put(myTarget, mySender);
-				ReplayCmd.replays.put(mySender, myTarget);
+				if (mySender != null) {
+					mySender.setReplayTo(myTarget);
+					myTarget.setReplayTo(mySender);
+				}
 			}
 		}
 		return true;

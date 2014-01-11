@@ -4,17 +4,20 @@ spillere er usynlig for andre etter en teleport
 
 
 Opprydding:
+FillWorld.class trenger en solid clean-up og re-write
 Noen linjer i /hjelp er på engelsk (f.eks den første gråe linjen)
 Bygge listeners mye bedre!
 
 
 Tillegg:
-TP cooldown på ca 3 sek etter en spiller har tatt skade av en annen spiller
-Dersom en spiller logger ut innen 2 sekunder fra han har tatt skade fra annen spiller så skal han droppe itemsa sine
 MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
 
 
 Kommandoer:
+Eget table for bannede spillere med UUID, When, Expires, Cause, Banner
+/ban
+/unban
+/kick
 
 
 Plasser:

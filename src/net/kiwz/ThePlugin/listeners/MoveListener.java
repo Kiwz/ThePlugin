@@ -88,11 +88,6 @@ public class MoveListener implements Listener {
 		Place fromPlace = Place.getPlace(fromLoc);
 		Place toPlace = Place.getPlace(toLoc);
 		
-		if (PlayerListener.playerDmg.containsKey(player.getName())) {
-			event.setCancelled(true);
-			player.sendMessage(Color.WARNING + "Du kan ikke teleportere rett etter du har tatt skade");
-		}
-		
 		if (MyWorld.getWorld(fromLoc.getWorld()).reachedBorder(toLoc)) {
 			event.setCancelled(true);
 			player.sendMessage(Color.WARNING + "Du kan ikke teleportere deg hit");

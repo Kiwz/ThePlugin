@@ -24,6 +24,7 @@ import net.kiwz.ThePlugin.commands.TpchunkCmd;
 import net.kiwz.ThePlugin.commands.TpsCmd;
 import net.kiwz.ThePlugin.commands.WhoisCmd;
 import net.kiwz.ThePlugin.commands.WorldCmd;
+import net.kiwz.ThePlugin.utils.MyPlayer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +38,9 @@ public class Commands implements CommandExecutor {
 
 		if (c.equalsIgnoreCase("test")) {
 			// Test her:
-			
+			for (MyPlayer p : MyPlayer.getPlayers()) {
+				if (p.isDamaged()) sender.sendMessage(p.getName() + " -> " + p.getDamagedTaskId());
+			}
 			// Test slutter!
 
 			return true;

@@ -31,6 +31,8 @@ public class HomeCmd {
 		
 		if (home == null) {
 			sender.sendMessage(Color.WARNING + "Fant ikke ditt hjem, bruk " + Color.VARIABLE + "/setthjem" + Color.WARNING + " for å lage nytt hjem");
+		} else if (mySender.isDamaged()) {
+			sender.sendMessage(Color.WARNING + "Du kan ikke teleportere rett etter du har tatt skade");
 		} else {
 			mySender.getOnlinePlayer().teleport(home.getLocation());
 		}

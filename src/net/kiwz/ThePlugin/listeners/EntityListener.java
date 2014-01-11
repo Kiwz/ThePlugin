@@ -3,7 +3,6 @@ package net.kiwz.ThePlugin.listeners;
 import java.util.List;
 
 import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.commands.PvpCmd;
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Place;
@@ -88,10 +87,10 @@ public class EntityListener implements Listener {
 		if (attacker instanceof Player && victim instanceof Player) {
 			playerAttacker = (Player) attacker;
 			playerVictim = (Player) victim;
-			if (PvpCmd.getPvpPlayers().contains(playerVictim.getName())) {
+			if (!MyPlayer.getPlayer(playerVictim).isPvp()) {
 				event.setCancelled(true);
 				playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade en Admin");
-			} else if (PvpCmd.getPvpPlayers().contains(playerAttacker.getName())) {
+			} else if (!MyPlayer.getPlayer(playerAttacker).isPvp()) {
 				event.setCancelled(true);
 				playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade andre når du har skrudd av pvp");
 			} else if (place != null) {
@@ -102,17 +101,17 @@ public class EntityListener implements Listener {
 			}
 			
 			if (!event.isCancelled()) {
-				final String victimName = playerVictim.getName();
-				if (PlayerListener.playerDmg.containsKey(victimName)) {
-					Bukkit.getServer().getScheduler().cancelTask(PlayerListener.playerDmg.get(victimName));
-					PlayerListener.playerDmg.remove(victimName);
+				final MyPlayer myVictim = MyPlayer.getPlayer(playerVictim);
+				if (myVictim.isDamaged()) {
+					Bukkit.getServer().getScheduler().cancelTask(myVictim.getDamagedTaskId());
+					myVictim.setDamaged(false, -1);
 				}
-				int scheId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
+				int taskId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 					public void run() {
-						PlayerListener.playerDmg.remove(victimName);
+						myVictim.setDamaged(false, -1);;
 					}
-				}, 60);
-				PlayerListener.playerDmg.put(victimName, scheId);
+				}, 100);
+				myVictim.setDamaged(true, taskId);
 			}
 		}
 		
@@ -121,10 +120,10 @@ public class EntityListener implements Listener {
 			if (shooter instanceof Player) {
 				playerAttacker = (Player) shooter;
 				playerVictim = (Player) victim;
-				if (PvpCmd.getPvpPlayers().contains(playerVictim.getName())) {
+				if (!MyPlayer.getPlayer(playerVictim).isPvp()) {
 					event.setCancelled(true);
 					playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade en Admin");
-				} else if (PvpCmd.getPvpPlayers().contains(playerAttacker.getName())) {
+				} else if (!MyPlayer.getPlayer(playerAttacker).isPvp()) {
 					event.setCancelled(true);
 					playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade andre når du har skrudd av pvp");
 				} else if (place != null) {
@@ -135,17 +134,17 @@ public class EntityListener implements Listener {
 				}
 				
 				if (!event.isCancelled()) {
-					final String victimName = playerVictim.getName();
-					if (PlayerListener.playerDmg.containsKey(victimName)) {
-						Bukkit.getServer().getScheduler().cancelTask(PlayerListener.playerDmg.get(victimName));
-						PlayerListener.playerDmg.remove(victimName);
+					final MyPlayer myVictim = MyPlayer.getPlayer(playerVictim);
+					if (myVictim.isDamaged()) {
+						Bukkit.getServer().getScheduler().cancelTask(myVictim.getDamagedTaskId());
+						myVictim.setDamaged(false, -1);
 					}
-					int scheId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
+					int taskId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 						public void run() {
-							PlayerListener.playerDmg.remove(victimName);
+							myVictim.setDamaged(false, -1);;
 						}
-					}, 60);
-					PlayerListener.playerDmg.put(victimName, scheId);
+					}, 100);
+					myVictim.setDamaged(true, taskId);
 				}
 			}
 		}
