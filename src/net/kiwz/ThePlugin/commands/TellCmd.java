@@ -36,7 +36,7 @@ public class TellCmd {
 				sender.sendMessage(message);
 				for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 					MyPlayer mySpy = MyPlayer.getPlayer(player);
-					if (mySpy.isSpy()) {
+					if (mySpy.isSpy() && (!mySpy.equals(mySender) && !mySpy.equals(myTarget))) {
 						player.sendMessage(Color.WARNING + "[SPY] " + message);
 					}
 				}

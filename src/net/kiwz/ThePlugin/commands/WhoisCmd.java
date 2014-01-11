@@ -65,7 +65,7 @@ public class WhoisCmd {
 		list.add(Color.INFO + "Eier av: " + plasser);
 		list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted);
 		if (mySender.isAdmin()) {
-			list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp + Color.INFO + "Spionering: " + Color.VARIABLE + spy);
+			list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp + Color.INFO + " Spionering: " + Color.VARIABLE + spy);
 		}
 		list.add(Color.INFO + "GameMode: " + Color.VARIABLE + player.getGameMode());
 		list.add(Color.INFO + "Level: " + Color.VARIABLE + player.getLevel() +Color.INFO

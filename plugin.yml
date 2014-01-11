@@ -47,7 +47,7 @@ commands:
   hjelp:
     description: Viser deg hjelpe menyen
     aliases: [help]
-    permission: ThePlugin.help
+    permission: ThePlugin.hjelp
     permission-message: §cDu har ikke tilgang!
     usage: |
       /hjelp
@@ -57,13 +57,13 @@ commands:
   hjem:
     description: Teleporterer deg hjem
     aliases: [h, home]
-    permission: ThePlugin.home
+    permission: ThePlugin.hjem
     permission-message: §cDu har ikke tilgang!
     usage: /hjem
   ignorer:
     description: Du slipper mas fra spesifiserte spillere
     aliases: [ignore, i, chat, c]
-    permission: ThePlugin.ignore
+    permission: ThePlugin.ignorer
     permission-message: §cDu har ikke tilgang!
     usage: |
       /ignorer
@@ -71,13 +71,13 @@ commands:
   setthjem:
     description: Setter ditt hjem der du står
     aliases: [sethjem, sethome, sh]
-    permission: ThePlugin.sethome
+    permission: ThePlugin.setthjem
     permission-message: §cDu har ikke tilgang!
     usage: /sethjem
   online:
     description: Hvem er online
     aliases: [who, list]
-    permission: ThePlugin.list
+    permission: ThePlugin.online
     permission-message: §cDu har ikke tilgang!
     usage: /online
   minne:
@@ -105,13 +105,13 @@ commands:
   oe:
     description: Åpner enderchesten til en spiller
     aliases: [openender]
-    permission: ThePlugin.openender
+    permission: ThePlugin.oe
     permission-message: §cDu har ikke tilgang!
     usage: /openinv <spiller-navn>
   oi:
     description: Åpner inventaret til en spiller
     aliases: [openinv]
-    permission: ThePlugin.openinv
+    permission: ThePlugin.oi
     permission-message: §cDu har ikke tilgang!
     usage: /openinv <spiller-navn>
   plass:
@@ -135,13 +135,13 @@ commands:
   svar:
     description: Skriv privat melding tilbake
     aliases: [replay, r]
-    permission: ThePlugin.replay
+    permission: ThePlugin.svar
     permission-message: §cDu har ikke tilgang!
     usage: /svar
   regler:
     description: Viser deg våres regler
     aliases: [rules]
-    permission: ThePlugin.rules
+    permission: ThePlugin.regler
     permission-message: §cDu har ikke tilgang!
     usage: /regler
   spawn:
@@ -159,7 +159,7 @@ commands:
   melde:
     description: Skriv privat melding
     aliases: [tell, msg, m, whisper]
-    permission: ThePlugin.tell
+    permission: ThePlugin.melde
     permission-message: §cDu har ikke tilgang!
     usage: /melde <spiller-navn>
   tid:
@@ -203,7 +203,7 @@ commands:
   hvem:
     description: Spiller info
     aliases: [whois, where]
-    permission: ThePlugin.whois
+    permission: ThePlugin.hvem
     permission-message: §cDu har ikke tilgang!
     usage: /hvem <spiller-navn>
   world:
@@ -220,27 +220,27 @@ commands:
     usage: /test
 
 permissions:
-  ThePlugin.help:
+  ThePlugin.hjelp:
     default: true
-  ThePlugin.home:
+  ThePlugin.hjem:
     default: true
-  ThePlugin.ignore:
+  ThePlugin.ignorer:
     default: true
-  ThePlugin.list:
+  ThePlugin.online:
     default: true
   ThePlugin.minne:
     default: true
   ThePlugin.plass:
     default: true
-  ThePlugin.replay:
+  ThePlugin.svar:
     default: true
-  ThePlugin.rules:
+  ThePlugin.regler:
     default: true
-  ThePlugin.sethome:
+  ThePlugin.setthjem:
     default: true
   ThePlugin.spawn:
     default: true
-  ThePlugin.tell:
+  ThePlugin.melde:
     default: true
   ThePlugin.tid:
     default: true
@@ -250,7 +250,7 @@ permissions:
     default: true
   ThePlugin.tpa:
     default: true
-  ThePlugin.whois:
+  ThePlugin.hvem:
     default: true
   bukkit.command.kill:
     default: op
