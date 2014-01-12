@@ -58,22 +58,21 @@ public class Dynmap {
         Map<String, AreaMarker> newAreaMarkers = new HashMap<String, AreaMarker>();
         Map<String, Marker> newMarkers = new HashMap<String, Marker>();
         for (Place place : Place.getPlaces()) {
-        	String markerID = "ThePlugin_" + place.getId();
-        	String label = place.getName() + " (" + place.getOwner() + ")";
         	String name = place.getName();
         	Location loc = place.getCenter();
-        	String world = loc.getWorld().getName();
-        	String owner = place.getOwner();
+        	String owner = MyPlayer.getPlayerById(place.getOwner()).getName();
         	String members = "";
         	for (String member : place.getMembers()) {
-        		members = members + member + ", ";
+        		MyPlayer myMember = MyPlayer.getPlayerById(member);
+        		if (myMember != null) members = members + myMember.getName() + ", ";
         	}
-        	if (!members.isEmpty()) {
+        	if (members.length() > 1) {
         		members = members.substring(0, members.length() - 2);
         	}
-        	double[] x = getX(loc.getBlockX(), place.getRadius() + 1);
-        	double[] z = getZ(loc.getBlockZ(), place.getRadius() + 1);
-        	boolean pvp = place.getPvP();
+
+        	String markerID = "ThePlugin_" + place.getId();
+        	String label = name + " (" + owner + ")";
+        	String world = loc.getWorld().getName();
 	        StringBuilder str = new StringBuilder();
 	        str.append("<b>");
 	        str.append("Plass: ");
@@ -86,6 +85,9 @@ public class Dynmap {
 	        str.append("<b>Medlemmer: </b>");
 	        str.append(members);
 	        String desc = str.toString();
+        	double[] x = getX(loc.getBlockX(), place.getRadius() + 1);
+        	double[] z = getZ(loc.getBlockZ(), place.getRadius() + 1);
+        	boolean pvp = place.getPvP();
 	        setAreaMarker(markerID, label, world, desc, x, z, pvp, newAreaMarkers);
 	        
 	        double SpawnX = place.getSpawn().getX();

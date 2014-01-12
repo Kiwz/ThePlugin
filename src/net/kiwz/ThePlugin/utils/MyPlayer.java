@@ -29,6 +29,13 @@ public class MyPlayer {
 	private long lastPlayed;
 	private long timePlayed;
 	private boolean muted;
+	//
+	private boolean banned;
+	private long banTime;
+	private long banExpire;
+	private String banReason;
+	private String bannedBy;
+	//
 	private MyPlayer replayTo;
 	private boolean spy;
 	private boolean pvp;

@@ -7,7 +7,7 @@
 			<attribute name="javadoc_location" value="http://jd.bukkit.org/apidocs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/workspace/git/craftbukkit.jar" sourcepath="C:/workspace/git/CraftBukkit"/>
+	<classpathentry kind="lib" path="C:/workspace/git/craftbukkit.jar"/>
 	<classpathentry kind="lib" path="C:/workspace/git/lib/dynmap-api.jar" sourcepath="C:/workspace/git/DynmapCoreAPI"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

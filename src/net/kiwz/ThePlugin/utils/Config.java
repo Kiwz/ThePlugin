@@ -84,6 +84,7 @@ public class Config {
 		filters.add("moved wrongly!");
 		filters.add("issued server command:");
 		filters.add("achievement");
+		filters.add("[WorldEdit] No compatible nms block class found.");
 		conf.addDefault(filtersPath, filters);
 		admins.add("Kiwz");
 		conf.addDefault(adminsPath, admins);
