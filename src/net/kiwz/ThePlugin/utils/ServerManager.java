@@ -93,12 +93,8 @@ public class ServerManager {
 		coreLogger.addFilter(new Filter() {
 			@Override
 			public Result filter(LogEvent event) {
-				String msg = event.getMessage().toString();
-				String filter[] = { "Server permissions file", "Reached end of stream for", "issued server command:",
-						"DSCT: socket closed", "Connection reset", "lost connection", "logged in with entity id", "moved wrongly!",
-						"Disconnecting", "achievement", "UUID" };
-				for (String thisFilter : filter) {
-					if (msg.contains(thisFilter)) {
+				for (String filter : Config.getFilters()) {
+					if (event.getMessage().toString().contains(filter)) {
 						return Result.DENY;
 					}
 				}

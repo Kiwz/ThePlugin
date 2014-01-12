@@ -53,36 +53,46 @@ public class WhoisCmd {
 		for (Place p : Place.getPlacesByOwner(myTarget)) {
 			plasser = plasser + "[" + p.getColorName() + "] ";
 		}
+		String fly = "Nei";
+		if (player.getAllowFlight()) fly = "Ja";
 		String muted = "Nei";
 		if (myTarget.isMuted()) muted = "Ja";
 		String spy = "Nei";
 		if (myTarget.isSpy()) spy = "Ja";
 		String pvp = "Nei";
-		if (myTarget.isPvp()) spy = "Ja";
+		if (myTarget.isPvp()) pvp = "Ja";
+		Place place = Place.getPlace(loc);
+		String placeName = "";
+		if (place != null) placeName = " Plass: [" + place.getColorName() + "]";
 		
-		list.add(Color.INFO + "Siste innlogging: " + Color.VARIABLE + lastLogin);
-		list.add(Color.INFO + "Tid spilt: " + Color.VARIABLE + timePlayed + " timer");
+		if (player.isBanned()) list.add(Color.WARNING + "BANNED!!!     BANNED!!!     BANNED!!!");
+		list.add(Color.INFO + "Siste innlogging: " + Color.VARIABLE + lastLogin + Color.INFO
+				+ " Tid spilt: " + Color.VARIABLE + timePlayed + " timer");
 		list.add(Color.INFO + "Eier av: " + plasser);
-		list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted);
-		if (mySender.isAdmin()) {
-			list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp + Color.INFO + " Spionering: " + Color.VARIABLE + spy);
+		if (mySender == null || mySender.isAdmin()) {
+			list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted + Color.INFO
+					+ " PvP: " + Color.VARIABLE + pvp + Color.INFO
+					+ " Spionering: " + Color.VARIABLE + spy);
+			list.add(Color.INFO + "GameMode: " + Color.VARIABLE + player.getGameMode() + Color.INFO
+					+ " Flying: " + Color.VARIABLE + fly);
+		} else {
+			list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted);
 		}
-		list.add(Color.INFO + "GameMode: " + Color.VARIABLE + player.getGameMode());
 		list.add(Color.INFO + "Level: " + Color.VARIABLE + player.getLevel() +Color.INFO
 				+ " Experience: " + Color.VARIABLE + player.getTotalExperience());
-		list.add(Color.INFO + "Helse: " + Color.VARIABLE + player.getHealth() +  Color.INFO
+		list.add(Color.INFO + "Helse: " + Color.VARIABLE + (int) player.getHealth() +  Color.INFO
 				+ " Sult: " + Color.VARIABLE + player.getFoodLevel() +  Color.INFO
-				+ " Metning: " + Color.VARIABLE + player.getSaturation());
+				+ " Metning: " + Color.VARIABLE + (int) player.getSaturation());
 		if (mySender == null || mySender.equals(myTarget) || mySender.isAdmin() || loc.getWorld().equals(Bukkit.getServer().getWorlds().get(0))) {
 			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
 					+ " X: " + Color.VARIABLE + loc.getBlockX() + Color.INFO
 					+ " Y: " + Color.VARIABLE + loc.getBlockY() + Color.INFO
-					+ " Z: " + Color.VARIABLE + loc.getBlockZ());
+					+ " Z: " + Color.VARIABLE + loc.getBlockZ() + Color.INFO + placeName);
 		} else {
 			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
 					+ " X: " + Color.VARIABLE + "??" + Color.INFO
 					+ " Y: " + Color.VARIABLE + "??" + Color.INFO
-					+ " Z: " + Color.VARIABLE + "??");
+					+ " Z: " + Color.VARIABLE + "??" + Color.INFO);
 		}
 		return list;
 	}

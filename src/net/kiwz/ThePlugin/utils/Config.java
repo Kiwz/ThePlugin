@@ -16,6 +16,7 @@ public class Config {
 	private static String database = "theplugin";
 	private static String user = "rooty";
 	private static String password = "booty";
+	private static List<String> filters = new ArrayList<String>();
 	private static List<String> admins = new ArrayList<String>();
 	private static List<String> rules = new ArrayList<String>();
 	private static List<String> areaBlocks = new ArrayList<String>();
@@ -36,6 +37,9 @@ public class Config {
 	public static String getPassword() {
 		return password;
 	}
+	public static List<String> getFilters() {
+		return filters;
+	}
 	public static List<String> getAdmins() {
 		return admins;
 	}
@@ -54,6 +58,7 @@ public class Config {
 	private String databasePath = "MySQL.Database";
 	private String userPath = "MySQL.User";
 	private String passwordPath = "MySQL.Password";
+	private String filtersPath = "Filters";
 	private String adminsPath = "Admins";
 	private String rulesPath = "Rules";
 	private String areaBlocksPath = "Place.Spawn.AreaBlocks";
@@ -68,6 +73,18 @@ public class Config {
 		conf.addDefault(databasePath, database);
 		conf.addDefault(userPath, user);
 		conf.addDefault(passwordPath, password);
+		filters.add("Server permissions file");
+		filters.add("UUID");
+		filters.add("logged in with entity id");
+		filters.add("Disconnecting");
+		filters.add("lost connection");
+		filters.add("Connection reset");
+		filters.add("DSCT: socket closed");
+		filters.add("Reached end of stream for");
+		filters.add("moved wrongly!");
+		filters.add("issued server command:");
+		filters.add("achievement");
+		conf.addDefault(filtersPath, filters);
 		admins.add("Kiwz");
 		conf.addDefault(adminsPath, admins);
 		rules.add("Regler får nummer foran seg i chatten");
@@ -86,6 +103,7 @@ public class Config {
 		database = conf.getString(databasePath, database);
 		user = conf.getString(userPath, user);
 		password = conf.getString(passwordPath, password);
+		filters = conf.getStringList(filtersPath);
 		admins = conf.getStringList(adminsPath);
 		rules = conf.getStringList(rulesPath);
 		areaBlocks = conf.getStringList(areaBlocksPath);

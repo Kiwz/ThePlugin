@@ -394,7 +394,7 @@ public class Place {
 		}
 		
 		if (this.name.equalsIgnoreCase("liste") || this.name.equalsIgnoreCase("her") || this.name.equalsIgnoreCase("spiller")) return true;
-		if (this.name.length() < 2 || this.name.length() > 16) return true;
+		if (this.name.length() < 2 || this.name.length() > 12) return true;
 		if (!op && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return true;
 		if (!op && this.radius < 10) return true;
 		if (!op && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return true;
@@ -412,7 +412,7 @@ public class Place {
 		else op = myPlayer.getOfflinePlayer().isOp();
 		Place place = getPlace(this.id);
 		if (place != null) {
-			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";//problemer!
+			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";
 			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
 			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
 				if (getPlace(this.spawn) == null) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";
@@ -424,7 +424,7 @@ public class Place {
 		}
 		
 		if (this.name.equalsIgnoreCase("liste") || this.name.equalsIgnoreCase("her") || this.name.equalsIgnoreCase("spiller")) return "Dette navnet er reservert, prøv ett annet navn";
-		if (this.name.length() < 2 || this.name.length() > 16) return "Navnet må være mellom 2 og 20 bokstaver";
+		if (this.name.length() < 2 || this.name.length() > 12) return "Navnet må være mellom 2 og 12 bokstaver";
 		if (!op && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return "Du kan ikke lage plass i denne verdenen";
 		if (!op && this.radius < 10) return "Plassen du lager må ha en radius større enn 9";
 		if (!op && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return "Plasser nære spawn (innenfor 300 blokker) må ha en radius mindre enn 16";
