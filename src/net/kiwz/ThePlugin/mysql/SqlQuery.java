@@ -76,8 +76,14 @@ public class SqlQuery {
 				long lastPlayed = res.getLong("LastPlayed");
 				long timePlayed = res.getLong("TimePlayed");
 				boolean muted = res.getBoolean("Mute");
+				boolean banned = res.getBoolean("Banned");
+				long banTime = res.getLong("BanTime");
+				long banExpire = res.getLong("BanExpire");
+				String banReason = res.getString("BanReason");
+				String bannedBy = res.getString("BannedBy");
 				
-				MyPlayer myPlayer = new MyPlayer(uuid, name, ip, lastPlayed, timePlayed, muted);
+				MyPlayer myPlayer = new MyPlayer(uuid, name, ip, lastPlayed, timePlayed, muted,
+						banned, banTime, banExpire, banReason, bannedBy);
 				myPlayer.save();
 			}
 		} catch (SQLException e) {
@@ -87,13 +93,18 @@ public class SqlQuery {
 	
 	public void insertPlayers() {
 		for (MyPlayer myPlayer : MyPlayer.getPlayers()) {
-			String query = "INSERT INTO players VALUES (?, ?, ?, ?, ?, ?) "
+			String query = "INSERT INTO players VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 					+ "ON DUPLICATE KEY UPDATE "
 					+ "Player=values(Player), "
 					+ "IP=values(IP), "
 					+ "LastPlayed=values(LastPlayed), "
 					+ "TimePlayed=values(TimePlayed), "
-					+ "Mute=values(Mute);";
+					+ "Mute=values(Mute), "
+					+ "Banned=values(Banned), "
+					+ "BanTime=values(BanTime), "
+					+ "BanExpire=values(BanExpire), "
+					+ "BanReason=values(BanReason), "
+					+ "BannedBy=values(BannedBy);";
 			try {
 				PreparedStatement prep = conn.prepareStatement(query);
 				prep.setString(1, myPlayer.getUUID());
@@ -102,6 +113,11 @@ public class SqlQuery {
 				prep.setLong(4, myPlayer.getLastPlayed());
 				prep.setLong(5, myPlayer.getTimePlayed());
 				prep.setBoolean(6, myPlayer.isMuted());
+				prep.setBoolean(7, myPlayer.isBanned());
+				prep.setLong(8, myPlayer.getBanTime());
+				prep.setLong(9, myPlayer.getBanExpire());
+				prep.setString(10, myPlayer.getBanReason());
+				prep.setString(11, myPlayer.getBannedBy());
 				prep.execute();
 			} catch (SQLException e) {
 				e.printStackTrace();

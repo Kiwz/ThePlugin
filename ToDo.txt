@@ -1,4 +1,6 @@
 Bugs:
+Fjerne perm attachement dersom man op'er eller deoper
+Mapper og filer skal ikke ha mellomrom, erstatt med _
 Får ikke melding om at man går inn/ut av en plass dersom grensen er på x/z 0!
 spillere er usynlig for andre etter en teleport
 
@@ -14,10 +16,6 @@ MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
 
 
 Kommandoer:
-Eget table for bannede spillere med UUID, When, Expires, Cause, Banner
-/ban
-/unban
-/kick
 
 
 Plasser:

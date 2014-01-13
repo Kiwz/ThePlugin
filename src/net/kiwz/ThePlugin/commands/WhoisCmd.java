@@ -65,7 +65,12 @@ public class WhoisCmd {
 		String placeName = "";
 		if (place != null) placeName = " Plass: [" + place.getColorName() + "]";
 		
-		if (player.isBanned()) list.add(Color.WARNING + "BANNED!!!     BANNED!!!     BANNED!!!");
+		if (myTarget.isBanned()) {
+			MyPlayer myBannedBy = MyPlayer.getPlayer(myTarget.getBannedBy());
+			list.add(Color.WARNING + "Bannet av: " + MyPlayer.getColorName(myBannedBy)
+					+ Color.WARNING + " Benådes: " + Color.VARIABLE + Util.getTimeFullDate(myTarget.getBanExpire() + 60));
+			list.add(Color.WARNING + "Årsak: " + Color.VARIABLE + myTarget.getBanReason());
+		}
 		list.add(Color.INFO + "Siste innlogging: " + Color.VARIABLE + lastLogin + Color.INFO
 				+ " Tid spilt: " + Color.VARIABLE + timePlayed + " timer");
 		list.add(Color.INFO + "Eier av: " + plasser);

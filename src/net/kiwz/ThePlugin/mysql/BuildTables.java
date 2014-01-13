@@ -40,6 +40,11 @@ public class BuildTables {
 			+ "LastPlayed BIGINT, "
 			+ "TimePlayed BIGINT, "
 			+ "Mute BOOLEAN, "
+			+ "Banned BOOLEAN, "
+			+ "BanTime BIGINT, "
+			+ "BanExpire BIGINT, "
+			+ "BanReason VARCHAR(255), "
+			+ "BannedBy VARCHAR(255), "
 			+ "PRIMARY KEY (ID));";
 	
 	private final static String worlds = "CREATE TABLE IF NOT EXISTS worlds "

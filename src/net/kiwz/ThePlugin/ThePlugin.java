@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ThePlugin extends JavaPlugin {
 	private final static String thisPlugin = "ThePlugin";
 	private PluginManager pm = Bukkit.getServer().getPluginManager();
+	private boolean error = false;
 	
 	public static Plugin getPlugin() {
 		return Bukkit.getServer().getPluginManager().getPlugin(thisPlugin);
@@ -25,7 +26,11 @@ public class ThePlugin extends JavaPlugin {
 	
 	public void onEnable() {
 		new Config().getConfig(this);
-		new ConnectToMySQL().loadTables();
+		if (!new ConnectToMySQL().loadTables()) {
+			error = true;
+			pm.disablePlugin(this);
+			return;
+		}
     	new Dynmap().markTheMap();
 		Perm.setPermissions();
 		ServerManager.start();
@@ -42,6 +47,6 @@ public class ThePlugin extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		new ConnectToMySQL().saveTables();
+		if (!error) new ConnectToMySQL().saveTables();
 	}
 }

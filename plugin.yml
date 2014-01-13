@@ -8,6 +8,26 @@ softdepend: [dynmap]
 loadbefore: []
 
 commands:
+  ban:
+    description: Ban en spiller (eller få banned-liste)
+    aliases: []
+    permission: ThePlugin.ban
+    permission-message: §cDu har ikke tilgang!
+    usage: |
+      /ban
+      /ban <spiller-navn> <minutter> <årsak>
+  unban:
+    description: Benåde en spiller
+    aliases: []
+    permission: ThePlugin.unban
+    permission-message: §cDu har ikke tilgang!
+    usage: /unban <spiller-navn>
+  kick:
+    description: Spark en spiller ut av serveren
+    aliases: []
+    permission: ThePlugin.kick
+    permission-message: §cDu har ikke tilgang!
+    usage: /kick <spiller-navn> <årsak>
   entity:
     description: a = animals, m = monsters, d = drops
     aliases: [e]
@@ -172,7 +192,7 @@ commands:
       /tid natt
       /tid server
   tp:
-    description: Teleportering
+    description: Teleportering (Koster 1 Gullbar)
     aliases: []
     permission: ThePlugin.tp
     permission-message: §cDu har ikke tilgang!

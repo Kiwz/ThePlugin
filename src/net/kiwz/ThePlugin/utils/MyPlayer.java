@@ -29,13 +29,11 @@ public class MyPlayer {
 	private long lastPlayed;
 	private long timePlayed;
 	private boolean muted;
-	//
 	private boolean banned;
 	private long banTime;
 	private long banExpire;
 	private String banReason;
 	private String bannedBy;
-	//
 	private MyPlayer replayTo;
 	private boolean spy;
 	private boolean pvp;
@@ -51,6 +49,11 @@ public class MyPlayer {
 		this.lastPlayed = System.currentTimeMillis() / 1000;
 		this.timePlayed = 0;
 		this.muted = false;
+		this.banned = false;
+		this.banTime = 0;
+		this.banExpire = 0;
+		this.banReason = "";
+		this.bannedBy = "";
 		this.replayTo = null;
 		this.spy = false;
 		this.pvp = true;
@@ -60,13 +63,19 @@ public class MyPlayer {
 		this.damagedTaskId = -1;
 	}
 	
-	public MyPlayer(String uuid, String name, String ip, long lastPlayed, long timePlayed, boolean muted) {
+	public MyPlayer(String uuid, String name, String ip, long lastPlayed, long timePlayed, boolean muted,
+			boolean banned, long banTime, long banExpire, String banReason, String bannedBy) {
 		this.uuid = uuid;
 		this.name = name;
 		this.ip = ip;
 		this.lastPlayed = lastPlayed;
 		this.timePlayed = timePlayed;
 		this.muted = muted;
+		this.banned = banned;
+		this.banTime = banTime;
+		this.banExpire = banExpire;
+		this.banReason = banReason;
+		this.bannedBy = bannedBy;
 		this.replayTo = null;
 		this.spy = false;
 		this.pvp = true;
@@ -178,6 +187,34 @@ public class MyPlayer {
 	
 	public boolean isMuted() {
 		return this.muted;
+	}
+	
+	public void setBanned(boolean banned, long banExpire, String banReason, String bannedBy) {
+		this.banned = banned;
+		this.banTime = System.currentTimeMillis() / 1000;
+		this.banExpire = banExpire;
+		this.banReason = banReason;
+		this.bannedBy = bannedBy;
+	}
+	
+	public boolean isBanned() {
+		return this.banned;
+	}
+	
+	public long getBanTime() {
+		return this.banTime;
+	}
+	
+	public long getBanExpire() {
+		return this.banExpire;
+	}
+	
+	public String getBanReason() {
+		return this.banReason;
+	}
+	
+	public String getBannedBy() {
+		return this.bannedBy;
 	}
 	
 	public void setSpy(boolean spy) {

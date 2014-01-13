@@ -29,7 +29,7 @@ public class OiCmd {
 			} else {
 				Inventory inventory = myTarget.getOfflinePlayer().getEnderChest();
 				mySender.getOnlinePlayer().openInventory(inventory);
-				sender.sendMessage(MyPlayer.getColorName(myTarget));
+				sender.sendMessage("/openender for spiller: " + MyPlayer.getColorName(myTarget));
 			}
 		}
 		return true;
@@ -49,7 +49,7 @@ public class OiCmd {
 			} else {
 				Inventory inventory = myTarget.getOfflinePlayer().getInventory();
 				mySender.getOnlinePlayer().openInventory(inventory);
-				sender.sendMessage(MyPlayer.getColorName(myTarget));
+				sender.sendMessage("/openinv for spiller: " + MyPlayer.getColorName(myTarget));
 			}
 		}
 		return true;

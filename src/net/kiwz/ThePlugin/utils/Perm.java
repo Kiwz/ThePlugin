@@ -21,10 +21,9 @@ public class Perm {
 	public static void setAdminPermissions(Player player) {
 		PermissionAttachment atch = player.addAttachment(ThePlugin.getPlugin());
 		atch.setPermission("worldedit.navigation.jumpto.tool", true);
-		atch.setPermission("bukkit.command.ban", true);
-		atch.setPermission("bukkit.command.ban.list", true);
-		atch.setPermission("bukkit.command.unban", true);
-		atch.setPermission("bukkit.command.kick", true);
+		atch.setPermission("ThePlugin.ban", true);
+		atch.setPermission("ThePlugin.unban", true);
+		atch.setPermission("ThePlugin.kick", true);
 		atch.setPermission("ThePlugin.mute", true);
 		atch.setPermission("ThePlugin.unmute", true);
 		atch.setPermission("ThePlugin.fly", true);

@@ -24,7 +24,7 @@ public class Util {
 	
 	public static String getTimeFullDate(long unix) {
 		Date date = new Date(unix*1000L);
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		String formattedDate = sdf.format(date);
 		return formattedDate;
 	}
@@ -101,11 +101,9 @@ public class Util {
 	}
 	
 	public static void sendAsPages(CommandSender sender, String pageN, int pageHeight, String about, String adminInfo, List<String> list) {
-		if (adminInfo != "") adminInfo = ChatColor.GRAY + "(" + adminInfo + ") ";
 		MyPlayer mySender = MyPlayer.getPlayer(sender);
-		if (mySender != null) {
-			if (!mySender.isAdmin()) adminInfo = "";
-		}
+		if ((mySender == null || mySender.isAdmin()) && adminInfo != "") adminInfo = "(" + adminInfo + ") ";
+		else adminInfo = "";
 		
         int pageNumber;
         try {
@@ -140,6 +138,7 @@ public class Util {
 		header.append("----- ");
 		header.append(ChatColor.WHITE);
 		header.append(about + " ");
+		header.append(ChatColor.GRAY);
 		header.append(adminInfo);
 		header.append(ChatColor.WHITE);
 		if (page.getTotalPages() > 1) {

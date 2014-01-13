@@ -26,9 +26,68 @@ public class ServerManager {
 	
 	public static void start() {
 		ServerManager sm = new ServerManager();
+		sm.unban();
+	    sm.save();
 	    sm.autoStop();
-	    sm.save(10L);
 	    sm.setFilter();
+	}
+	
+	private void unban() {
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(ThePlugin.getPlugin(), new Runnable() {
+			public void run() {
+				for (MyPlayer myPlayer : MyPlayer.getPlayers()) {
+					if (myPlayer.isBanned() && myPlayer.getBanExpire() < System.currentTimeMillis() / 1000) {
+						myPlayer.setBanned(false, 0, "", "");
+					}
+				}
+			}
+		}, 20, 200);
+	}
+	
+	private void save() {
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(ThePlugin.getPlugin(), new Runnable() {
+			@Override
+            public void run() {
+				new ConnectToMySQL().saveTables();
+			}
+		}, 200, 200);
+		
+		Bukkit.getServer().getScheduler().runTaskTimer(ThePlugin.getPlugin(), new Runnable() {
+			@Override
+            public void run() {
+				long time = System.currentTimeMillis();
+				broadcastMsg(Color.SERVER + "Lagrer...");
+				Bukkit.getServer().savePlayers();
+				for (World world : Bukkit.getWorlds()) {
+					world.save();
+				}
+				time = System.currentTimeMillis() - time;
+				broadcastMsg(Color.SERVER + "Lagring fullført (" + time + "ms)");
+			}
+		}, 12000, 12000);
+	}
+	
+	private void autoStop() {
+		Bukkit.getServer().getScheduler().runTaskTimer(ThePlugin.getPlugin(), new Runnable() {
+            public void run() {
+				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+				int min = Calendar.getInstance().get(Calendar.MINUTE);
+				int sec = Calendar.getInstance().get(Calendar.SECOND);
+				if ((hour == 01 || hour == 13 || hour == 17) && (min == 55 && sec == 00 && !ServerManager.warning)) {
+					ServerManager.warning = true;
+					broadcastMsg(Color.SERVER + "*** Server restarter om 5 minutter ***");
+				}
+				if ((hour == 01 || hour == 13 || hour == 17) && (min == 59 && sec == 57 && ServerManager.warning)) {
+					broadcastMsg(Color.SERVER + "*** Server restarter ***");
+				}
+				if ((hour == 02 || hour == 14 || hour == 18) && (min == 00 && sec == 00 && ServerManager.warning)) {
+					for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+						player.kickPlayer("Serveren restarter, kom tilbake om 1 minutt");
+					}
+					Bukkit.shutdown();
+				}
+			}
+		}, 28800, 10);
 	}
 	
 	public static void logString(String string) {
@@ -42,50 +101,6 @@ public class ServerManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void autoStop() {
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(ThePlugin.getPlugin(), new Runnable() {
-				@Override
-                public void run() {
-					int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-					int min = Calendar.getInstance().get(Calendar.MINUTE);
-					int sec = Calendar.getInstance().get(Calendar.SECOND);
-					if ((hour == 01 || hour == 13 || hour == 17) && (min == 55 && sec == 00 && !ServerManager.warning)) {
-						ServerManager.warning = true;
-						broadcastMsg(Color.SERVER + "*** Server restarter om 5 minutter ***");
-					}
-					if ((hour == 01 || hour == 13 || hour == 17) && (min == 59 && sec == 57 && ServerManager.warning)) {
-						broadcastMsg(Color.SERVER + "*** Server restarter ***");
-					}
-					if ((hour == 02 || hour == 14 || hour == 18) && (min == 00 && sec == 00 && ServerManager.warning)) {
-						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-							player.kickPlayer("Serveren restarter, kom tilbake om 1 minutt");
-						}
-						Bukkit.shutdown();
-					}
-				}
-		}, 28800L, 10L);
-	}
-	
-	private void save(long period) {
-		period = period * 1200;
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(ThePlugin.getPlugin(), new Runnable() {
-				@Override
-                public void run() {
-					long time = System.currentTimeMillis();
-					broadcastMsg(Color.SERVER + "Lagrer...");
-
-					new ConnectToMySQL().saveTables();
-					Bukkit.getServer().savePlayers();
-					for (World world : Bukkit.getWorlds()) {
-						world.save();
-					}
-					
-					time = System.currentTimeMillis() - time;
-					broadcastMsg(Color.SERVER + "Lagring fullført (" + time + "ms)");
-				}
-		}, period, period);
 	}
 	
 	private void setFilter() {
@@ -128,7 +143,7 @@ public class ServerManager {
 		});
 	}
     
-    private static void broadcastMsg(String string) {
+    private void broadcastMsg(String string) {
     	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
     		player.sendMessage(string);
     	}

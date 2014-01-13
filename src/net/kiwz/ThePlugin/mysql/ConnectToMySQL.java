@@ -22,13 +22,13 @@ public class ConnectToMySQL {
     private final String password = Config.getPassword();
     private Connection connection = null;
     
-    public void loadTables() {
+    public boolean loadTables() {
 		Connection conn = openConnection();
 		if (conn == null) {
 			plugin.getLogger().severe(Ansi.ansi().fg(Ansi.Color.RED) + "Ingen database funnet, aktiverer White-List!"
 					+ Ansi.ansi().fg(Ansi.Color.DEFAULT));
 			Bukkit.getServer().setWhitelist(true);
-			return;
+			return false;
 		}
 		BuildTables.createTables(conn);
 		SqlQuery query = new SqlQuery(conn);
@@ -38,6 +38,7 @@ public class ConnectToMySQL {
 		query.selectHomes();
 		query.selectPlaces();
 		closeConnection(conn);
+		return true;
     }
     
     public void saveTables() {

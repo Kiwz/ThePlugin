@@ -32,6 +32,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.help.HelpTopic;
@@ -175,7 +176,7 @@ public class PlayerListener implements Listener {
 			}
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (!event.isCancelled()) {
@@ -198,7 +199,7 @@ public class PlayerListener implements Listener {
 	    	}
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		//event.setFormat("%s: %s");
@@ -246,7 +247,7 @@ public class PlayerListener implements Listener {
 		event.getEntity().sendMessage(Color.WARNING + "Du døde i " + Color.VARIABLE + world
 				+ Color.WARNING + " X: " + Color.VARIABLE + x + Color.WARNING + " Y: " + Color.VARIABLE + y + Color.WARNING + " Z: " + Color.VARIABLE + z);
 	}
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		final Player player = event.getPlayer();
@@ -260,7 +261,7 @@ public class PlayerListener implements Listener {
 			}, 1);
 		}
 	}
-
+	
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
@@ -334,7 +335,19 @@ public class PlayerListener implements Listener {
 		ServerManager.logString("[CONN] " + log);
         server.getLogger().info(log);
 	}
-
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+		Player player = event.getPlayer();
+		MyPlayer myPlayer = MyPlayer.getPlayer(player);
+		MyPlayer myBannedBy = MyPlayer.getPlayer(myPlayer.getBannedBy());
+		if (myPlayer.isBanned()) {
+			event.disallow(PlayerLoginEvent.Result.KICK_BANNED, Color.WARNING + "Du ble bannet av " + MyPlayer.getColorName(myBannedBy)
+					+ Color.WARNING + "\nKom tilbake igjen " + Color.VARIABLE + Util.getTimeFullDate(myPlayer.getBanExpire() + 60)
+					+ Color.WARNING + "\nBegrunnelse: " + Color.VARIABLE + myPlayer.getBanReason());
+		}
+	}
+	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void OnPlayerQuit(PlayerQuitEvent event) {
 		MyPlayer myPlayer = MyPlayer.getPlayer(event.getPlayer());
