@@ -340,11 +340,13 @@ public class PlayerListener implements Listener {
     public void onPlayerLogin(PlayerLoginEvent event) {
 		Player player = event.getPlayer();
 		MyPlayer myPlayer = MyPlayer.getPlayer(player);
-		MyPlayer myBannedBy = MyPlayer.getPlayer(myPlayer.getBannedBy());
-		if (myPlayer.isBanned()) {
-			event.disallow(PlayerLoginEvent.Result.KICK_BANNED, Color.WARNING + "Du ble bannet av " + MyPlayer.getColorName(myBannedBy)
-					+ Color.WARNING + "\nKom tilbake igjen " + Color.VARIABLE + Util.getTimeFullDate(myPlayer.getBanExpire() + 60)
-					+ Color.WARNING + "\nBegrunnelse: " + Color.VARIABLE + myPlayer.getBanReason());
+		if (myPlayer != null) {
+			if (myPlayer.isBanned()) {
+				MyPlayer myBannedBy = MyPlayer.getPlayer(myPlayer.getBannedBy());
+				event.disallow(PlayerLoginEvent.Result.KICK_BANNED, Color.WARNING + "Du ble bannet av " + MyPlayer.getColorName(myBannedBy)
+						+ Color.WARNING + "\nKom tilbake igjen " + Color.VARIABLE + Util.getTimeFullDate(myPlayer.getBanExpire() + 60)
+						+ Color.WARNING + "\nBegrunnelse: " + Color.VARIABLE + myPlayer.getBanReason());
+			}
 		}
 	}
 	
