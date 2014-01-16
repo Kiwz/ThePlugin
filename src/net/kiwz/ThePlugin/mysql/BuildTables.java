@@ -47,6 +47,12 @@ public class BuildTables {
 			+ "BannedBy VARCHAR(255), "
 			+ "PRIMARY KEY (ID));";
 	
+	private final static String woolChest = "CREATE TABLE IF NOT EXISTS woolchests "
+			+ "(Owner VARCHAR(255), "
+			+ "Chest SMALLINT, "
+			+ "Content MEDIUMTEXT, "
+			+ "PRIMARY KEY (Owner, Chest));";
+	
 	private final static String worlds = "CREATE TABLE IF NOT EXISTS worlds "
 			+ "(World VARCHAR(255), "
 			+ "Environment VARCHAR(255), "
@@ -79,6 +85,10 @@ public class BuildTables {
 			Statement stmtPlayers = conn.createStatement();
 			stmtPlayers.executeUpdate(players);
 			stmtPlayers.close();
+	
+			Statement stmtWoolChest = conn.createStatement();
+			stmtWoolChest.executeUpdate(woolChest);
+			stmtWoolChest.close();
 	
 			Statement stmtWorlds = conn.createStatement();
 			stmtWorlds.executeUpdate(worlds);

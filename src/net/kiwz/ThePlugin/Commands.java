@@ -25,7 +25,6 @@ import net.kiwz.ThePlugin.commands.TpchunkCmd;
 import net.kiwz.ThePlugin.commands.TpsCmd;
 import net.kiwz.ThePlugin.commands.WhoisCmd;
 import net.kiwz.ThePlugin.commands.WorldCmd;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

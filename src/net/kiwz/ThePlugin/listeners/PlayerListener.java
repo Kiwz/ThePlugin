@@ -8,6 +8,7 @@ import net.kiwz.ThePlugin.utils.MyWorld;
 import net.kiwz.ThePlugin.utils.Perm;
 import net.kiwz.ThePlugin.utils.ServerManager;
 import net.kiwz.ThePlugin.utils.Util;
+import net.kiwz.ThePlugin.utils.WoolChest;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -62,6 +63,7 @@ public class PlayerListener implements Listener {
 		Material sPlate = Material.STONE_PLATE;
 		Material iPlate = Material.IRON_PLATE;
 		Material gPlate = Material.GOLD_PLATE;
+		Material wool = Material.WOOL;
 		
 		if (!MyWorld.getWorld(block.getWorld()).getTrample() && event.getAction().equals(Action.PHYSICAL)) {
 			if ((block.getType().equals(soil)) || (block.getType().equals(crops))) {
@@ -75,8 +77,24 @@ public class PlayerListener implements Listener {
 			Material clickedBlock = event.getClickedBlock().getType();
 			Material heldItem = player.getItemInHand().getType();
 			Place place = Place.getPlace(clickedBlockLoc);
-			
+
 			if (clickedBlock.equals(wDoor)) {
+				return;
+			}
+			
+			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && heldItem == Material.AIR && clickedBlock == wool) {
+				short damage = event.getClickedBlock().getState().getData().toItemStack().getDurability();
+				WoolChest woolChest = WoolChest.getWoolChest(myPlayer.getWoolChestOwner(), damage);
+				if (myPlayer == myPlayer.getWoolChestOwner() && woolChest == null) {
+					woolChest = new WoolChest(myPlayer, damage);
+					woolChest.save();
+				}
+				
+				if (woolChest == null){
+					player.sendMessage(MyPlayer.getColorName(myPlayer.getWoolChestOwner()) + Color.WARNING + " har ikke åpnet denne kisten enda");
+				} else {
+					player.openInventory(woolChest.getInventory());
+				}
 				return;
 			}
 			
@@ -164,14 +182,12 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onInventoryClose(InventoryCloseEvent event) {
-		Inventory inv = event.getView().getTopInventory();
-		InventoryType invType = inv.getType();
-		if (invType.equals(InventoryType.PLAYER)) {
-			Player holder = (Player) inv.getHolder();
-			if (!holder.isOnline()) {
-				ItemStack[] content = inv.getHolder().getInventory().getContents();
-				Player player = MyPlayer.getPlayer(holder.getName()).getOfflinePlayer();
-				player.getInventory().setContents(content);
+		Inventory inventory = event.getView().getTopInventory();
+		if (inventory.getType() == InventoryType.PLAYER) {
+			Player owner = (Player) inventory.getHolder();
+			if (!owner.isOnline()) {
+				Player player = MyPlayer.getPlayer(owner).getOfflinePlayer();
+				player.getInventory().setContents(inventory.getContents());
 				player.saveData();
 			}
 		}

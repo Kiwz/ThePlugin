@@ -37,6 +37,7 @@ public class ConnectToMySQL {
 		query.selectPlayers();
 		query.selectHomes();
 		query.selectPlaces();
+		query.selectWoolChests();
 		closeConnection(conn);
 		return true;
     }
@@ -49,6 +50,7 @@ public class ConnectToMySQL {
 		query.insertWorlds();
 		query.insertHomes();
 		query.insertPlaces();
+		query.insertWoolChests();
 		closeConnection(conn);
     }
 

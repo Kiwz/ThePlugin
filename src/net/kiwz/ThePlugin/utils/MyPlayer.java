@@ -41,6 +41,7 @@ public class MyPlayer {
 	private int xp;
 	private boolean damaged;
 	private int damagedTaskId;
+	private MyPlayer woolChestOwner;
 	
 	public MyPlayer(Player player) {
 		this.uuid = player.getUniqueId().toString().replace("-", "");
@@ -61,6 +62,7 @@ public class MyPlayer {
 		this.xp = 0;
 		this.damaged = false;
 		this.damagedTaskId = -1;
+		this.woolChestOwner = this;
 	}
 	
 	public MyPlayer(String uuid, String name, String ip, long lastPlayed, long timePlayed, boolean muted,
@@ -83,6 +85,7 @@ public class MyPlayer {
 		this.xp = 0;
 		this.damaged = false;
 		this.damagedTaskId = -1;
+		this.woolChestOwner = this;
 	}
 	
 	public static MyPlayer getPlayerById(String id) {
@@ -264,6 +267,14 @@ public class MyPlayer {
 	
 	public int getDamagedTaskId() {
 		return this.damagedTaskId;
+	}
+	
+	public void setWoolChestOwner(MyPlayer myPlayer) {
+		this.woolChestOwner = myPlayer;
+	}
+	
+	public MyPlayer getWoolChestOwner() {
+		return this.woolChestOwner;
 	}
 	
 	public boolean isAdmin() {

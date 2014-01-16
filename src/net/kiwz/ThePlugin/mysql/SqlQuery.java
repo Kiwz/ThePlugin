@@ -10,6 +10,7 @@ import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.MyWorld;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.Util;
+import net.kiwz.ThePlugin.utils.WoolChest;
 
 public class SqlQuery {
 	Connection conn;
@@ -209,6 +210,39 @@ public class SqlQuery {
 				prep.setBoolean(15, place.getAnimals());
 				prep.setString(16, place.getEnter());
 				prep.setString(17, place.getLeave());
+				prep.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void selectWoolChests() {
+		try {
+			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM woolchests;");
+			while (res.next()) {
+				String uuid = res.getString("Owner");
+				short damage = res.getShort("Chest");
+				String items = res.getString("Content");
+				
+				WoolChest woolChest = new WoolChest(uuid, damage);
+				woolChest.save(items);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertWoolChests() {
+		for (WoolChest woolChest : WoolChest.getWoolChests()) {
+			String query = "INSERT INTO woolchests VALUES (?, ?, ?) "
+					+ "ON DUPLICATE KEY UPDATE "
+					+ "Content=values(Content);";
+			try {
+				PreparedStatement prep = conn.prepareStatement(query);
+				prep.setString(1, woolChest.getUUID());
+				prep.setShort(2, woolChest.getDamage());
+				prep.setString(3, woolChest.getItems());
 				prep.execute();
 			} catch (SQLException e) {
 				e.printStackTrace();
