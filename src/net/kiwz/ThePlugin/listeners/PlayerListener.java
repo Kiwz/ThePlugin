@@ -83,11 +83,10 @@ public class PlayerListener implements Listener {
 			}
 			
 			if (event.getAction() == Action.RIGHT_CLICK_BLOCK && heldItem == Material.AIR && clickedBlock == wool) {
-				short damage = event.getClickedBlock().getState().getData().toItemStack().getDurability();
-				WoolChest woolChest = WoolChest.getWoolChest(myPlayer.getWoolChestOwner(), damage);
+				short chest = event.getClickedBlock().getState().getData().toItemStack().getDurability();
+				WoolChest woolChest = WoolChest.getWoolChest(myPlayer.getWoolChestOwner(), chest);
 				if (myPlayer == myPlayer.getWoolChestOwner() && woolChest == null) {
-					woolChest = new WoolChest(myPlayer, damage);
-					woolChest.save();
+					woolChest = new WoolChest(myPlayer, chest);
 				}
 				
 				if (woolChest == null){

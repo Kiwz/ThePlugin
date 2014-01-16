@@ -13,24 +13,15 @@ public class WoolChest {
 	private static HashMap<String, WoolChest> map = new HashMap<String, WoolChest>();
 	
 	private String uuid;
-	private short damage;
+	private short chest;
 	private Inventory inventory;
 
 	
-	public WoolChest(MyPlayer myPlayer, short damage) {
+	public WoolChest(MyPlayer myPlayer, short chest) {
 		this.uuid = myPlayer.getUUID();
-		this.damage = damage;
-		this.inventory = createInventory(myPlayer, damage);
-	}
-	
-	public WoolChest(String uuid, short damage) {
-		this.uuid = uuid;
-		this.damage = damage;
-		this.inventory = createInventory(MyPlayer.getPlayerById(uuid), damage);
-	}
-	
-	public static WoolChest getWoolChest(MyPlayer myPlayer, short damage) {
-		return map.get(myPlayer.getWoolChestOwner().getUUID() + damage);
+		this.chest = chest;
+		this.inventory = createInventory(myPlayer, chest);
+		map.put(uuid + chest, this);
 	}
 	
 	public static List<WoolChest> getWoolChests() {
@@ -41,17 +32,41 @@ public class WoolChest {
 		return list;
 	}
 	
+	public static WoolChest getWoolChest(MyPlayer myPlayer, short chest) {
+		return map.get(myPlayer.getWoolChestOwner().getUUID() + chest);
+	}
+	
 	public String getUUID() {
 		return uuid;
 	}
 	
-	public short getDamage() {
-		return damage;
+	public short getChest() {
+		return chest;
+	}
+	
+	public void setInventory(int index, String material, int amount, short damage, String enchants) {
+		ItemStack item = new ItemStack(Material.getMaterial(material), amount, damage);
+		if (enchants != "") {
+			String[] enchant = enchants.split(" ");
+			for (int i = 0; enchant.length > i; i++) {
+				Enchantment ench = Enchantment.getByName(enchant[i]);
+				i++;
+				int level = Integer.parseInt(enchant[i]);
+				item.addEnchantment(ench, level);
+			}
+		}
+		inventory.setItem(index, item);
 	}
 	
 	public Inventory getInventory() {
 		return inventory;
 	}
+	
+	private Inventory createInventory(MyPlayer myPlayer, short chest) {
+		return Bukkit.getServer().createInventory(null, 54, Color.INFO + "Ullkiste " + chest + " (" + myPlayer.getName() + ")");
+	}
+	
+	/*
 	
 	public String getItems() {
 		String items = "";
@@ -77,10 +92,6 @@ public class WoolChest {
 		return items;
 	}
 	
-	public void save() {
-		map.put(uuid + damage , this);
-	}
-	
 	public void save(String items) {
 		ItemStack[] itemStacks = new ItemStack[54];
 		for (String slots : items.split(":")) {
@@ -103,10 +114,6 @@ public class WoolChest {
 		}
 		
 		inventory.setContents(itemStacks);
-		map.put(uuid + damage , this);
-	}
-	
-	private Inventory createInventory(MyPlayer myPlayer, short damage) {
-		return Bukkit.getServer().createInventory(null, 54, Color.INFO + "Ullkiste " + damage + " (" + myPlayer.getName() + ")");
-	}
+		map.put(uuid + chest , this);
+	}*/
 }

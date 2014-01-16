@@ -5,6 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import net.kiwz.ThePlugin.utils.Home;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.MyWorld;
@@ -221,12 +225,19 @@ public class SqlQuery {
 		try {
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM woolchests;");
 			while (res.next()) {
-				String uuid = res.getString("Owner");
-				short damage = res.getShort("Chest");
-				String items = res.getString("Content");
+				MyPlayer myPlayer = MyPlayer.getPlayerById(res.getString("Owner"));
+				short chest = res.getShort("Chest");
+				int index = res.getInt("Index_");
+				String material = res.getString("Material");
+				int amount = res.getInt("Amount");
+				short damage = res.getShort("Damage");
+				String enchants = res.getString("Enchants");
 				
-				WoolChest woolChest = new WoolChest(uuid, damage);
-				woolChest.save(items);
+				WoolChest woolChest = WoolChest.getWoolChest(myPlayer, chest);
+				if (woolChest == null) {
+					woolChest = new WoolChest(myPlayer, chest);
+				}
+				woolChest.setInventory(index, material, amount, damage, enchants);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -235,17 +246,45 @@ public class SqlQuery {
 	
 	public void insertWoolChests() {
 		for (WoolChest woolChest : WoolChest.getWoolChests()) {
-			String query = "INSERT INTO woolchests VALUES (?, ?, ?) "
-					+ "ON DUPLICATE KEY UPDATE "
-					+ "Content=values(Content);";
-			try {
-				PreparedStatement prep = conn.prepareStatement(query);
-				prep.setString(1, woolChest.getUUID());
-				prep.setShort(2, woolChest.getDamage());
-				prep.setString(3, woolChest.getItems());
-				prep.execute();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			Inventory inventory = woolChest.getInventory();
+			for (int index = 0; inventory.getContents().length > index; index++) {
+				ItemStack itemStack = inventory.getItem(index);
+				if (itemStack == null) {
+					try {
+						conn.createStatement().executeUpdate("DELETE FROM woolchests "
+								+ "WHERE Owner='" + woolChest.getUUID() + "' "
+								+ "AND Chest='" + woolChest.getChest() + "' "
+								+ "AND Index_='" + index + "';");
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				} else {
+					String query = "INSERT INTO woolchests VALUES (?, ?, ?, ?, ?, ?, ?) "
+							+ "ON DUPLICATE KEY UPDATE "
+							+ "Material=values(Material), "
+							+ "Amount=values(Amount), "
+							+ "Damage=values(Damage), "
+							+ "Enchants=values(Enchants);";
+					try {
+						PreparedStatement prep = conn.prepareStatement(query);
+						prep.setString(1, woolChest.getUUID());
+						prep.setShort(2, woolChest.getChest());
+						prep.setInt(3, index);
+						prep.setString(4, itemStack.getType().name());
+						prep.setInt(5, itemStack.getAmount());
+						prep.setShort(6, itemStack.getDurability());
+						String enchants = "";
+						for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
+							enchants += enchantment.getName() + " ";
+							enchants += itemStack.getEnchantments().get(enchantment) + " ";
+						}
+						enchants = enchants.trim();
+						prep.setString(7, enchants);
+						prep.execute();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}

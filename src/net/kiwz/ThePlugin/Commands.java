@@ -1,6 +1,7 @@
 package net.kiwz.ThePlugin;
 
 import net.kiwz.ThePlugin.commands.BanCmd;
+import net.kiwz.ThePlugin.commands.ChestCmd;
 import net.kiwz.ThePlugin.commands.EntityCmd;
 import net.kiwz.ThePlugin.commands.FlyCmd;
 import net.kiwz.ThePlugin.commands.GmCmd;
@@ -25,6 +26,7 @@ import net.kiwz.ThePlugin.commands.TpchunkCmd;
 import net.kiwz.ThePlugin.commands.TpsCmd;
 import net.kiwz.ThePlugin.commands.WhoisCmd;
 import net.kiwz.ThePlugin.commands.WorldCmd;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,6 +45,7 @@ public class Commands implements CommandExecutor {
 		}
 
 		else if (c.equals("ban") || c.equals("unban") || c.equals("kick")) return BanCmd.exec(sender, c, args);
+		else if (c.equals("chest")) return ChestCmd.exec(sender, args);
 		else if (c.equals("entity")) return EntityCmd.exec(sender, args);
 		else if (c.equals("fly")) return FlyCmd.exec(sender, args);
 		else if (c.equals("gm")) return GmCmd.exec(sender, args);

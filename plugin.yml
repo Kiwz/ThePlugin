@@ -28,6 +28,14 @@ commands:
     permission: ThePlugin.kick
     permission-message: §cDu har ikke tilgang!
     usage: /kick <spiller-navn> <årsak>
+  chest:
+    description: Toggle deg til annen spiller for WoolChest tilgang
+    aliases: [woolchest, wchest, kiste, ullkiste, ukiste]
+    permission: ThePlugin.chest
+    permission-message: §cDu har ikke tilgang!
+    usage: |
+      /chest
+      /chest <spiller-navn>
   entity:
     description: a = animals, m = monsters, d = drops
     aliases: [e]

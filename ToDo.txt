@@ -1,6 +1,5 @@
 Bugs:
 Fjerne perm attachement dersom man op'er eller deoper
-Mapper og filer skal ikke ha mellomrom, erstatt med _
 Får ikke melding om at man går inn/ut av en plass dersom grensen er på x/z 0!
 spillere er usynlig for andre etter en teleport
 
@@ -19,7 +18,6 @@ Kommandoer:
 
 
 Plasser:
-Private kister med skilt
 Auto-claim
 
 

@@ -50,8 +50,12 @@ public class BuildTables {
 	private final static String woolChest = "CREATE TABLE IF NOT EXISTS woolchests "
 			+ "(Owner VARCHAR(255), "
 			+ "Chest SMALLINT, "
-			+ "Content MEDIUMTEXT, "
-			+ "PRIMARY KEY (Owner, Chest));";
+			+ "Index_ INT, "
+			+ "Material VARCHAR(255), "
+			+ "Amount INT, "
+			+ "Damage SMALLINT, "
+			+ "Enchants MEDIUMTEXT, "
+			+ "PRIMARY KEY (Owner, Chest, Index_));";
 	
 	private final static String worlds = "CREATE TABLE IF NOT EXISTS worlds "
 			+ "(World VARCHAR(255), "

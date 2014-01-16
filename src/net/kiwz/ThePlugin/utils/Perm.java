@@ -29,6 +29,7 @@ public class Perm {
 		atch.setPermission("ThePlugin.fly", true);
 		atch.setPermission("ThePlugin.oe", true);
 		atch.setPermission("ThePlugin.oi", true);
+		atch.setPermission("ThePlugin.chest", true);
 		atch.setPermission("ThePlugin.pvp", true);
 		atch.setPermission("ThePlugin.spy", true);
 	}

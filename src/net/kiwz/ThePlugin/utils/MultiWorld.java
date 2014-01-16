@@ -76,12 +76,9 @@ public class MultiWorld {
 	private static void moveWorldFolder(String worldName) {
 		File oldFile = new File(Bukkit.getServer().getWorldContainer().getPath() + File.separatorChar + worldName);
 		String to = ThePlugin.getPlugin().getDataFolder().getPath();
-		to = to + File.separatorChar;
-		to = to + "Old Worlds";
-		to = to + File.separatorChar;
+		to += File.separatorChar + "deleted_worlds" + File.separatorChar;
 		new File(to).mkdirs();
-		to = to + worldName;
-		to = to + " (" + System.currentTimeMillis() / 1000 + ")";
+		to += worldName + "_(" + System.currentTimeMillis() / 1000 + ")";
 		oldFile.renameTo(new File(to));
 	}
 }
