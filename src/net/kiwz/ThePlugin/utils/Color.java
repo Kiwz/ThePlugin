@@ -9,6 +9,11 @@ public enum Color {
 	WHITE,
 	
 	/**
+	 * WHITE
+	 */
+	BLACK,
+	
+	/**
 	 * GOLD
 	 */
 	INFO,
@@ -70,6 +75,7 @@ public enum Color {
 	
 	public String toString(){
 		if (this == WHITE) return ChatColor.WHITE.toString();
+		else if(this == BLACK) return ChatColor.BLACK.toString();
 		else if(this == INFO) return ChatColor.GOLD.toString();
 		else if (this == HEADER) return ChatColor.YELLOW.toString();
 		else if (this == WARNING) return ChatColor.DARK_RED.toString();

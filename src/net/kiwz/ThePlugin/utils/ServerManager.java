@@ -48,7 +48,23 @@ public class ServerManager {
 		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(ThePlugin.getPlugin(), new Runnable() {
 			@Override
             public void run() {
+				/**
+				 * TODO fjerne logging av tidsbruk
+				 */
+				int time = (int) System.currentTimeMillis();
+				// Det er bare neste linje som skal være her!
 				new ConnectToMySQL().saveTables();
+				// Det er linjen over som skal være her!
+				time = (int) (System.currentTimeMillis() - time);
+				try {
+					File file = new File("db_save.log");
+					BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
+					bw.write(Util.getTimeLogDate(System.currentTimeMillis() / 1000) + " " + time + "ms");
+					bw.write("\n");
+					bw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}, 200, 200);
 		
@@ -56,7 +72,6 @@ public class ServerManager {
 			@Override
             public void run() {
 				long time = System.currentTimeMillis();
-				broadcastMsg(Color.SERVER + "Lagrer...");
 				Bukkit.getServer().savePlayers();
 				for (World world : Bukkit.getWorlds()) {
 					world.save();
