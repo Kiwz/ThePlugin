@@ -16,7 +16,13 @@ public class MultiWorld {
 	public void loadWorlds() {
 		for (World world : server.getWorlds()) {
 			MyWorld myWorld = new MyWorld(world);
-			myWorld.save();
+			if (!myWorld.save()) {
+				myWorld = MyWorld.getWorld(world);
+				myWorld.setEnv(world.getEnvironment());
+				myWorld.setType(world.getWorldType());
+				myWorld.setSeed(world.getSeed());
+				myWorld.setSpawn(world.getSpawnLocation());
+			}
 		}
 		
 		for (MyWorld myWorld : MyWorld.getWorlds()) {

@@ -74,6 +74,7 @@ public class BuildTables {
 			+ "Explosions BOOLEAN, "
 			+ "Trample BOOLEAN, "
 			+ "Border INT, "
+			+ "Fill INT, "
 			+ "PRIMARY KEY (World));";
 	
 	public static void createTables(Connection conn) {

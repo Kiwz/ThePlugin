@@ -7,6 +7,7 @@ import net.kiwz.ThePlugin.listeners.PlayerListener;
 import net.kiwz.ThePlugin.mysql.ConnectToMySQL;
 import net.kiwz.ThePlugin.utils.Config;
 import net.kiwz.ThePlugin.utils.Dynmap;
+import net.kiwz.ThePlugin.utils.FillWorld;
 import net.kiwz.ThePlugin.utils.Perm;
 import net.kiwz.ThePlugin.utils.ServerManager;
 
@@ -34,6 +35,7 @@ public class ThePlugin extends JavaPlugin {
     	new Dynmap().markTheMap();
 		Perm.setPermissions();
 		ServerManager.start();
+		FillWorld.restoreFill();
 		
 		Commands cmds = new Commands();
 		for (String key : getDescription().getCommands().keySet()) {
@@ -47,6 +49,9 @@ public class ThePlugin extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		if (!error) new ConnectToMySQL().saveTables();
+		if (!error) {
+			FillWorld.pauseFill();
+			new ConnectToMySQL().saveTables();
+		}
 	}
 }

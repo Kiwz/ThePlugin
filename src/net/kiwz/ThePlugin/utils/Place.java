@@ -382,6 +382,10 @@ public class Place {
 		else op = myPlayer.getOfflinePlayer().isOp();
 		Place place = getPlace(this.id);
 		if (place != null) {
+			MyPlayer newOwner = MyPlayer.getPlayerById(this.owner);
+			if (place.getOwner() != newOwner.getUUID()) {
+				if (!op && getPlacesByOwner(newOwner).size() >= 3) return true;
+			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return true;
 			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return true;
 			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
@@ -412,6 +416,10 @@ public class Place {
 		else op = myPlayer.getOfflinePlayer().isOp();
 		Place place = getPlace(this.id);
 		if (place != null) {
+			MyPlayer newOwner = MyPlayer.getPlayerById(this.owner);
+			if (place.getOwner() != newOwner.getUUID()) {
+				if (!op && getPlacesByOwner(newOwner).size() >= 3) return MyPlayer.getColorName(newOwner) + Color.WARNING + " eier allerede 3 plasser";
+			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";
 			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
 			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {

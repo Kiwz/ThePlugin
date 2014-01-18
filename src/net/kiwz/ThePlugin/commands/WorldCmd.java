@@ -26,7 +26,6 @@ public class WorldCmd {
 	}
 	
 	public boolean world(CommandSender sender, Command cmd, String[] args) {
-		FillWorld fill = new FillWorld();
 		ChunkLag chunkLag = new ChunkLag();
 
 		for (String arg : args) {
@@ -82,9 +81,21 @@ public class WorldCmd {
 			}
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("fill")) {
-				fill.generateChunks(sender, myWorld.getBukkitWorld(), "2");
+				FillWorld fillWorld = FillWorld.getFillWorld(myWorld);
+				if (fillWorld != null) {
+					sendWarning(sender, "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.WARNING + " er allerede startet");
+				} else {
+					new FillWorld(myWorld).start();
+					sendInfo(sender, "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.INFO + " er startet, se consolen for info");
+				}
 			} else if (args[0].equalsIgnoreCase("cancelfill")) {
-				fill.cancelGeneration(sender, myWorld.getBukkitWorld());
+				FillWorld fillWorld = FillWorld.getFillWorld(myWorld);
+				if (fillWorld == null) {
+					sendWarning(sender, "Det er ikke startet noen fylling av " + Color.VARIABLE + myWorld.getName());
+				} else {
+					fillWorld.cancelTask();
+					sendInfo(sender, "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.INFO + " er avbrutt");
+				}
 			} else if (args[0].equalsIgnoreCase("claimable")) {
 				myWorld.setClaimable(!myWorld.getClaimable());
 				if (myWorld.getClaimable()) sendInfo(sender, "Plasser er aktivert for " + Color.VARIABLE + myWorld.getName());
@@ -124,6 +135,7 @@ public class WorldCmd {
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1]);
 			} else if (args[0].equalsIgnoreCase("delete")) {
+				FillWorld.getFillWorld(myWorld).cancelTask();
 				if (myWorld.delete()) sendInfo(sender, Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet");
 				else sendWarning(sender, Color.VARIABLE + myWorld.getName() + Color.WARNING + " kunne ikke slettes");
 			} else {
@@ -135,8 +147,6 @@ public class WorldCmd {
 				myWorld.setBorder(Util.parseInt(args[2]));
 				int size = myWorld.getBorder() * 2;
 				sendInfo(sender, "Ny størrelse for " + Color.VARIABLE + myWorld.getName() + " er " + Color.VARIABLE + size);
-			} else if (args[0].equalsIgnoreCase("fill")) {
-				fill.generateChunks(sender, myWorld.getBukkitWorld(), args[2]);
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1], args[2]);
 			} else {

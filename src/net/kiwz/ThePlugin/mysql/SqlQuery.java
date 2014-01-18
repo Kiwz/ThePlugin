@@ -237,7 +237,7 @@ public class SqlQuery {
 				if (woolChest == null) {
 					woolChest = new WoolChest(myPlayer, chest);
 				}
-				woolChest.setInventory(index, material, amount, damage, enchants);
+				woolChest.setItem(index, material, amount, damage, enchants);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -309,9 +309,10 @@ public class SqlQuery {
 				boolean explosions = res.getBoolean("Explosions");
 				boolean trample = res.getBoolean("Trample");
 				int border = res.getInt("Border");
+				int fill = res.getInt("Fill");
 				
 				MyWorld myWorld = new MyWorld(name, environment, type, seed, coords, direction, keepSpawn, pvp,
-						monsters, animals, monsterGrief, fireSpread, claimable, explosions, trample, border);
+						monsters, animals, monsterGrief, fireSpread, claimable, explosions, trample, border, fill);
 				myWorld.save();
 			}
 		} catch (SQLException e) {
@@ -330,7 +331,7 @@ public class SqlQuery {
 		MyWorld.clearRemovedWorlds();
 		
 		for (MyWorld myWorld : MyWorld.getWorlds()) {
-			String query = "INSERT INTO worlds VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			String query = "INSERT INTO worlds VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 					+ "ON DUPLICATE KEY UPDATE "
 					+ "Environment=values(Environment), "
 					+ "Type=values(Type), "
@@ -346,7 +347,8 @@ public class SqlQuery {
 					+ "Claimable=values(Claimable), "
 					+ "Explosions=values(Explosions), "
 					+ "Trample=values(Trample), "
-					+ "Border=values(Border);";
+					+ "Border=values(Border), "
+					+ "Fill=values(Fill);";
 			try {
 				PreparedStatement prep = conn.prepareStatement(query);
 				prep.setString(1, myWorld.getName());
@@ -366,6 +368,7 @@ public class SqlQuery {
 				prep.setBoolean(14, myWorld.getExplosions());
 				prep.setBoolean(15, myWorld.getTrample());
 				prep.setInt(16, myWorld.getBorder());
+				prep.setInt(17, myWorld.getFill());
 				prep.execute();
 			} catch (SQLException e) {
 				e.printStackTrace();

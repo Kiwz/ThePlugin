@@ -11,7 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class WoolChest {
-	private static HashMap<String, WoolChest> map = new HashMap<String, WoolChest>();
+	private static HashMap<String, WoolChest> woolChests = new HashMap<String, WoolChest>();
 	
 	private String uuid;
 	private short chest;
@@ -22,30 +22,30 @@ public class WoolChest {
 		this.uuid = myPlayer.getUUID();
 		this.chest = chest;
 		this.inventory = createInventory(myPlayer, chest);
-		map.put(uuid + chest, this);
+		woolChests.put(uuid + chest, this);
 	}
 	
 	public static List<WoolChest> getWoolChests() {
 		List<WoolChest> list = new ArrayList<WoolChest>();
-		for (String key : map.keySet()) {
-			list.add(map.get(key));
+		for (String key : woolChests.keySet()) {
+			list.add(woolChests.get(key));
 		}
 		return list;
 	}
 	
 	public static WoolChest getWoolChest(MyPlayer myPlayer, short chest) {
-		return map.get(myPlayer.getWoolChestOwner().getUUID() + chest);
+		return woolChests.get(myPlayer.getWoolChestOwner().getUUID() + chest);
 	}
 	
 	public String getUUID() {
-		return uuid;
+		return this.uuid;
 	}
 	
 	public short getChest() {
-		return chest;
+		return this.chest;
 	}
 	
-	public void setInventory(int index, String material, int amount, short damage, String enchants) {
+	public void setItem(int index, String material, int amount, short damage, String enchants) {
 		ItemStack item = new ItemStack(Material.getMaterial(material), amount, damage);
 		if (enchants != "") {
 			String[] enchant = enchants.split(" ");
@@ -56,11 +56,11 @@ public class WoolChest {
 				item.addEnchantment(ench, level);
 			}
 		}
-		inventory.setItem(index, item);
+		this.inventory.setItem(index, item);
 	}
 	
 	public Inventory getInventory() {
-		return inventory;
+		return this.inventory;
 	}
 	
 	private Inventory createInventory(MyPlayer myPlayer, short chest) {

@@ -29,6 +29,7 @@ public class MyWorld {
 	private boolean explosions;
 	private boolean trample;
 	private int border;
+	private int fill;
 	private String spawnCoords;
 	private String spawnDirection;
 	
@@ -60,6 +61,7 @@ public class MyWorld {
 		this.explosions = false;
 		this.trample = false;
 		this.border = 1000;
+		this.fill = 0;
 	}
 	
 	public MyWorld(World world) {
@@ -78,10 +80,11 @@ public class MyWorld {
 		this.explosions = false;
 		this.trample = false;
 		this.border = 1000;
+		this.fill = 0;
 	}
 	
 	public MyWorld(String name, String env, String type, long seed, String coords, String direction, boolean keepSpawn, boolean pvp,
-			boolean monsters, boolean animals, boolean monsterGrief, boolean fireSpread, boolean claimable, boolean explosions, boolean trample, int border) {
+			boolean monsters, boolean animals, boolean monsterGrief, boolean fireSpread, boolean claimable, boolean explosions, boolean trample, int border, int fill) {
 		this.name = name;
 		this.env = getEnvironment(env);
 		this.type = getWorldType(type);
@@ -97,6 +100,7 @@ public class MyWorld {
 		this.explosions = explosions;
 		this.trample = trample;
 		this.border = border;
+		this.fill = fill;
 		this.spawnCoords = coords;
 		this.spawnDirection = direction;
 	}
@@ -131,16 +135,32 @@ public class MyWorld {
 		removedWorlds.clear();
 	}
 	
+	public World getWorld() {
+		return Bukkit.getServer().getWorld(this.name);
+	}
+	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setEnv(Environment env) {
+		this.env = env;
 	}
 	
 	public Environment getEnv() {
 		return this.env;
 	}
 	
+	public void setType(WorldType type) {
+		this.type = type;
+	}
+	
 	public WorldType getType() {
 		return this.type;
+	}
+	
+	public void setSeed(long seed) {
+		this.seed = seed;
 	}
 	
 	public long getSeed() {
@@ -233,6 +253,14 @@ public class MyWorld {
 	
 	public int getBorder() {
 		return this.border;
+	}
+	
+	public void setFill(int fill) {
+		this.fill = fill;
+	}
+	
+	public int getFill() {
+		return this.fill;
 	}
 	
 	public String getSpawnCoords() {
