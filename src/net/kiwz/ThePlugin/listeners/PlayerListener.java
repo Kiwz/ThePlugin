@@ -333,19 +333,13 @@ public class PlayerListener implements Listener {
 			player.sendMessage(Color.INFO + "Du kan eie 3 plasser og invitere hvem du ønsker til din plass");
 			player.sendMessage(Color.INFO + "############################################");
         }
-        
-        myPlayer = MyPlayer.getPlayer(player);
-        
-        Perm.setOpPerm(player);
-    	if (myPlayer.isAdmin()) {
-    		Perm.setAdminPermissions(player);
-    	}
     	
         if (!player.isOp()) {
         	player.setGameMode(GameMode.SURVIVAL);
         	player.setAllowFlight(false);
         }
         
+    	Perm.setPlayerPermissions(player);
         Util.setTabColor(player);
 		ServerManager.logString("[CONN] " + log);
         server.getLogger().info(log);

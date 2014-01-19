@@ -11,27 +11,25 @@ import org.bukkit.plugin.Plugin;
 
 public class Perm {
 	
-	public static void setOpPerm(Player player) {
+	public static void setPlayerPermissions(Player player) {
 		PermissionAttachment atch = player.addAttachment(ThePlugin.getPlugin());
 		if (player.getName().equals("Kiwz") || player.getName().equals("zacker")) {
 			atch.setPermission("bukkit.command.op", true);
 		}
-	}
-	
-	public static void setAdminPermissions(Player player) {
-		PermissionAttachment atch = player.addAttachment(ThePlugin.getPlugin());
-		atch.setPermission("worldedit.navigation.jumpto.tool", true);
-		atch.setPermission("ThePlugin.ban", true);
-		atch.setPermission("ThePlugin.unban", true);
-		atch.setPermission("ThePlugin.kick", true);
-		atch.setPermission("ThePlugin.mute", true);
-		atch.setPermission("ThePlugin.unmute", true);
-		atch.setPermission("ThePlugin.fly", true);
-		atch.setPermission("ThePlugin.oe", true);
-		atch.setPermission("ThePlugin.oi", true);
-		atch.setPermission("ThePlugin.chest", true);
-		atch.setPermission("ThePlugin.pvp", true);
-		atch.setPermission("ThePlugin.spy", true);
+		if (MyPlayer.getPlayer(player).isAdmin() && !player.isOp()) {
+			atch.setPermission("worldedit.navigation.jumpto.tool", true);
+			atch.setPermission("ThePlugin.ban", true);
+			atch.setPermission("ThePlugin.unban", true);
+			atch.setPermission("ThePlugin.kick", true);
+			atch.setPermission("ThePlugin.mute", true);
+			atch.setPermission("ThePlugin.unmute", true);
+			atch.setPermission("ThePlugin.fly", true);
+			atch.setPermission("ThePlugin.oe", true);
+			atch.setPermission("ThePlugin.oi", true);
+			atch.setPermission("ThePlugin.chest", true);
+			atch.setPermission("ThePlugin.pvp", true);
+			atch.setPermission("ThePlugin.spy", true);
+		}
 	}
 	
 	public static void setPermissions() {

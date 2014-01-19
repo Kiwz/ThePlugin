@@ -3,6 +3,8 @@ package net.kiwz.ThePlugin.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.kiwz.ThePlugin.utils.Color;
+import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Util;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -51,13 +53,45 @@ public class HelpCmd {
     	}
     	
     	if (topic == null || !topic.canSee(sender)) {
-    		sender.sendMessage(ChatColor.RED + "Ingen hjelp for " + command);
+    		sender.sendMessage(Color.WARNING + "Ingen hjelp for " + command);
     		return true;
     	}
-    	
+
     	List<String> list = new ArrayList<String>();
-    	list.add(topic.getFullText(sender));
-    	Util.sendAsPages(sender, pageNumber + "", 0, "Hjelp: " + topic.getName(), "", list);
+		for (String line : topic.getFullText(sender).split("\n")) {
+			if (!line.contains("/op:") && !line.contains("/deop:")
+					&& !line.contains("/plugins") && !line.contains("/version")) list.add(line);
+		}
+		
+		String name = topic.getName();
+    	if (!MyPlayer.getPlayer(sender).isAdmin()) {
+    		if (name == "Index") {
+	    		list.set(0, ChatColor.GRAY + "Det finnes flere sider, skriv f.eks: /hjelp 2");
+	    		for (int index = 1; list.size() > index; index++) {
+	    			String line = list.get(index);
+	    			if (!line.contains("/") || line.contains("//") || line.contains("/none")) {
+	    				list.remove(index);
+	    				index--;
+	    			}
+	    		}
+    		} else if (name == "Aliases") {
+	    		list.set(0, ChatColor.GRAY + "Liste over alle Aliaser:");
+	    		for (int index = 1; list.size() > index; index++) {
+	    			String line = list.get(index);
+	    			if (line.contains("//")) {
+	    				list.remove(index);
+	    				index--;
+	    			}
+	    		}
+    		} else if (name.equals("WorldEdit") || name.equals("Bukkit") || list.size() < 2) {
+    			list.clear();
+    			list.add(Color.WARNING + "Ingen hjelp for " + name);
+    		} else {
+	    		list.set(0, ChatColor.GRAY + "Liste over alle " + name + " kommandoer:");
+			}
+    	}
+    	
+    	Util.sendAsPages(sender, pageNumber + "", 0, "Hjelp: " + name, "", list);
 		return true;
 	}
 }

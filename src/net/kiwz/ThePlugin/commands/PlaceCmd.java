@@ -414,13 +414,13 @@ public class PlaceCmd {
 		
 		list.add(Color.INFO + "Eier: " + Color.VARIABLE + MyPlayer.getColorName(MyPlayer.getPlayerById(place.getOwner())));
 		list.add(Color.INFO + "Medlemmer: " + Color.VARIABLE + members + " ");
-		list.add(Color.INFO + "Verden: " + Color.VARIABLE + place.getCenter().getWorld().getName());
-		list.add(Color.INFO + "Sentrum: " + Color.VARIABLE + center);
-		list.add(Color.INFO + "Størrelse: " + Color.VARIABLE + size + " x " + size);
-		list.add(Color.INFO + "Spawn: " + Color.VARIABLE + spawn);
-		list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp);
-		list.add(Color.INFO + "Monstre: " + Color.VARIABLE + monsters);
-		list.add(Color.INFO + "Dyr: " + Color.VARIABLE + animals);
+		list.add(Color.INFO + "Verden: " + Color.VARIABLE + place.getCenter().getWorld().getName() + Color.INFO
+				 + " Sentrum: " + Color.VARIABLE + center + Color.INFO
+				 + " Størrelse: " + Color.VARIABLE + size + " x " + size);
+		list.add(Color.INFO + "Spawn: " + Color.VARIABLE + spawn
+				+ Color.INFO + " PvP: " + Color.VARIABLE + pvp
+				+ Color.INFO + " Monstre: " + Color.VARIABLE + monsters
+				+ Color.INFO + " Dyr: " + Color.VARIABLE + animals);
 		list.add(Color.INFO + "Entré melding: " + Color.VARIABLE + place.getEnter());
 		list.add(Color.INFO + "Forlate melding: " + Color.VARIABLE + place.getLeave());
 		

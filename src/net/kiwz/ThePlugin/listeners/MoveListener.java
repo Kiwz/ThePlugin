@@ -24,11 +24,7 @@ public class MoveListener implements Listener {
 		Location fromLoc = event.getFrom();
 		Location toLoc = event.getTo();
 		Block block = event.getTo().getBlock();
-		int fromX = (int) event.getFrom().getX();
-		int fromZ = (int) event.getFrom().getZ();
-		int toX = (int) event.getTo().getX();
-		int toZ = (int) event.getTo().getZ();
-		if (fromX == toX && fromZ == toZ) {
+		if (fromLoc.getBlockX() == toLoc.getBlockX() && fromLoc.getBlockZ() == toLoc.getBlockZ()) {
 			return;
 		}
 		
