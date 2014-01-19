@@ -1,5 +1,5 @@
 Bugs:
-spillere er usynlig for andre etter en teleport
+Importere plasser som tilhører den nye verdenen dersom den nye verdenen har samme navn som plassen sin verden hadde tidligere
 
 
 Opprydding:

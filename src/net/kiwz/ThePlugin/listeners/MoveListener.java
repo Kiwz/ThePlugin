@@ -1,5 +1,6 @@
 package net.kiwz.ThePlugin.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -75,7 +76,7 @@ public class MoveListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 		Location fromLoc = event.getFrom();
 		Location toLoc = event.getTo();
 		
@@ -119,6 +120,11 @@ public class MoveListener implements Listener {
 			} else {
 				player.sendMessage(Color.SAFE + "PvP er deaktivert for denne verden");
 			}
+		}
+		
+		for (Player otherPlayer : Bukkit.getServer().getOnlinePlayers()) {
+			otherPlayer.hidePlayer(player);
+			otherPlayer.showPlayer(player);
 		}
 	}
 }
