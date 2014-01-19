@@ -1,13 +1,10 @@
 Bugs:
-/tp funker ikke pga border og verdener
-BØKER blir ikke lagret i ullkister
 Fjerne perm attachement dersom man op'er eller deoper
 Får ikke melding om at man går inn/ut av en plass dersom grensen er på x/z 0!
 spillere er usynlig for andre etter en teleport
 
 
 Opprydding:
-FillWorld.class trenger en solid clean-up og re-write
 Noen linjer i /hjelp er på engelsk (f.eks den første gråe linjen)
 Bygge listeners mye bedre!
 

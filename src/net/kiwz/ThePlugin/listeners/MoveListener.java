@@ -88,7 +88,7 @@ public class MoveListener implements Listener {
 		Place fromPlace = Place.getPlace(fromLoc);
 		Place toPlace = Place.getPlace(toLoc);
 		
-		if (MyWorld.getWorld(fromLoc.getWorld()).reachedBorder(toLoc)) {
+		if (MyWorld.getWorld(toLoc.getWorld()).reachedBorder(toLoc)) {
 			event.setCancelled(true);
 			player.sendMessage(Color.WARNING + "Du kan ikke teleportere deg hit");
 		} else if (fromPlace != toPlace) {

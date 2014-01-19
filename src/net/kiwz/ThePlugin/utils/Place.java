@@ -383,7 +383,7 @@ public class Place {
 		Place place = getPlace(this.id);
 		if (place != null) {
 			MyPlayer newOwner = MyPlayer.getPlayerById(this.owner);
-			if (place.getOwner() != newOwner.getUUID()) {
+			if (!place.getOwner().equals(newOwner.getUUID())) {
 				if (!op && getPlacesByOwner(newOwner).size() >= 3) return true;
 			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return true;
@@ -417,7 +417,8 @@ public class Place {
 		Place place = getPlace(this.id);
 		if (place != null) {
 			MyPlayer newOwner = MyPlayer.getPlayerById(this.owner);
-			if (place.getOwner() != newOwner.getUUID()) {
+			if (!place.getOwner().equals(newOwner.getUUID())) {
+				System.out.println("|" + place.getOwner() + "!" + newOwner.getUUID() + "|");
 				if (!op && getPlacesByOwner(newOwner).size() >= 3) return MyPlayer.getColorName(newOwner) + Color.WARNING + " eier allerede 3 plasser";
 			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";

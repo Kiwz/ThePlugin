@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 import net.kiwz.ThePlugin.utils.Home;
 import net.kiwz.ThePlugin.utils.MyPlayer;
@@ -277,6 +279,13 @@ public class SqlQuery {
 						for (Enchantment enchantment : itemStack.getEnchantments().keySet()) {
 							enchants += enchantment.getName() + " ";
 							enchants += itemStack.getEnchantments().get(enchantment) + " ";
+						}
+						if (itemStack.getType() == Material.ENCHANTED_BOOK) {
+							EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
+							for (Enchantment enchantment : meta.getStoredEnchants().keySet()) {
+								enchants += enchantment.getName() + " ";
+								enchants += meta.getStoredEnchants().get(enchantment) + " ";
+							}
 						}
 						enchants = enchants.trim();
 						prep.setString(7, enchants);

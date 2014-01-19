@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 public class WoolChest {
 	private static HashMap<String, WoolChest> woolChests = new HashMap<String, WoolChest>();
@@ -46,17 +48,24 @@ public class WoolChest {
 	}
 	
 	public void setItem(int index, String material, int amount, short damage, String enchants) {
-		ItemStack item = new ItemStack(Material.getMaterial(material), amount, damage);
+		ItemStack itemStack = new ItemStack(Material.getMaterial(material), amount, damage);
 		if (enchants != "") {
 			String[] enchant = enchants.split(" ");
 			for (int i = 0; enchant.length > i; i++) {
 				Enchantment ench = Enchantment.getByName(enchant[i]);
 				i++;
 				int level = Integer.parseInt(enchant[i]);
-				item.addEnchantment(ench, level);
+				if (itemStack.getType() == Material.ENCHANTED_BOOK) {
+					EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
+					meta.addEnchant(ench, level, false);
+					meta.setDisplayName(ChatColor.YELLOW + "Enchanted Book");
+					itemStack.setItemMeta(meta);
+				} else {
+					itemStack.addEnchantment(ench, level);
+				}
 			}
 		}
-		this.inventory.setItem(index, item);
+		this.inventory.setItem(index, itemStack);
 	}
 	
 	public Inventory getInventory() {
