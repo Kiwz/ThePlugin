@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class Place {
 	private static HashMap<Integer, Place> places = new HashMap<Integer, Place>();
+	private static HashMap<Integer, Place> unloadedPlaces = new HashMap<Integer, Place>();
 	private static HashMap<Integer, Place> removedPlaces = new HashMap<Integer, Place>();
 	private static Set<Integer> usedIDs = new HashSet<Integer>();
 	private static Set<String> usedNames = new HashSet<String>();
@@ -208,6 +209,14 @@ public class Place {
 		return list;
 	}
 	
+	public static List<Place> getUnloadedPlaces() {
+		List<Place> list = new ArrayList<Place>();
+		for (int key : unloadedPlaces.keySet()) {
+			list.add(unloadedPlaces.get(key));
+		}
+		return list;
+	}
+	
 	public static List<Place> getRemovedPlaces() {
 		List<Place> list = new ArrayList<Place>();
 		for (int key : removedPlaces.keySet()) {
@@ -346,7 +355,15 @@ public class Place {
 		this.isChargeAble = isChargeAble;
 	}
 	
-	public boolean deletePlace(MyPlayer myPlayer) {
+	public void load() {
+		places.put(id, unloadedPlaces.remove(id));
+	}
+	
+	public void unload() {
+		unloadedPlaces.put(id, places.remove(id));
+	}
+	
+	public boolean delete(MyPlayer myPlayer) {
 		if (myPlayer == null) {
 			usedNames.remove(this.name.toLowerCase());
 			removedPlaces.put(this.id, places.remove(this.id));
@@ -360,14 +377,14 @@ public class Place {
 		return false;
 	}
 	
-	public void savePlace() {
+	public void save() {
 		usedIDs.add(this.id);
 		usedNames.add(this.name.toLowerCase());
 		if (this.center.getWorld() == null) return;
 		places.put(this.id, this);
 	}
 	
-	public boolean savePlace(MyPlayer myPlayer) {
+	public boolean save(MyPlayer myPlayer) {
 		if (error(myPlayer)) return false;
 		if (getPlace(this.id) != null) usedNames.remove(getPlace(this.id).getName().toLowerCase());
 		usedIDs.add(this.id);

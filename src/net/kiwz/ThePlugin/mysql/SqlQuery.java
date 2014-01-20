@@ -156,7 +156,7 @@ public class SqlQuery {
 				
 				Place place = new Place(id, time, name, owner, members, world, x, z, radius,
 						spawnCoords, spawnDirection, priv, pvp, monsters, animals, enter, leave);
-				place.savePlace();
+				place.save();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -172,8 +172,56 @@ public class SqlQuery {
 			}
 		}
 		Place.clearRemovedPlaces();
-		
+
 		for (Place place : Place.getPlaces()) {
+			String query = "INSERT INTO places VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+					+ "ON DUPLICATE KEY UPDATE "
+					+ "Time=values(Time), "
+					+ "Name=values(Name), "
+					+ "Owner=values(Owner), "
+					+ "Members=values(Members), "
+					+ "World=values(World), "
+					+ "X=values(X), "
+					+ "Z=values(Z), "
+					+ "Radius=values(Radius), "
+					+ "SpawnCoords=values(SpawnCoords), "
+					+ "SpawnDirection=values(SpawnDirection), "
+					+ "Priv=values(Priv), "
+					+ "PvP=values(PvP), "
+					+ "Monsters=values(Monsters), "
+					+ "Animals=values(Animals), "
+					+ "Enter=values(Enter), "
+					+ "Leave_=values(Leave_);";
+			try {
+				PreparedStatement prep = conn.prepareStatement(query);
+				prep.setInt(1, place.getId());
+				prep.setInt(2, place.getTime());
+				prep.setString(3, place.getName());
+				prep.setString(4, place.getOwner());
+				String members = "";
+				for (String member : place.getMembers()) {
+					members = members + member + " ";
+				}
+				prep.setString(5, members.trim());
+				prep.setString(6, place.getCenter().getWorld().getName());
+				prep.setInt(7, place.getCenter().getBlockX());
+				prep.setInt(8, place.getCenter().getBlockZ());
+				prep.setInt(9, place.getRadius());
+				String[] spawn = Util.convertLocation(place.getSpawn());
+				prep.setString(10, spawn[1]);
+				prep.setString(11, spawn[2]);
+				prep.setBoolean(12, place.getPriv());
+				prep.setBoolean(13, place.getPvP());
+				prep.setBoolean(14, place.getMonsters());
+				prep.setBoolean(15, place.getAnimals());
+				prep.setString(16, place.getEnter());
+				prep.setString(17, place.getLeave());
+				prep.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		for (Place place : Place.getUnloadedPlaces()) {
 			String query = "INSERT INTO places VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 					+ "ON DUPLICATE KEY UPDATE "
 					+ "Time=values(Time), "

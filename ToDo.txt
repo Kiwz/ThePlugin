@@ -1,8 +1,8 @@
 Bugs:
-Importere plasser som tilhører den nye verdenen dersom den nye verdenen har samme navn som plassen sin verden hadde tidligere
 
 
 Opprydding:
+Endre på sql queryes så de ikke har for loop men at de blir en "setter" for hvert object
 Bygge listeners mye bedre!
 
 

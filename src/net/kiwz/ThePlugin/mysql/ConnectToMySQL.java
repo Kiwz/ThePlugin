@@ -33,7 +33,7 @@ public class ConnectToMySQL {
 		BuildTables.createTables(conn);
 		SqlQuery query = new SqlQuery(conn);
 		query.selectWorlds();
-		new MultiWorld().loadWorlds();
+		MultiWorld.handleWorlds();
 		query.selectPlayers();
 		query.selectHomes();
 		query.selectPlaces();
@@ -46,8 +46,8 @@ public class ConnectToMySQL {
 		Connection conn = openConnection();
 		if (conn == null) return;
 		SqlQuery query = new SqlQuery(conn);
-		query.insertPlayers();
 		query.insertWorlds();
+		query.insertPlayers();
 		query.insertHomes();
 		query.insertPlaces();
 		query.insertWoolChests();
