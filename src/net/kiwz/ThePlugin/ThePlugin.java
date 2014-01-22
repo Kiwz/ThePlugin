@@ -14,11 +14,13 @@ import net.kiwz.ThePlugin.utils.Config;
 import net.kiwz.ThePlugin.utils.Dynmap;
 import net.kiwz.ThePlugin.utils.FillWorld;
 import net.kiwz.ThePlugin.utils.Home;
+import net.kiwz.ThePlugin.utils.MultiWorld;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.MyWorld;
 import net.kiwz.ThePlugin.utils.Perm;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.ServerManager;
+import net.kiwz.ThePlugin.utils.WoolChest;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -36,7 +38,7 @@ public class ThePlugin extends JavaPlugin {
 	}
 	
 	public void onEnable() {
-		new Config().getConfig(this);
+		Config.getConfig().loadConfig();
 		
 		Connection conn = new SqlConnection().getConnection();
 		if (conn == null) {
@@ -53,10 +55,11 @@ public class ThePlugin extends JavaPlugin {
 			query.loadPlayers();
 			query.loadPlaces();
 			query.loadHomes();
-			query.selectWoolChests();
+			query.loadWoolChests();
 			try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 		
+		MultiWorld.saveBukkitWorlds();
     	new Dynmap().markTheMap();
 		Perm.setPermissions();
 		ServerManager.start();
@@ -83,7 +86,7 @@ public class ThePlugin extends JavaPlugin {
 				for (MyPlayer myPlayer : MyPlayer.getPlayers()) query.updatePlayer(myPlayer);
 				for (Place place : Place.getPlaces()) query.updatePlace(place);
 				for (Home home : Home.getHomes()) query.updateHome(home);
-				query.insertWoolChests();
+				for (WoolChest woolChest : WoolChest.getWoolChests()) query.updateWoolChest(woolChest);
 				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 			}
 		}

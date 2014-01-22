@@ -182,6 +182,7 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
     public void onInventoryClose(InventoryCloseEvent event) {
 		Inventory inventory = event.getView().getTopInventory();
+		String title = inventory.getTitle();
 		if (inventory.getType() == InventoryType.PLAYER) {
 			Player owner = (Player) inventory.getHolder();
 			if (!owner.isOnline()) {
@@ -189,6 +190,11 @@ public class PlayerListener implements Listener {
 				player.getInventory().setContents(inventory.getContents());
 				player.saveData();
 			}
+		} else if (inventory.getType() == InventoryType.CHEST && title.contains("Ullkiste")) {
+			short chest = Short.parseShort(title.split(" ")[1]);
+			String name = title.replaceAll("[()]", "").split(" ")[2];
+			WoolChest woolChest = WoolChest.getWoolChest(MyPlayer.getPlayer(name), chest);
+			woolChest.setChanged(true);
 		}
 	}
 	

@@ -3,6 +3,7 @@ package net.kiwz.ThePlugin.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -339,12 +340,15 @@ public class MyWorld {
 	}
 	
 	private long getSeed(String seedString) {
-		if (seedString == "") seedString = "a" + System.currentTimeMillis() + "z";
-		long seed = 0;
-		try {
-			seed = Long.parseLong(seedString);
-		} catch (NumberFormatException e) {
-			seed = (long) seedString.hashCode();
+		long seed;
+		if (seedString != "") {
+			try {
+				seed = Long.parseLong(seedString);
+			} catch (NumberFormatException e) {
+				seed = (long) seedString.hashCode();
+			}
+		} else {
+			seed = new Random().nextLong();
 		}
 		return seed;
 	}

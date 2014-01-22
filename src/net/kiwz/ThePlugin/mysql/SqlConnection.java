@@ -10,12 +10,13 @@ import net.kiwz.ThePlugin.utils.Config;
 import org.bukkit.plugin.Plugin;
 
 public class SqlConnection {
+	private Config config = Config.getConfig();
 	private final Plugin plugin = ThePlugin.getPlugin();
-    private final String hostname = Config.getHost();
-    private final String port = Config.getPort();
-    private final String database = Config.getDatabase();
-    private final String user = Config.getUser();
-    private final String password = Config.getPassword();
+    private final String hostname = config.getHost();
+    private final String port = config.getPort();
+    private final String database = config.getDatabase();
+    private final String user = config.getUser();
+    private final String password = config.getPassword();
     private Connection connection = null;
 
     public Connection getConnection() {

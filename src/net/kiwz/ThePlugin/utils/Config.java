@@ -5,51 +5,56 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.kiwz.ThePlugin.ThePlugin;
+
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 public class Config {
+	private static Config config = new Config();
+	private String host = "127.0.0.1";
+	private String port = "3306";
+	private String database = "theplugin";
+	private String user = "rooty";
+	private String password = "booty";
+	private List<String> filters = new ArrayList<String>();
+	private List<String> admins = new ArrayList<String>();
+	private List<String> rules = new ArrayList<String>();
+	private List<String> areaBlocks = new ArrayList<String>();
+	private List<String> spotBlocks = new ArrayList<String>();
 	
-	private static String host = "127.0.0.1";
-	private static String port = "3306";
-	private static String database = "theplugin";
-	private static String user = "rooty";
-	private static String password = "booty";
-	private static List<String> filters = new ArrayList<String>();
-	private static List<String> admins = new ArrayList<String>();
-	private static List<String> rules = new ArrayList<String>();
-	private static List<String> areaBlocks = new ArrayList<String>();
-	private static List<String> spotBlocks = new ArrayList<String>();
+	public static Config getConfig() {
+		return config;
+	}
 	
-	public static String getHost() {
+	public String getHost() {
 		return host;
 	}
-	public static String getPort() {
+	public String getPort() {
 		return port;
 	}
-	public static String getDatabase() {
+	public String getDatabase() {
 		return database;
 	}
-	public static String getUser() {
+	public String getUser() {
 		return user;
 	}
-	public static String getPassword() {
+	public String getPassword() {
 		return password;
 	}
-	public static List<String> getFilters() {
+	public List<String> getFilters() {
 		return filters;
 	}
-	public static List<String> getAdmins() {
+	public List<String> getAdmins() {
 		return admins;
 	}
-	public static List<String> getRules() {
+	public List<String> getRules() {
 		return rules;
 	}
-	public static List<String> getAreaBlocks() {
+	public List<String> getAreaBlocks() {
 		return areaBlocks;
 	}
-	public static List<String> getSpotBlocks() {
+	public List<String> getSpotBlocks() {
 		return spotBlocks;
 	}
 	
@@ -64,8 +69,8 @@ public class Config {
 	private String areaBlocksPath = "Place.Spawn.AreaBlocks";
 	private String spotBlocksPath = "Place.Spawn.SpotBlocks";
 	
-	public void getConfig(Plugin plugin) {
-		File file = new File(plugin.getDataFolder(), "config.yml");
+	public void loadConfig() {
+		File file = new File(ThePlugin.getPlugin().getDataFolder(), "config.yml");
 		
 		YamlConfiguration conf = new YamlConfiguration();
 		conf.addDefault(hostPath, host);

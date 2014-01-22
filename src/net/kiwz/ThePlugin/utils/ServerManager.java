@@ -56,7 +56,7 @@ public class ServerManager {
 				 * TODO fjerne logging av tidsbruk
 				 */
 				int time = (int) System.currentTimeMillis();
-				// Det er bare neste linje som skal være her!
+				// Behold linjer herfra og ned til neste //
 				Connection conn = new SqlConnection().getConnection();
 				if (conn == null) {
 					Bukkit.getServer().getScheduler().runTaskLater(ThePlugin.getPlugin(), new Runnable() {
@@ -77,10 +77,10 @@ public class ServerManager {
 					for (MyPlayer myPlayer : MyPlayer.getPlayers()) query.updatePlayer(myPlayer);
 					for (Place place : Place.getPlaces()) query.updatePlace(place);
 					for (Home home : Home.getHomes()) query.updateHome(home);
-					//query.insertWoolChests();
+					for (WoolChest woolChest : WoolChest.getWoolChests()) query.updateWoolChest(woolChest);
 					try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 				}
-				// Det er linjen over som skal være her!
+				// Det er linjer over her som skal beholdes!
 				time = (int) (System.currentTimeMillis() - time);
 				try {
 					File file = new File("db_save.log");
@@ -149,7 +149,7 @@ public class ServerManager {
 		coreLogger.addFilter(new Filter() {
 			@Override
 			public Result filter(LogEvent event) {
-				for (String filter : Config.getFilters()) {
+				for (String filter : Config.getConfig().getFilters()) {
 					if (event.getMessage().toString().contains(filter)) {
 						return Result.DENY;
 					}

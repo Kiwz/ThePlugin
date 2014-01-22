@@ -70,7 +70,7 @@ public class Util {
 		
 		if (!a.equals(air) || !b.equals(air) || (c.equals(air) && d.equals(air))) return false;
 		
-		for (String spotBlock : Config.getSpotBlocks()) {
+		for (String spotBlock : Config.getConfig().getSpotBlocks()) {
 			Material mat = Material.getMaterial(spotBlock);
 			if (c.equals(mat)) return false;
 			if (c.equals(air) && d.equals(mat)) return false;
@@ -87,7 +87,7 @@ public class Util {
 				int locZ = loc.getBlockZ() - 2;
 				while (locMaxZ >= locZ) {
 					Material mat = world.getBlockAt(locX, locY, locZ).getType();
-					for (String areaBlock : Config.getAreaBlocks()) {
+					for (String areaBlock : Config.getConfig().getAreaBlocks()) {
 						Material m = Material.getMaterial(areaBlock);
 						if (mat.equals(m)) return false;
 					}
@@ -164,7 +164,6 @@ public class Util {
 	 * @return <b>Location</b>, null if <b>world</b> is null
 	 */
 	public static Location parseLocation(World world, String coordsString, String directionString) {
-		if (world == null) return null;
 		String[] coords = coordsString.split(" ");
 		String[] direction = directionString.split(" ");
 		
@@ -206,15 +205,5 @@ public class Util {
 			i = 0;
 		}
 		return i;
-	}
-	
-	/**
-	 * 
-	 * @param i as int to parse
-	 * @return true if int equals 1, else return false
-	 */
-	public static boolean parseBoolean(int i) {
-		if (i == 1) return true;
-		else return false;
 	}
 }

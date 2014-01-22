@@ -47,14 +47,14 @@ public class WorldCmd {
 		}
 		
 		if (args.length == 0) {
-			Util.sendAsPages(sender, "1", 0, "Hjelp: /plass", "", help());
+			Util.sendAsPages(sender, "1", 0, "Hjelp: /world", "", help());
 		} else if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("liste")) {
 				sendWorldList(sender);
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender);
 			} else if (args[0].length() == 1 && args[0].matches("[0-9]+")) {
-				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
+				Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 			} else {
 				if (MyWorld.getWorld(args[0]) == null) {
 					sendWarning(sender, args[0] + " finnes ikke");
@@ -137,7 +137,7 @@ public class WorldCmd {
 				MultiWorld.unloadWorld(myWorld);
 				sendInfo(sender, Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet");
 			} else {
-				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
+				Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 			}
 			MultiWorld.setWorldOptions(myWorld);
 		} else if (args.length == 3) {
@@ -148,10 +148,10 @@ public class WorldCmd {
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1], args[2]);
 			} else {
-				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
+				Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 			}
 		} else {
-			Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
+			Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 		}
 		return true;
 	}

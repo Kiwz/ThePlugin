@@ -17,8 +17,6 @@ import org.bukkit.entity.Player;
  */
 public class Place {
 	private static HashMap<Integer, Place> places = new HashMap<Integer, Place>();
-	//private static HashMap<Integer, Place> unloadedPlaces = new HashMap<Integer, Place>();
-	//private static HashMap<Integer, Place> removedPlaces = new HashMap<Integer, Place>();
 	private static Set<Integer> usedIDs = new HashSet<Integer>();
 	private static Set<String> usedNames = new HashSet<String>();
 	
@@ -122,6 +120,7 @@ public class Place {
 		place.changed = places.get(id).changed;
 		place.loaded = places.get(id).loaded;
 		place.removed = places.get(id).removed;
+		place.worldName = places.get(id).worldName;
 		return place;
 	}
 	
@@ -228,26 +227,6 @@ public class Place {
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		return list;
 	}
-	/*
-	public static List<Place> getUnloadedPlaces() {
-		List<Place> list = new ArrayList<Place>();
-		for (int key : unloadedPlaces.keySet()) {
-			list.add(unloadedPlaces.get(key));
-		}
-		return list;
-	}
-	
-	public static List<Place> getRemovedPlaces() {
-		List<Place> list = new ArrayList<Place>();
-		for (int key : removedPlaces.keySet()) {
-			list.add(removedPlaces.get(key));
-		}
-		return list;
-	}
-	
-	public static void clearRemovedPlaces() {
-		removedPlaces.clear();
-	}*/
 	
 	public boolean hasAccess(MyPlayer myPlayer) {
 		if (myPlayer.isAdmin()) return true;
@@ -413,23 +392,6 @@ public class Place {
 		usedNames.remove(this.name.toLowerCase());
 		places.remove(id);
 	}
-	/*
-	public void load() {
-		places.put(id, unloadedPlaces.remove(id));
-	}
-	
-	public void unload() {
-		unloadedPlaces.put(id, places.remove(id));
-	}
-	
-	public boolean delete(MyPlayer myPlayer) {
-		if (myPlayer == null || myPlayer.getOfflinePlayer().isOp() || this.owner.equals(myPlayer.getUUID())) {
-			usedNames.remove(this.name.toLowerCase());
-			removedPlaces.put(this.id, places.remove(this.id));
-			return true;
-		}
-		return false;
-	}*/
 	
 	public void save() {
 		usedIDs.add(this.id);

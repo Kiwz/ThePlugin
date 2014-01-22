@@ -264,7 +264,7 @@ public class SqlQuery {
 					members = members + member + " ";
 				}
 				prep.setString(5, members.trim());
-				prep.setString(6, place.getCenter().getWorld().getName());
+				prep.setString(6, place.getWorldName());
 				prep.setInt(7, place.getCenter().getBlockX());
 				prep.setInt(8, place.getCenter().getBlockZ());
 				prep.setInt(9, place.getRadius());
@@ -308,7 +308,8 @@ public class SqlQuery {
 		if (home.isRemoved()) {
 			String uuid = home.getUUID();
 			String worldName = home.getLocation().getWorld().getName();
-			String query = "DELETE FROM homes WHERE Player='" + uuid + "' AND World='" + worldName + "';";
+			String query = "DELETE FROM homes "
+					+ "WHERE Player='" + uuid + "' AND World='" + worldName + "';";
 			try {
 				PreparedStatement prep = conn.prepareStatement(query);
 				prep.execute();
@@ -338,7 +339,7 @@ public class SqlQuery {
 		}
 	}
 	
-	public void selectWoolChests() {
+	public void loadWoolChests() {
 		try {
 			ResultSet res = conn.createStatement().executeQuery("SELECT * FROM woolchests;");
 			while (res.next()) {
@@ -356,23 +357,27 @@ public class SqlQuery {
 				}
 				woolChest.setItem(index, material, amount, damage, enchants);
 			}
+			res.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void insertWoolChests() {
-		for (WoolChest woolChest : WoolChest.getWoolChests()) {
+	public void updateWoolChest(WoolChest woolChest) {
+		if (woolChest.isChanged()) {
+			boolean success = true;
 			Inventory inventory = woolChest.getInventory();
 			for (int index = 0; inventory.getContents().length > index; index++) {
 				ItemStack itemStack = inventory.getItem(index);
 				if (itemStack == null) {
+					String query = "DELETE FROM woolchests "
+							+ "WHERE Owner='" + woolChest.getUUID() + "' AND Chest='" + woolChest.getChest() + "' AND Index_='" + index + "';";
 					try {
-						conn.createStatement().executeUpdate("DELETE FROM woolchests "
-								+ "WHERE Owner='" + woolChest.getUUID() + "' "
-								+ "AND Chest='" + woolChest.getChest() + "' "
-								+ "AND Index_='" + index + "';");
+						PreparedStatement prep = conn.prepareStatement(query);
+						prep.execute();
+						prep.close();
 					} catch (SQLException e) {
+						success = false;
 						e.printStackTrace();
 					}
 				} else {
@@ -405,11 +410,14 @@ public class SqlQuery {
 						enchants = enchants.trim();
 						prep.setString(7, enchants);
 						prep.execute();
+						prep.close();
 					} catch (SQLException e) {
+						success = false;
 						e.printStackTrace();
 					}
 				}
 			}
+			if (success) woolChest.setChanged(false);
 		}
 	}
 }

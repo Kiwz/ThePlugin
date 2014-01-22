@@ -18,12 +18,14 @@ public class WoolChest {
 	private String uuid;
 	private short chest;
 	private Inventory inventory;
+	private boolean changed;
 
 	
 	public WoolChest(MyPlayer myPlayer, short chest) {
 		this.uuid = myPlayer.getUUID();
 		this.chest = chest;
-		this.inventory = createInventory(myPlayer, chest);
+		this.inventory = Bukkit.getServer().createInventory(null, 54, Color.BLACK + "Ullkiste " + chest + " (" + myPlayer.getName() + ")");
+		this.changed = false;
 		woolChests.put(uuid + chest, this);
 	}
 	
@@ -72,7 +74,11 @@ public class WoolChest {
 		return this.inventory;
 	}
 	
-	private Inventory createInventory(MyPlayer myPlayer, short chest) {
-		return Bukkit.getServer().createInventory(null, 54, Color.BLACK + "Ullkiste " + chest + " (" + myPlayer.getName() + ")");
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+	
+	public boolean isChanged() {
+		return this.changed;
 	}
 }

@@ -18,7 +18,7 @@ public class RulesCmd {
 	private boolean rules(CommandSender sender) {
 		List<String> list = new ArrayList<String>();
 		int i = 1;
-		for (String rule : Config.getRules()) {
+		for (String rule : Config.getConfig().getRules()) {
 			list.add(Color.SAFE + "" + i + ": " + rule);
 			i++;
 		}

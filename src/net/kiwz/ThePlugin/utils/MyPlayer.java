@@ -352,7 +352,7 @@ public class MyPlayer {
 	}
 	
 	public boolean isAdmin() {
-		if (Config.getAdmins().contains(this.name)) return true;
+		if (Config.getConfig().getAdmins().contains(this.name)) return true;
 		if (this.getOfflinePlayer().isOp()) return true;
         return false;
 	}

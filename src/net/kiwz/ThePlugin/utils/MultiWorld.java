@@ -11,30 +11,16 @@ import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 public class MultiWorld {
-	/*
-	public static void handleWorlds() {
-		for (World world : Bukkit.getServer().getWorlds()) {
-			saveWorld(world);
-		}
-		for (MyWorld myWorld : MyWorld.getWorlds()) {
-			loadMyWorld(myWorld);
-		}
-	}
-	
-	private static void saveWorld(World world) {
-		MyWorld myWorld = new MyWorld(world);
-		if (!myWorld.save()) {
-			myWorld = MyWorld.getWorld(world);
-			myWorld.setEnv(world.getEnvironment());
-			myWorld.setType(world.getWorldType());
-			myWorld.setSeed(world.getSeed());
-			myWorld.setSpawn(world.getSpawnLocation());
-			myWorld.setChanged(true);
-		}
-	}*/
 	
 	public static void loadMyWorld(MyWorld myWorld) {
-		World world = createWorld(myWorld);
+		World world = Bukkit.getServer().getWorld(myWorld.getName());
+		if (world == null) {
+			WorldCreator c = new WorldCreator(myWorld.getName());
+			c.environment(myWorld.getEnv());
+			c.type(myWorld.getType());
+			c.seed(myWorld.getSeed());
+			world = c.createWorld();
+		}
 		if (myWorld.getSpawn() == null) {
 			if (myWorld.getSpawnCoords() != null && myWorld.getSpawnDirection() != null) {
 				myWorld.setSpawn(Util.parseLocation(world, myWorld.getSpawnCoords(), myWorld.getSpawnDirection()));
@@ -49,20 +35,6 @@ public class MultiWorld {
 				place.getCenter().setWorld(world);
 				place.getSpawn().setWorld(world);
 			}
-		}
-	}
-	
-	private static World createWorld(MyWorld myWorld) {
-		World world = Bukkit.getServer().getWorld(myWorld.getName());
-		if (world != null) {
-			return world;
-		} else {
-			WorldCreator c = new WorldCreator(myWorld.getName());
-			c.environment(myWorld.getEnv());
-			c.type(myWorld.getType());
-			c.seed(myWorld.getSeed());
-			world = c.createWorld();
-			return world;
 		}
 	}
 	
@@ -109,6 +81,20 @@ public class MultiWorld {
 		String name = world.getName();
 		server.unloadWorld(world, true);
 		moveWorldFolder(name);
+	}
+	
+	public static void saveBukkitWorlds() {
+		for (World world : Bukkit.getServer().getWorlds()) {
+			if (MyWorld.getWorld(world) == null) {
+				MyWorld myWorld = new MyWorld(world);
+				myWorld.setEnv(world.getEnvironment());
+				myWorld.setType(world.getWorldType());
+				myWorld.setSeed(world.getSeed());
+				myWorld.setSpawn(world.getSpawnLocation());
+				myWorld.save();
+				setWorldOptions(myWorld);
+			}
+		}
 	}
 	
 	private static void moveWorldFolder(String worldName) {

@@ -88,6 +88,8 @@ public class BanCmd {
 					player.sendMessage(MyPlayer.getColorName(myTarget)
 							+ Color.WARNING + " kan komme tilbake " + Color.VARIABLE + Util.getTimeFullDate(banExpire + 60));
 				}
+				sender.sendMessage(Color.INFO + "Du bannet " + MyPlayer.getColorName(myTarget)
+						+ " frem til " + Color.VARIABLE + Util.getTimeFullDate(banExpire + 60));
 			}
 		} else {
 			sender.sendMessage(Color.WARNING + "For å se hvem som er bannet skriv:");
@@ -137,6 +139,7 @@ public class BanCmd {
 					player.sendMessage(MyPlayer.getColorName(myTarget)
 							+ Color.WARNING + " ble sparket av " + MyPlayer.getColorName(mySender));
 				}
+				sender.sendMessage(Color.INFO + "Du kicket " + MyPlayer.getColorName(myTarget));
 			}
 		} else {
 			sender.sendMessage(Color.WARNING + "Kommandoen må inneholde flere argumenter:");

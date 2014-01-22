@@ -2,7 +2,7 @@ Bugs:
 
 
 Opprydding:
-Endre på sql queryes så de ikke har for loop men at de blir en "setter" for hvert object
+Slå sammen en del kommando klasser i færre klasser
 Bygge listeners mye bedre!
 
 
