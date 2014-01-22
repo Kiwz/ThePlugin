@@ -52,19 +52,21 @@ public class PlaceCmd {
 				if (mySender == null) {
 					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
 				} else {
-					if (Place.getPlace(mySender.getOnlinePlayer().getLocation()) == null) {
+					place = Place.getPlace(mySender.getOnlinePlayer().getLocation());
+					if (place == null) {
 						sendWarning(sender, "Det finnes ingen plass her");
 					} else {
-						sendPlaceInfo(sender, Place.getPlace(mySender.getOnlinePlayer().getLocation()));
+						sendPlaceInfo(sender, place);
 					}
 				}
 			} else if (args[0].length() == 1) {
 				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
 			} else {
-				if (Place.getPlace(mySender, args[0]) == null) {
+				place = Place.getPlace(mySender, args[0]);
+				if (place == null) {
 					sendWarning(sender, Color.PLACE + args[0] + Color.WARNING + " finnes ikke");
 				} else {
-					sendPlaceInfo(sender, Place.getPlace(mySender, args[0]));
+					sendPlaceInfo(sender, place);
 				}
 			}
 		} else if (args.length == 2) {
@@ -139,10 +141,11 @@ public class PlaceCmd {
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("slett")) {
-				if (place.delete(mySender)) {
+				place.setRemoved(mySender, true);
+				if (place.save(mySender)) {
 					sendInfo(sender, place.getColorName() + " er slettet");
 				} else {
-					sendWarning(sender, place.getColorName() + Color.WARNING + " er ikke din plass");
+					sendWarning(sender, place.getError(mySender));
 				}
 			} else if (args[0].equalsIgnoreCase("entre")) {
 				place.setEnter("Velkommen til " + place.getName());

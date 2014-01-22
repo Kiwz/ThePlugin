@@ -10,29 +10,36 @@ import org.bukkit.World;
 
 public class Home {
 	private static HashMap<String, Home> homes = new HashMap<String, Home>();
-	private static HashMap<String, Home> removedHomes = new HashMap<String, Home>();
-	
-	private String key;
+
 	private String uuid;
+	private String worldName;
+	private String key;
 	private Location loc;
+	private boolean changed;
+	private boolean loaded;
+	private boolean removed;
 	
 	public Home(MyPlayer myPlayer) {
-		this.key = myPlayer.getUUID() + " " + myPlayer.getOnlinePlayer().getWorld().getName();
 		this.uuid = myPlayer.getUUID();
+		this.worldName = myPlayer.getOnlinePlayer().getWorld().getName();
+		this.key = getUUID() + " " + getWorldName();
 		this.loc = myPlayer.getOnlinePlayer().getLocation();
+		this.changed = true;
+		this.loaded = true;
+		this.removed = false;
 	}
 	
 	public Home(String uuid, String worldName, String coords, String direction) {
 		World world = Bukkit.getServer().getWorld(worldName);
 		Location loc = Util.parseLocation(world, coords, direction);
 		
-		this.key = uuid + " " + worldName;
 		this.uuid = uuid;
+		this.worldName = worldName;
+		this.key = getUUID() + " " + getWorldName();
 		this.loc = loc;
-	}
-	
-	public static Home getHome(MyPlayer myPlayer) {
-		return homes.get(myPlayer.getUUID() + " " + myPlayer.getOnlinePlayer().getWorld().getName());
+		this.changed = false;
+		this.loaded = true;
+		this.removed = false;
 	}
 	
 	public static Home getHome(MyPlayer myPlayer, World world) {
@@ -47,16 +54,8 @@ public class Home {
 		return list;
 	}
 	
-	public static List<Home> getRemovedHomes() {
-		List<Home> list = new ArrayList<Home>();
-		for (String key : removedHomes.keySet()) {
-			list.add(removedHomes.get(key));
-		}
-		return list;
-	}
-	
-	public static void clearRemovedHomes() {
-		removedHomes.clear();
+	public String getWorldName() {
+		return this.worldName;
 	}
 	
 	public String getUUID() {
@@ -67,12 +66,36 @@ public class Home {
 		return this.loc;
 	}
 	
-	public void delete() {
-		removedHomes.put(this.key, homes.remove(this.key));
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+	
+	public boolean isChanged() {
+		return this.changed;
+	}
+	
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+	
+	public boolean isLoaded() {
+		return this.loaded;
+	}
+	
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+	
+	public boolean isRemoved() {
+		return this.removed;
+	}
+	
+	public void remove() {
+		homes.remove(this.key);
 	}
 	
 	public void save() {
-		if (this.loc.getWorld() == null) return;
+		if (getLocation() == null) setLoaded(false);
 		homes.put(this.key, this);
 	}
 }

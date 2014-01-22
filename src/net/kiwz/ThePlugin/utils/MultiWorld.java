@@ -11,7 +11,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
 public class MultiWorld {
-
+	/*
 	public static void handleWorlds() {
 		for (World world : Bukkit.getServer().getWorlds()) {
 			saveWorld(world);
@@ -29,8 +29,9 @@ public class MultiWorld {
 			myWorld.setType(world.getWorldType());
 			myWorld.setSeed(world.getSeed());
 			myWorld.setSpawn(world.getSpawnLocation());
+			myWorld.setChanged(true);
 		}
-	}
+	}*/
 	
 	public static void loadMyWorld(MyWorld myWorld) {
 		World world = createWorld(myWorld);
@@ -42,27 +43,12 @@ public class MultiWorld {
 			}
 		}
 		
-		for (Place place : Place.getUnloadedPlaces()) {
-			if (place.getSpawn().getWorld().getName().equals(world.getName())) {
-				place.load();
-				place = Place.getPlace(place.getId());
+		for (Place place : Place.getPlaces()) {
+			if (!place.isRemoved() && !place.isLoaded() && place.getWorldName().equals(world.getName())) {
+				place.setLoaded(true);
 				place.getCenter().setWorld(world);
 				place.getSpawn().setWorld(world);
 			}
-		}
-	}
-	
-	public static void setWorldOptions(MyWorld myWorld) {
-		World world = Bukkit.getServer().getWorld(myWorld.getName());
-		if (world != null) {
-			world.setSpawnLocation(myWorld.getSpawn().getBlockX(), myWorld.getSpawn().getBlockY(), myWorld.getSpawn().getBlockZ());
-			world.setKeepSpawnInMemory(myWorld.getKeepSpawn());
-			world.setPVP(myWorld.getPvp());
-			world.setSpawnFlags(myWorld.getMonsters(), myWorld.getAnimals());
-			if (myWorld.getMonsterGrief()) world.setGameRuleValue("mobGriefing", "true");
-			else world.setGameRuleValue("mobGriefing", "false");
-			if (myWorld.getFireSpread()) world.setGameRuleValue("doFireTick", "true");
-			else world.setGameRuleValue("doFireTick", "false");
 		}
 	}
 	
@@ -80,9 +66,28 @@ public class MultiWorld {
 		}
 	}
 	
-	public static boolean unloadWorld(World world) {
+	public static void setWorldOptions(MyWorld myWorld) {
+		World world = Bukkit.getServer().getWorld(myWorld.getName());
+		if (world != null) {
+			world.setSpawnLocation(myWorld.getSpawn().getBlockX(), myWorld.getSpawn().getBlockY(), myWorld.getSpawn().getBlockZ());
+			world.setKeepSpawnInMemory(myWorld.getKeepSpawn());
+			world.setPVP(myWorld.getPvp());
+			world.setSpawnFlags(myWorld.getMonsters(), myWorld.getAnimals());
+			if (myWorld.getMonsterGrief()) world.setGameRuleValue("mobGriefing", "true");
+			else world.setGameRuleValue("mobGriefing", "false");
+			if (myWorld.getFireSpread()) world.setGameRuleValue("doFireTick", "true");
+			else world.setGameRuleValue("doFireTick", "false");
+		}
+	}
+	
+	public static void unloadWorld(MyWorld myWorld) {
 		Server server = Bukkit.getServer();
-		String name = world.getName();
+		World world = myWorld.getWorld();
+		FillWorld fillWorld = FillWorld.getFillWorld(myWorld);
+		if (fillWorld != null) fillWorld.cancelTask();
+		myWorld.setLoaded(false);
+		myWorld.setRemoved(true);
+		
 		for (Player player : world.getPlayers()) {
 			player.teleport(MyWorld.getWorld(server.getWorlds().get(0)).getSpawn());
 			player.sendMessage(Color.WARNING + "Verdenen du var i ble slettet, du er nå i hoved-spawnen");
@@ -90,27 +95,20 @@ public class MultiWorld {
 		
 		for (Place place : Place.getPlaces()) {
 			if (place.getSpawn().getWorld() == world) {
-				place.unload();
+				place.setLoaded(false);
 			}
-		}
-		
-		if (!server.unloadWorld(world, true)) {
-			for (Place place : Place.getUnloadedPlaces()) {
-				if (place.getSpawn().getWorld().getName().equals(world.getName())) {
-					place.load();
-					place = Place.getPlace(place.getId());
-					place.getCenter().setWorld(world);
-					place.getSpawn().setWorld(world);
-				}
-			}
-			return false;
 		}
 		
 		for (Home home : Home.getHomes()) {
-			if (home.getLocation().getWorld().getName().equals(name)) home.delete();
+			if (home.getLocation().getWorld() == world) {
+				home.setLoaded(false);
+				home.setRemoved(true);
+			}
 		}
+
+		String name = world.getName();
+		server.unloadWorld(world, true);
 		moveWorldFolder(name);
-		return true;
 	}
 	
 	private static void moveWorldFolder(String worldName) {

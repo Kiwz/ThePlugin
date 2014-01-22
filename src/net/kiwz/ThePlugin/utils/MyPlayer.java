@@ -42,6 +42,9 @@ public class MyPlayer {
 	private boolean damaged;
 	private int damagedTaskId;
 	private MyPlayer woolChestOwner;
+	private boolean changed;
+	private boolean loaded;
+	private boolean removed;
 	
 	public MyPlayer(Player player) {
 		this.uuid = player.getUniqueId().toString().replace("-", "");
@@ -63,6 +66,9 @@ public class MyPlayer {
 		this.damaged = false;
 		this.damagedTaskId = -1;
 		this.woolChestOwner = this;
+		this.changed = true;
+		this.loaded = true;
+		this.removed = false;
 	}
 	
 	public MyPlayer(String uuid, String name, String ip, long lastPlayed, long timePlayed, boolean muted,
@@ -86,6 +92,9 @@ public class MyPlayer {
 		this.damaged = false;
 		this.damagedTaskId = -1;
 		this.woolChestOwner = this;
+		this.changed = false;
+		this.loaded = true;
+		this.removed = false;
 	}
 	
 	public static MyPlayer getPlayerById(String id) {
@@ -136,6 +145,7 @@ public class MyPlayer {
 	
 	public void setName(String name) {
 		this.name = name;
+		setChanged(true);
 	}
 	
 	public String getName() {
@@ -154,6 +164,7 @@ public class MyPlayer {
 	
 	public void setIp(String ip) {
 		this.ip = ip;
+		setChanged(true);
 	}
 	
 	public String getIp() {
@@ -162,6 +173,7 @@ public class MyPlayer {
 	
 	public void setLastPlayed(long lastPlayed) {
 		this.lastPlayed = lastPlayed;
+		setChanged(true);
 	}
 	
 	public long getLastPlayed() {
@@ -170,6 +182,7 @@ public class MyPlayer {
 	
 	public void setTimePlayed(long timePlayed) {
 		this.timePlayed = timePlayed;
+		setChanged(true);
 	}
 	
 	public long getTimePlayed() {
@@ -186,6 +199,7 @@ public class MyPlayer {
 	
 	public void setMuted(boolean muted) {
 		this.muted = muted;
+		setChanged(true);
 	}
 	
 	public boolean isMuted() {
@@ -198,6 +212,7 @@ public class MyPlayer {
 		this.banExpire = banExpire;
 		this.banReason = banReason;
 		this.bannedBy = bannedBy;
+		setChanged(true);
 	}
 	
 	public boolean isBanned() {
@@ -277,20 +292,36 @@ public class MyPlayer {
 		return this.woolChestOwner;
 	}
 	
-	public boolean isAdmin() {
-		if (Config.getAdmins().contains(this.name)) return true;
-		if (this.getOfflinePlayer().isOp()) return true;
-        return false;
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 	
-	public Player getOnlinePlayer() {
-		return Bukkit.getServer().getPlayer(this.name);
+	public boolean isChanged() {
+		return this.changed;
 	}
 	
-	public boolean save() {
-		if (players.containsKey(this.uuid)) return false;
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+	
+	public boolean isLoaded() {
+		return this.loaded;
+	}
+	
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+	
+	public boolean isRemoved() {
+		return this.removed;
+	}
+	
+	public void remove() {
+		players.remove(this.uuid);
+	}
+	
+	public void save() {
 		players.put(this.uuid, this);
-		return true;
 	}
 	
 	public boolean canBeCharged(int amount) {
@@ -298,7 +329,7 @@ public class MyPlayer {
 	}
 
 	public boolean canBeCharged(Material material, int amount) {
-		PlayerInventory inventory = this.getOfflinePlayer().getInventory();
+		PlayerInventory inventory = getOfflinePlayer().getInventory();
 		if (inventory.containsAtLeast(new ItemStack(material), amount)) return true;
 		return false;
 	}
@@ -311,13 +342,23 @@ public class MyPlayer {
 		PlayerInventory inventory = this.getOfflinePlayer().getInventory();
 		if (inventory.containsAtLeast(new ItemStack(material), amount)) {
 			inventory.removeItem(new ItemStack(material, amount));
-			if (this.getOnlinePlayer() != null) {
-				this.getOnlinePlayer().sendMessage(Color.WARNING + "Denne handlingen kostet "
+			if (getOnlinePlayer() != null) {
+				getOnlinePlayer().sendMessage(Color.WARNING + "Denne handlingen kostet "
 						+ Color.VARIABLE + amount + " " + material.toString());
 			}
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean isAdmin() {
+		if (Config.getAdmins().contains(this.name)) return true;
+		if (this.getOfflinePlayer().isOp()) return true;
+        return false;
+	}
+	
+	public Player getOnlinePlayer() {
+		return Bukkit.getServer().getPlayer(this.name);
 	}
 	
     public Player getOfflinePlayer() {

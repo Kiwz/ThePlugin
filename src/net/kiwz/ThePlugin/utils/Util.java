@@ -158,12 +158,13 @@ public class Util {
 	
 	/**
 	 * 
-	 * @param world
+	 * @param world as World
 	 * @param coordsString "xx.xx yy.yy zz.zz"
 	 * @param directionString "pi.pi ya.ya"
-	 * @return Location
+	 * @return <b>Location</b>, null if <b>world</b> is null
 	 */
 	public static Location parseLocation(World world, String coordsString, String directionString) {
+		if (world == null) return null;
 		String[] coords = coordsString.split(" ");
 		String[] direction = directionString.split(" ");
 		

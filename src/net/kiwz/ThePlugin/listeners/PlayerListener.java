@@ -286,10 +286,8 @@ public class PlayerListener implements Listener {
         String coords = player.getLocation().getBlockX() + ", " + player.getLocation().getBlockY() + ", " + player.getLocation().getBlockZ();
         String log;
         
-        MyPlayer myPlayer = new MyPlayer(player);
-        
-        if (!myPlayer.save()) {
-        	myPlayer = MyPlayer.getPlayer(player);
+        MyPlayer myPlayer = MyPlayer.getPlayer(player);
+        if (myPlayer != null) {
         	myPlayer.setName(playerName);
         	myPlayer.setIp(ip);
         	myPlayer.setLastPlayed(System.currentTimeMillis() / 1000);
@@ -304,6 +302,8 @@ public class PlayerListener implements Listener {
 	        player.sendMessage(Color.INFO + "Mumble:" + Color.HEADER + " mumble.larvikgaming.net:60000");
 			player.sendMessage(Color.INFO + "############################################");
         } else {
+        	myPlayer = new MyPlayer(player);
+        	myPlayer.save();
 	        log = playerName + " logget inn for første gang (" + worldName + " " + coords + ") [" + ip + "]";
 			event.setJoinMessage(MyPlayer.getColorName(myPlayer) + Color.HEADER + " logget inn for første gang");
 			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());

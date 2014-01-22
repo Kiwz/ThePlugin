@@ -87,7 +87,7 @@ public class FillWorld {
 	}
 	
 	private void generateChunk() {
-		World world = myWorld.getBukkitWorld();
+		World world = myWorld.getWorld();
 		status(world);
 		if (chunkMap.get(key) == null) {
 			task.cancel();

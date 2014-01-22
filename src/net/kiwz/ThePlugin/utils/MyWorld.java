@@ -12,7 +12,6 @@ import org.bukkit.WorldType;
 
 public class MyWorld {
 	private static HashMap<String, MyWorld> worlds = new HashMap<String, MyWorld>();
-	private static HashMap<String, MyWorld> removedWorlds = new HashMap<String, MyWorld>();
 	
 	private String name;
 	private Environment env;
@@ -32,6 +31,9 @@ public class MyWorld {
 	private int fill;
 	private String spawnCoords;
 	private String spawnDirection;
+	private boolean changed;
+	private boolean loaded;
+	private boolean removed;
 	
 	public MyWorld(String name) {
 		this(name, "");
@@ -62,6 +64,9 @@ public class MyWorld {
 		this.trample = false;
 		this.border = 1000;
 		this.fill = 0;
+		this.changed = true;
+		this.loaded = true;
+		this.removed = false;
 	}
 	
 	public MyWorld(World world) {
@@ -81,6 +86,9 @@ public class MyWorld {
 		this.trample = false;
 		this.border = 1000;
 		this.fill = 0;
+		this.changed = true;
+		this.loaded = true;
+		this.removed = false;
 	}
 	
 	public MyWorld(String name, String env, String type, long seed, String coords, String direction, boolean keepSpawn, boolean pvp,
@@ -103,6 +111,9 @@ public class MyWorld {
 		this.fill = fill;
 		this.spawnCoords = coords;
 		this.spawnDirection = direction;
+		this.changed = false;
+		this.loaded = true;
+		this.removed = false;
 	}
 	
 	public static MyWorld getWorld(String name) {
@@ -121,18 +132,6 @@ public class MyWorld {
 			list.add(worlds.get(key));
 		}
 		return list;
-	}
-	
-	public static List<MyWorld> getRemovedWorlds() {
-		List<MyWorld> list = new ArrayList<MyWorld>();
-		for (String key : removedWorlds.keySet()) {
-			list.add(removedWorlds.get(key));
-		}
-		return list;
-	}
-	
-	public static void clearRemovedWorlds() {
-		removedWorlds.clear();
 	}
 	
 	public World getWorld() {
@@ -169,6 +168,7 @@ public class MyWorld {
 	
 	public void setSpawn(Location loc) {
 		this.spawn = loc;
+		setChanged(true);
 	}
 	
 	public Location getSpawn() {
@@ -177,6 +177,7 @@ public class MyWorld {
 	
 	public void setKeepSpawn(boolean keepSpawn) {
 		this.keepSpawn = keepSpawn;
+		setChanged(true);
 	}
 	
 	public boolean getKeepSpawn() {
@@ -185,6 +186,7 @@ public class MyWorld {
 	
 	public void setPvp(boolean pvp) {
 		this.pvp = pvp;
+		setChanged(true);
 	}
 	
 	public boolean getPvp() {
@@ -193,6 +195,7 @@ public class MyWorld {
 	
 	public void setMonsters(boolean monsters) {
 		this.monsters = monsters;
+		setChanged(true);
 	}
 	
 	public boolean getMonsters() {
@@ -201,6 +204,7 @@ public class MyWorld {
 	
 	public void setAnimals(boolean animals) {
 		this.animals = animals;
+		setChanged(true);
 	}
 	
 	public boolean getAnimals() {
@@ -209,6 +213,7 @@ public class MyWorld {
 	
 	public void setMonsterGrief(boolean monsterGrief) {
 		this.monsterGrief = monsterGrief;
+		setChanged(true);
 	}
 	
 	public boolean getMonsterGrief() {
@@ -217,6 +222,7 @@ public class MyWorld {
 	
 	public void setFireSpread(boolean fireSpread) {
 		this.fireSpread = fireSpread;
+		setChanged(true);
 	}
 	
 	public boolean getFireSpread() {
@@ -225,6 +231,7 @@ public class MyWorld {
 	
 	public void setClaimable(boolean claimable) {
 		this.claimable = claimable;
+		setChanged(true);
 	}
 	
 	public boolean getClaimable() {
@@ -233,6 +240,7 @@ public class MyWorld {
 	
 	public void setExplosions(boolean explosions) {
 		this.explosions = explosions;
+		setChanged(true);
 	}
 	
 	public boolean getExplosions() {
@@ -241,6 +249,7 @@ public class MyWorld {
 	
 	public void setTrample(boolean trample) {
 		this.trample = trample;
+		setChanged(true);
 	}
 	
 	public boolean getTrample() {
@@ -249,14 +258,24 @@ public class MyWorld {
 	
 	public void setBorder(int border) {
 		this.border = border;
+		setChanged(true);
 	}
 	
 	public int getBorder() {
 		return this.border;
 	}
 	
+	public boolean reachedBorder(Location loc) {
+		if (this.border < loc.getBlockX() || -this.border + 1 > loc.getBlockX()
+				|| this.border < loc.getBlockZ() || -this.border + 1 > loc.getBlockZ()) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void setFill(int fill) {
 		this.fill = fill;
+		setChanged(true);
 	}
 	
 	public int getFill() {
@@ -271,28 +290,36 @@ public class MyWorld {
 		return this.spawnDirection;
 	}
 	
-	public boolean reachedBorder(Location loc) {
-		if (this.border < loc.getBlockX() || -this.border + 1 > loc.getBlockX()
-				|| this.border < loc.getBlockZ() || -this.border + 1 > loc.getBlockZ()) {
-			return true;
-		}
-		return false;
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 	
-	public World getBukkitWorld() {
-		return Bukkit.getServer().getWorld(this.name);
+	public boolean isChanged() {
+		return this.changed;
 	}
 	
-	public boolean delete() {
-		if (!MultiWorld.unloadWorld(getBukkitWorld())) return false;
-		removedWorlds.put(this.name, worlds.remove(this.name));
-		return true;
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
 	}
 	
-	public boolean save() {
-		if (worlds.containsKey(this.name)) return false;
+	public boolean isLoaded() {
+		return this.loaded;
+	}
+	
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+	
+	public boolean isRemoved() {
+		return this.removed;
+	}
+	
+	public void remove() {
+		worlds.remove(this.name);
+	}
+	
+	public void save() {
 		worlds.put(name, this);
-		return true;
 	}
 	
 	private Environment getEnvironment(String envString) {

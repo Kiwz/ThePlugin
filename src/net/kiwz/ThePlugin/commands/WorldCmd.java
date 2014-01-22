@@ -39,7 +39,7 @@ public class WorldCmd {
 		if (args.length > 1) {
 			if (!args[0].equalsIgnoreCase("new")) {
 				myWorld = MyWorld.getWorld(args[1]);
-				if (myWorld == null) {
+				if (myWorld == null || myWorld.isRemoved()) {
 					sendWarning(sender, args[1] + " finnes ikke");
 					return true;
 				}
@@ -63,22 +63,21 @@ public class WorldCmd {
 				}
 			}
 		} else if (args[0].equalsIgnoreCase("new")) {
-			if (args.length == 2) myWorld = new MyWorld(args[1]);
-			if (args.length == 3) myWorld = new MyWorld(args[1], args[2]);
-			if (args.length == 4) myWorld = new MyWorld(args[1], args[2], args[3]);
-			if (args.length == 5) myWorld = new MyWorld(args[1], args[2], args[3], args[4]);
-			
-			if (myWorld.save()) {
+			if (Bukkit.getServer().getWorld(args[1].toLowerCase()) != null) {
+				sendWarning(sender, args[1] + " eksisterer allerede");
+			} else {
+				if (args.length == 2) myWorld = new MyWorld(args[1]);
+				if (args.length == 3) myWorld = new MyWorld(args[1], args[2]);
+				if (args.length == 4) myWorld = new MyWorld(args[1], args[2], args[3]);
+				if (args.length == 5) myWorld = new MyWorld(args[1], args[2], args[3], args[4]);
+				myWorld.save();
 				sendInfo(sender, "Starter generering av ny verden...");
 				MultiWorld.loadMyWorld(myWorld);
 				MultiWorld.setWorldOptions(myWorld);
-				String msg = Color.INFO + "World: " + Color.VARIABLE + myWorld.getName()
+				sendInfo(sender, Color.INFO + "World: " + Color.VARIABLE + myWorld.getName()
 						+ Color.INFO + " Environment: " + Color.VARIABLE + myWorld.getEnv().toString()
 						+ Color.INFO + " Type: " + Color.VARIABLE + myWorld.getType().toString()
-						+ Color.INFO + " Seed: " + Color.VARIABLE + myWorld.getSeed();
-				sendInfo(sender, msg);
-			} else {
-				sendWarning(sender, args[1] + " er allerede loaded");
+						+ Color.INFO + " Seed: " + Color.VARIABLE + myWorld.getSeed());
 			}
 		} else if (args.length == 2) {
 			FillWorld fillWorld = FillWorld.getFillWorld(myWorld);
@@ -135,12 +134,8 @@ public class WorldCmd {
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1]);
 			} else if (args[0].equalsIgnoreCase("delete")) {
-				if (myWorld.delete()) {
-					if (fillWorld != null) fillWorld.cancelTask();
-					sendInfo(sender, Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet");
-				} else {
-					sendWarning(sender, Color.VARIABLE + myWorld.getName() + Color.WARNING + " kunne ikke slettes");
-				}
+				MultiWorld.unloadWorld(myWorld);
+				sendInfo(sender, Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet");
 			} else {
 				Util.sendAsPages(sender, args[0], 0, "Hjelp: /plass", "", help());
 			}

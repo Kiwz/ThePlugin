@@ -5,10 +5,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import net.kiwz.ThePlugin.ThePlugin;
-import net.kiwz.ThePlugin.mysql.ConnectToMySQL;
+import net.kiwz.ThePlugin.mysql.SqlConnection;
+import net.kiwz.ThePlugin.mysql.SqlQuery;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +23,7 @@ import org.apache.logging.log4j.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.fusesource.jansi.Ansi;
 
 public class ServerManager {
 	private static boolean warning = false;
@@ -53,7 +57,29 @@ public class ServerManager {
 				 */
 				int time = (int) System.currentTimeMillis();
 				// Det er bare neste linje som skal være her!
-				new ConnectToMySQL().saveTables();
+				Connection conn = new SqlConnection().getConnection();
+				if (conn == null) {
+					Bukkit.getServer().getScheduler().runTaskLater(ThePlugin.getPlugin(), new Runnable() {
+						public void run() {
+							ThePlugin.getPlugin().getLogger().severe(Ansi.ansi().fg(Ansi.Color.RED) + "Ingen database funnet, restarter serveren!"
+									+ Ansi.ansi().fg(Ansi.Color.DEFAULT));
+							ThePlugin.error = true;
+							for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+								player.kickPlayer(Color.WARNING + "Det har desverre skjedd noe feil med serveren og den vil restarte!");
+							}
+							Bukkit.getServer().shutdown();
+						}
+					}, 20);
+					return;
+				} else {
+					SqlQuery query = new SqlQuery(conn);
+					for (MyWorld myWorld : MyWorld.getWorlds()) query.updateWorld(myWorld);
+					for (MyPlayer myPlayer : MyPlayer.getPlayers()) query.updatePlayer(myPlayer);
+					for (Place place : Place.getPlaces()) query.updatePlace(place);
+					for (Home home : Home.getHomes()) query.updateHome(home);
+					//query.insertWoolChests();
+					try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+				}
 				// Det er linjen over som skal være her!
 				time = (int) (System.currentTimeMillis() - time);
 				try {

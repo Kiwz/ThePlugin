@@ -17,8 +17,8 @@ import org.bukkit.entity.Player;
  */
 public class Place {
 	private static HashMap<Integer, Place> places = new HashMap<Integer, Place>();
-	private static HashMap<Integer, Place> unloadedPlaces = new HashMap<Integer, Place>();
-	private static HashMap<Integer, Place> removedPlaces = new HashMap<Integer, Place>();
+	//private static HashMap<Integer, Place> unloadedPlaces = new HashMap<Integer, Place>();
+	//private static HashMap<Integer, Place> removedPlaces = new HashMap<Integer, Place>();
 	private static Set<Integer> usedIDs = new HashSet<Integer>();
 	private static Set<String> usedNames = new HashSet<String>();
 	
@@ -37,6 +37,10 @@ public class Place {
 	private String enter;
 	private String leave;
 	private boolean isChargeAble;
+	private boolean changed;
+	private boolean loaded;
+	private boolean removed;
+	private String worldName;
 	
 	public Place() {
 	}
@@ -60,11 +64,14 @@ public class Place {
 		this.animals = true;
 		this.enter = "Velkommen til " + name;
 		this.leave = "Du forlater " + name;
+		this.changed = true;
+		this.loaded = true;
+		this.removed = false;
+		this.worldName = player.getWorld().getName();
 	}
 	
 	public Place(int id, int time, String name, String owner, String members, String worldName, int x, int z, int radius,
 			String spawnCoords, String spawnDirection, boolean priv, boolean pvp, boolean monsters, boolean animals, String enter, String leave) {
-		
 		World world = Bukkit.getServer().getWorld(worldName);
 		
 		Set<String> set = new HashSet<String>();
@@ -86,6 +93,10 @@ public class Place {
 		this.animals = animals;
 		this.enter = enter;
 		this.leave = leave;
+		this.changed = false;
+		this.loaded = false;
+		this.removed = false;
+		this.worldName = worldName;
 	}
 	
 	public static Place getTempPlace(int id) {
@@ -108,6 +119,9 @@ public class Place {
 		place.enter = places.get(id).enter;
 		place.leave = places.get(id).leave;
 		place.isChargeAble = places.get(id).isChargeAble;
+		place.changed = places.get(id).changed;
+		place.loaded = places.get(id).loaded;
+		place.removed = places.get(id).removed;
 		return place;
 	}
 	
@@ -116,24 +130,26 @@ public class Place {
 	}
 	
 	public static Place getPlace(MyPlayer myPlayer, String name) {
+		Place place = null;
 		for (int key : places.keySet()) {
-			if (places.get(key).name.equalsIgnoreCase(name)) {
-				return places.get(key);
+			if (places.get(key).name.toLowerCase().startsWith(name.toLowerCase())) {
+				place = places.get(key);
 			}
 		}
 		if (myPlayer != null) {
 			for (int key : places.keySet()) {
 				if (places.get(key).owner.equals(myPlayer.getUUID())
 						&& places.get(key).name.toLowerCase().startsWith(name.toLowerCase())) {
-					return places.get(key);
+					place = places.get(key);
 				}
 			}
 		}
 		for (int key : places.keySet()) {
-			if (places.get(key).name.toLowerCase().startsWith(name.toLowerCase())) {
-				return places.get(key);
+			if (places.get(key).name.equalsIgnoreCase(name)) {
+				place = places.get(key);
 			}
 		}
+		if (place.isLoaded()) return place;
 		return null;
 	}
 	
@@ -144,7 +160,7 @@ public class Place {
 					&& (place.getCenter().getBlockX() - place.getRadius()) <= loc.getBlockX()
 					&& (place.getCenter().getBlockZ() + place.getRadius()) >= loc.getBlockZ()
 					&& (place.getCenter().getBlockZ() - place.getRadius()) <= loc.getBlockZ()) {
-				return place;
+				if (place.isLoaded()) return place;
 			}
 		}
 		return null;
@@ -153,7 +169,7 @@ public class Place {
 	public static List<Place> getPlacesByOwner(MyPlayer myPlayer) {
 		List<Place> list = new ArrayList<Place>();
 		for (Place place : getPlaces()) {
-			if (place.getOwner().equals(myPlayer.getUUID())) {
+			if (place.getOwner().equals(myPlayer.getUUID()) && !place.isRemoved()) {
 				list.add(place);
 			}
 		}
@@ -163,7 +179,7 @@ public class Place {
 	public static List<Place> getPlacesByMember(MyPlayer myPlayer) {
 		List<Place> list = new ArrayList<Place>();
 		for (Place place : getPlaces()) {
-			if (place.getMembers().contains(myPlayer.getUUID())) {
+			if (place.getMembers().contains(myPlayer.getUUID()) && !place.isRemoved()) {
 				list.add(place);
 			}
 		}
@@ -181,7 +197,9 @@ public class Place {
 	public static List<String> getPlaceList() {
 		List<String> list = new ArrayList<String>();
 		for (Place place : getPlaces()) {
-			list.add(place.getColorName() + " [" + MyPlayer.getColorName(MyPlayer.getPlayerById(place.getOwner())) + "] ");
+			if (!place.isRemoved()) {
+				list.add(place.getColorName() + " [" + MyPlayer.getColorName(MyPlayer.getPlayerById(place.getOwner())) + "] ");
+			}
 		}
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		return list;
@@ -190,14 +208,16 @@ public class Place {
 	public static List<String> getPlayerList() {
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Place place : getPlaces()) {
-			if (map.containsKey(place.getOwner())) {
-				String name = map.get(place.getOwner());
-				name = name + " [" + place.getColorName() + "]";
-				map.put(place.getOwner(), name);
-			}
-			else {
-				String name = " [" + place.getColorName() + "]";
-				map.put(place.getOwner(), name);
+			if (!place.isRemoved()) {
+				if (map.containsKey(place.getOwner())) {
+					String name = map.get(place.getOwner());
+					name = name + " [" + place.getColorName() + "]";
+					map.put(place.getOwner(), name);
+				}
+				else {
+					String name = " [" + place.getColorName() + "]";
+					map.put(place.getOwner(), name);
+				}
 			}
 		}
 		
@@ -208,7 +228,7 @@ public class Place {
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		return list;
 	}
-	
+	/*
 	public static List<Place> getUnloadedPlaces() {
 		List<Place> list = new ArrayList<Place>();
 		for (int key : unloadedPlaces.keySet()) {
@@ -227,7 +247,7 @@ public class Place {
 	
 	public static void clearRemovedPlaces() {
 		removedPlaces.clear();
-	}
+	}*/
 	
 	public boolean hasAccess(MyPlayer myPlayer) {
 		if (myPlayer.isAdmin()) return true;
@@ -244,9 +264,8 @@ public class Place {
 		return this.time;
 	}
 	
-	public boolean setName(String name) {
+	public void setName(String name) {
 		this.name = name;
-		return true;
 	}
 	
 	public String getName() {
@@ -254,7 +273,8 @@ public class Place {
 	}
 	
 	public String getColorName() {
-		return Color.PLACE + this.name + Color.INFO;
+		if (this.isLoaded()) return Color.PLACE + this.name + Color.INFO;
+		else return Color.WARNING + this.name + Color.INFO;
 	}
 	
 	public void setOwner(MyPlayer myPlayer) {
@@ -281,6 +301,7 @@ public class Place {
 	
 	public void setCenter(Location center) {
 		this.center = new Location(center.getWorld(), center.getBlockX(), 100, center.getZ());
+		setWorldName(center.getWorld().getName());
 	}
 	
 	public Location getCenter() {
@@ -355,6 +376,44 @@ public class Place {
 		this.isChargeAble = isChargeAble;
 	}
 	
+	public void setWorldName(String worldName) {
+		this.worldName = worldName;
+	}
+	
+	public String getWorldName() {
+		return this.worldName;
+	}
+	//
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+	
+	public boolean isChanged() {
+		return this.changed;
+	}
+	
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+	
+	public boolean isLoaded() {
+		return this.loaded;
+	}
+	
+	public void setRemoved(MyPlayer myPlayer, boolean removed) {
+			this.loaded = false;
+			this.removed = removed;
+	}
+	
+	public boolean isRemoved() {
+		return this.removed;
+	}
+	
+	public void remove() {
+		usedNames.remove(this.name.toLowerCase());
+		places.remove(id);
+	}
+	/*
 	public void load() {
 		places.put(id, unloadedPlaces.remove(id));
 	}
@@ -364,23 +423,18 @@ public class Place {
 	}
 	
 	public boolean delete(MyPlayer myPlayer) {
-		if (myPlayer == null) {
-			usedNames.remove(this.name.toLowerCase());
-			removedPlaces.put(this.id, places.remove(this.id));
-			return true;
-		}
-		if (myPlayer.getOfflinePlayer().isOp() || this.owner.equals(myPlayer.getUUID())) {
+		if (myPlayer == null || myPlayer.getOfflinePlayer().isOp() || this.owner.equals(myPlayer.getUUID())) {
 			usedNames.remove(this.name.toLowerCase());
 			removedPlaces.put(this.id, places.remove(this.id));
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
 	public void save() {
 		usedIDs.add(this.id);
 		usedNames.add(this.name.toLowerCase());
-		if (this.center.getWorld() == null) return;
+		if (this.center.getWorld() != null) setLoaded(true);
 		places.put(this.id, this);
 	}
 	
@@ -390,6 +444,7 @@ public class Place {
 		usedIDs.add(this.id);
 		usedNames.add(this.name.toLowerCase());
 		places.put(this.id, this);
+		setChanged(true);
 		return true;
 	}
 	
@@ -435,7 +490,6 @@ public class Place {
 		if (place != null) {
 			MyPlayer newOwner = MyPlayer.getPlayerById(this.owner);
 			if (!place.getOwner().equals(newOwner.getUUID())) {
-				System.out.println("|" + place.getOwner() + "!" + newOwner.getUUID() + "|");
 				if (!op && getPlacesByOwner(newOwner).size() >= 3) return MyPlayer.getColorName(newOwner) + Color.WARNING + " eier allerede 3 plasser";
 			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";
@@ -484,7 +538,7 @@ public class Place {
 					&& place.getCenter().getBlockX() - place.getRadius() <= otherPlace.getCenter().getBlockX() + otherPlace.getRadius()
 					&& place.getCenter().getBlockZ() + place.getRadius() >= otherPlace.getCenter().getBlockZ() - otherPlace.getRadius()
 					&& place.getCenter().getBlockZ() - place.getRadius() <= otherPlace.getCenter().getBlockZ() + otherPlace.getRadius()) {
-				if (place.getId() != otherPlace.getId()) {
+				if (place.getId() != otherPlace.getId() && !otherPlace.isRemoved()) {
 					list.add(otherPlace);
 				}
 	    	}

@@ -3,7 +3,9 @@ package net.kiwz.ThePlugin.commands;
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.Home;
 import net.kiwz.ThePlugin.utils.MyPlayer;
+import net.kiwz.ThePlugin.utils.MyWorld;
 
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 public class HomeCmd {
@@ -24,9 +26,16 @@ public class HomeCmd {
 			sender.sendMessage(Color.COMMAND + "/hjem " + Color.WARNING + "kan bare brukes av spillere");
 			return true;
 		} else if (args.length == 0) {
-			home = Home.getHome(mySender);
-		} else {
 			home = Home.getHome(mySender, mySender.getOnlinePlayer().getWorld());
+		} else {
+			MyWorld myWorld = MyWorld.getWorld(args[0]);
+			if (myWorld != null) {
+				World world = myWorld.getWorld();
+				if (world != null) home = Home.getHome(mySender, world);
+				else home = Home.getHome(mySender, mySender.getOnlinePlayer().getWorld());
+			} else {
+				home = Home.getHome(mySender, mySender.getOnlinePlayer().getWorld());
+			}
 		}
 		
 		if (home == null) {

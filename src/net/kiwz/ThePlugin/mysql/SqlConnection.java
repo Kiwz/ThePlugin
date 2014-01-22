@@ -7,13 +7,9 @@ import java.util.logging.Level;
 
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.utils.Config;
-import net.kiwz.ThePlugin.utils.MultiWorld;
-
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.fusesource.jansi.Ansi;
 
-public class ConnectToMySQL {
+public class SqlConnection {
 	private final Plugin plugin = ThePlugin.getPlugin();
     private final String hostname = Config.getHost();
     private final String port = Config.getPort();
@@ -21,40 +17,8 @@ public class ConnectToMySQL {
     private final String user = Config.getUser();
     private final String password = Config.getPassword();
     private Connection connection = null;
-    
-    public boolean loadTables() {
-		Connection conn = openConnection();
-		if (conn == null) {
-			plugin.getLogger().severe(Ansi.ansi().fg(Ansi.Color.RED) + "Ingen database funnet, aktiverer White-List!"
-					+ Ansi.ansi().fg(Ansi.Color.DEFAULT));
-			Bukkit.getServer().setWhitelist(true);
-			return false;
-		}
-		BuildTables.createTables(conn);
-		SqlQuery query = new SqlQuery(conn);
-		query.selectWorlds();
-		MultiWorld.handleWorlds();
-		query.selectPlayers();
-		query.selectHomes();
-		query.selectPlaces();
-		query.selectWoolChests();
-		closeConnection(conn);
-		return true;
-    }
-    
-    public void saveTables() {
-		Connection conn = openConnection();
-		if (conn == null) return;
-		SqlQuery query = new SqlQuery(conn);
-		query.insertWorlds();
-		query.insertPlayers();
-		query.insertHomes();
-		query.insertPlaces();
-		query.insertWoolChests();
-		closeConnection(conn);
-    }
 
-    public Connection openConnection() {
+    public Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database, this.user, this.password);
@@ -73,13 +37,5 @@ public class ConnectToMySQL {
             plugin.getLogger().log(Level.SEVERE, "JDBC Driver not found!");
         }
         return connection;
-    }
-    
-    public void closeConnection(Connection conn) {
-    	try {
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
     }
 }

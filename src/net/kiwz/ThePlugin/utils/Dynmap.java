@@ -58,6 +58,7 @@ public class Dynmap {
         Map<String, AreaMarker> newAreaMarkers = new HashMap<String, AreaMarker>();
         Map<String, Marker> newMarkers = new HashMap<String, Marker>();
         for (Place place : Place.getPlaces()) {
+        	if (place.isRemoved()) break;
         	String name = place.getName();
         	Location loc = place.getCenter();
         	String owner = MyPlayer.getPlayerById(place.getOwner()).getName();
