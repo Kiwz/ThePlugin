@@ -41,11 +41,11 @@ public class MyWorld {
 	}
 	
 	public MyWorld(String name, String env) {
-		this(name, "", "");
+		this(name, env, "");
 	}
 	
 	public MyWorld(String name, String env, String type) {
-		this(name, "", "", "");
+		this(name, env, type, "");
 	}
 	
 	public MyWorld(String name, String env, String type, String seed) {

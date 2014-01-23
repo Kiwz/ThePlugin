@@ -1,4 +1,5 @@
 Bugs:
+TPRune må bare teleportere rett frem, bakover eller sidene i stedetefor å søke i en "sirkel" rundt seg selv
 
 
 Opprydding:
