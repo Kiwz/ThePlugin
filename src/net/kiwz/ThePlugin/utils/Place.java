@@ -148,7 +148,7 @@ public class Place {
 				place = places.get(key);
 			}
 		}
-		if (place.isLoaded()) return place;
+		if (place != null && place.isLoaded()) return place;
 		return null;
 	}
 	

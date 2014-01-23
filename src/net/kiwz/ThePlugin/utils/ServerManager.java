@@ -55,7 +55,7 @@ public class ServerManager {
 				/**
 				 * TODO fjerne logging av tidsbruk
 				 */
-				int time = (int) System.currentTimeMillis();
+				long time = System.currentTimeMillis();
 				// Behold linjer herfra og ned til neste //
 				Connection conn = new SqlConnection().getConnection();
 				if (conn == null) {
@@ -81,15 +81,18 @@ public class ServerManager {
 					try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 				}
 				// Det er linjer over her som skal beholdes!
-				time = (int) (System.currentTimeMillis() - time);
-				try {
-					File file = new File("db_save.log");
-					BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
-					bw.write(Util.getTimeLogDate(System.currentTimeMillis() / 1000) + " " + time + "ms");
-					bw.write("\n");
-					bw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+				time = (System.currentTimeMillis() - time);
+				int players = Bukkit.getServer().getOnlinePlayers().length;
+				if (time > 30) {
+					try {
+						File file = new File("db_save.log");
+						BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
+						bw.write(Util.getTimeLogDate(System.currentTimeMillis() / 1000) + " " + time + "ms (" + players + ")");
+						bw.write("\n");
+						bw.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}, 200, 200);
