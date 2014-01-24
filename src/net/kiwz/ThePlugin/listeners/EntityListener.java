@@ -41,19 +41,23 @@ public class EntityListener implements Listener {
 	public void onHangingBreak(HangingBreakByEntityEvent event) {
 		
 		if (event.getCause() == RemoveCause.ENTITY) {
-			Player player = (Player) event.getRemover();
-			Location loc = event.getEntity().getLocation();
-			MyPlayer myPlayer = MyPlayer.getPlayer(player);
-			Place place = Place.getPlace(loc);
-			
-			if (place != null) {
-				if (!place.hasAccess(myPlayer)) {
+			if (event.getRemover() instanceof Player) {
+				Player player = (Player) event.getRemover();
+				Location loc = event.getEntity().getLocation();
+				MyPlayer myPlayer = MyPlayer.getPlayer(player);
+				Place place = Place.getPlace(loc);
+				
+				if (place != null) {
+					if (!place.hasAccess(myPlayer)) {
+						event.setCancelled(true);
+						player.sendMessage(denyString);
+					}
+				} else if (!myPlayer.isAdmin() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
 					event.setCancelled(true);
 					player.sendMessage(denyString);
 				}
-			} else if (!myPlayer.isAdmin() && MyWorld.getWorld(loc.getWorld()).getClaimable() && loc.getBlockY() > 40) {
+			} else {
 				event.setCancelled(true);
-				player.sendMessage(denyString);
 			}
 		}
 	}

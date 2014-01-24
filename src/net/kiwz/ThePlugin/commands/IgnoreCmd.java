@@ -1,7 +1,11 @@
 package net.kiwz.ThePlugin.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
+import net.kiwz.ThePlugin.utils.Util;
 
 import org.bukkit.command.CommandSender;
 
@@ -17,14 +21,14 @@ public class IgnoreCmd {
 		if (mySender == null) {
 			sender.sendMessage(Color.COMMAND + "/ignorer " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length == 0) {
-			if (mySender.getIgnored().isEmpty()) {
-				sender.sendMessage(Color.WARNING + "Du har ikke ignorert noen spillere");
-			} else {
-				sender.sendMessage(Color.INFO + "Du har ignorert følgende spiller(e):");
+				List<String> list = new ArrayList<String>();
 				for (MyPlayer myIgnored : mySender.getIgnored()) {
-					sender.sendMessage(MyPlayer.getColorName(myIgnored));
+					list.add(MyPlayer.getColorName(myIgnored));
 				}
-			}
+				if (list.size() == 0) {
+					list.add(Color.INFO + "Du har ikke ignorert noen enda");
+				}
+				Util.sendAsPages(sender, "1", 20, "Ignorerte spiller(e)", "", list);
 		} else if (mySender.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
 			sender.sendMessage(Color.WARNING + "Du kan ikke ignorere deg selv");
 		} else {

@@ -61,50 +61,14 @@ public class TPRune {
 		if (fromBlock.getRelative(0, 0, 2).getType().equals(toBlock)) {
 			return fromBlock.getRelative(0, 0, 2).getLocation();
 		}
-		else if (fromBlock.getRelative(1, 0, 2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(1, 0, 2).getLocation();
-		}
-		else if (fromBlock.getRelative(2, 0, 2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(2, 0, 2).getLocation();
-		}
-		else if (fromBlock.getRelative(2, 0, 1).getType().equals(toBlock)) {
-			return fromBlock.getRelative(2, 0, 1).getLocation();
-		}
 		else if (fromBlock.getRelative(2, 0, 0).getType().equals(toBlock)) {
 			return fromBlock.getRelative(2, 0, 0).getLocation();
-		}
-		else if (fromBlock.getRelative(2, 0, -1).getType().equals(toBlock)) {
-			return fromBlock.getRelative(2, 0, -1).getLocation();
-		}
-		else if (fromBlock.getRelative(2, 0, -2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(2, 0, -2).getLocation();
-		}
-		else if (fromBlock.getRelative(1, 0, -2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(1, 0, -2).getLocation();
 		}
 		else if (fromBlock.getRelative(0, 0, -2).getType().equals(toBlock)) {
 			return fromBlock.getRelative(0, 0, -2).getLocation();
 		}
-		else if (fromBlock.getRelative(-1, 0, -2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(-1, 0, -2).getLocation();
-		}
-		else if (fromBlock.getRelative(-2, 0, -2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(-2, 0, -2).getLocation();
-		}
-		else if (fromBlock.getRelative(-2, 0, -1).getType().equals(toBlock)) {
-			return fromBlock.getRelative(-2, 0, -1).getLocation();
-		}
 		else if (fromBlock.getRelative(-2, 0, 0).getType().equals(toBlock)) {
 			return fromBlock.getRelative(-2, 0, 0).getLocation();
-		}
-		else if (fromBlock.getRelative(-2, 0, 1).getType().equals(toBlock)) {
-			return fromBlock.getRelative(-2, 0, 1).getLocation();
-		}
-		else if (fromBlock.getRelative(-2, 0, 2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(-2, 0, 2).getLocation();
-		}
-		else if (fromBlock.getRelative(-1, 0, 2).getType().equals(toBlock)) {
-			return fromBlock.getRelative(-1, 0, 2).getLocation();
 		}
 		else {
 			return null;

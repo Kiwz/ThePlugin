@@ -87,6 +87,7 @@ public class Config {
 		filters.add("DSCT: socket closed");
 		filters.add("Reached end of stream for");
 		filters.add("moved wrongly!");
+		filters.add("moved too quickly!");
 		filters.add("issued server command:");
 		filters.add("achievement");
 		filters.add("[WorldEdit] No compatible nms block class found.");

@@ -18,13 +18,16 @@ public class PlaceCmd {
 	}
 	
 	private boolean place(CommandSender sender, String[] args) {
+		String info = "";
+		String warning = "";
+		String target = "";
 		MyPlayer mySender = MyPlayer.getPlayer(sender);
-		MyPlayer myTarget;
+		MyPlayer myTarget = null;
 		Place place = null;
 		
 		for (String arg : args) {
 			if (!arg.matches("[a-zA-Z-_0-9æøåÆØÅ]+")) {
-				sendWarning(sender, "Tillatte tegn er " + Color.VARIABLE + "a-å A-Å 0-9 - _");
+				sender.sendMessage(Color.WARNING + "Tillatte tegn er " + Color.VARIABLE + "a-å A-Å 0-9 - _");
 				return true;
 			}
 		}
@@ -33,7 +36,7 @@ public class PlaceCmd {
 			if (!args[0].equalsIgnoreCase("liste") && !args[0].equalsIgnoreCase("spiller") && !args[0].equalsIgnoreCase("ny")) {
 				place = Place.getPlace(mySender, args[1]);
 				if (place == null) {
-					sendWarning(sender, Color.PLACE + args[1] + Color.WARNING + " finnes ikke");
+					sender.sendMessage(Color.PLACE + args[1] + Color.WARNING + " finnes ikke");
 					return true;
 				}
 				place = Place.getTempPlace(place.getId());
@@ -50,11 +53,11 @@ public class PlaceCmd {
 				Util.sendAsPages(sender, "1", 6, Color.PLAYER + "Eier " + Color.INFO + "[" + Color.PLACE + "Plass-Navn" + Color.INFO + "]", "", Place.getPlayerList());
 			} else if (args[0].equalsIgnoreCase("her")) {
 				if (mySender == null) {
-					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
+					warning = Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere";
 				} else {
 					place = Place.getPlace(mySender.getOnlinePlayer().getLocation());
 					if (place == null) {
-						sendWarning(sender, "Det finnes ingen plass her");
+						warning = "Det finnes ingen plass her";
 					} else {
 						sendPlaceInfo(sender, place);
 					}
@@ -64,7 +67,7 @@ public class PlaceCmd {
 			} else {
 				place = Place.getPlace(mySender, args[0]);
 				if (place == null) {
-					sendWarning(sender, Color.PLACE + args[0] + Color.WARNING + " finnes ikke");
+					warning = Color.PLACE + args[0] + Color.WARNING + " finnes ikke";
 				} else {
 					sendPlaceInfo(sender, place);
 				}
@@ -78,136 +81,101 @@ public class PlaceCmd {
 				} else {
 					myTarget = MyPlayer.getPlayer(args[1]);
 					if (myTarget == null) {
-						sendWarning(sender, Color.PLAYER + args[1] + Color.WARNING + " er ikke en spiller her");
+						warning = Color.PLAYER + args[1] + Color.WARNING + " er ikke en spiller her";
 					} else {
-						String ownerOf = MyPlayer.getColorName(myTarget) + " eier følgende plasser: ";
+						String ownerOf = Color.INFO + "Eier: ";
 						for (Place p : Place.getPlacesByOwner(myTarget)) {
 							ownerOf = ownerOf + "[" + p.getColorName() + "] ";
 						}
-						String memberOf = MyPlayer.getColorName(myTarget) + " er medlem i følgende plasser: ";
+						String memberOf = Color.INFO + "Medlem av: ";
 						for (Place p : Place.getPlacesByMember(myTarget)) {
 							memberOf = memberOf + "[" + p.getColorName() + "] ";
 						}
-						sendInfo(sender, ownerOf);
-						sendInfo(sender, memberOf);
+						List<String> list = new ArrayList<String>();
+						list.add(ownerOf);
+						list.add(memberOf);
+						Util.sendAsPages(sender, "1", 20, MyPlayer.getColorName(myTarget), "", list);
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("ny")) {
 				if (mySender == null) {
-					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
+					warning = Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere";
 				} else {
-					Place newPlace = new Place(mySender, args[1], "40");
-					newPlace.setChargeAble(true);
-					if (newPlace.save(mySender)) {
-						sendInfo(sender, "Din nye plass heter " + newPlace.getColorName() + ", for info skriv: " + Color.COMMAND + "/plass " + newPlace.getColorName());
-					} else {
-						sendWarning(sender, newPlace.getError(mySender));
-					}
+					place = new Place(mySender, args[1], "40");
+					place.setChargeAble(true);
+					info = "Din nye plass heter " + place.getColorName() + ", for info skriv: " + Color.COMMAND + "/plass " + place.getColorName();
 				}
 			} else if (args[0].equalsIgnoreCase("flytt")) {
 				if (mySender == null) {
-					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
+					warning = Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere";
 				} else {
 					place.setCenter(mySender.getOnlinePlayer().getLocation());
 					place.setSpawn(mySender.getOnlinePlayer().getLocation());
 					place.setChargeAble(true);
-					if (place.save(mySender)) {
-						sendInfo(sender, place.getColorName() + " er flyttet hit");
-					} else {
-						sendWarning(sender, place.getError(mySender));
-					}
+					info = place.getColorName() + " er flyttet hit";
 				}
 			} else if (args[0].equalsIgnoreCase("spawn")) {
 				if (mySender == null) {
-					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
+					warning = Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere";
 				} else if (mySender.isDamaged()) {
-					sender.sendMessage(Color.WARNING + "Du kan ikke teleportere rett etter du har tatt skade");
+					warning = "Du kan ikke teleportere rett etter du har tatt skade";
 				} else {
 					if (place.hasAccess(mySender) || (!place.getPriv() && Util.isSpawnSafe(place.getSpawn()))) {
 						mySender.getOnlinePlayer().teleport(place.getSpawn());
 					} else {
-						sendWarning(sender, place.getColorName() + Color.WARNING + " har ingen spawn");
+						warning = place.getColorName() + Color.WARNING + " har ingen spawn";
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("setspawn")) {
 				if (mySender == null) {
-					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
+					warning = Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere";
 				} else {
 					place.setSpawn(mySender.getOnlinePlayer().getLocation());
-					if (place.save(mySender)) {
-						sendInfo(sender, place.getColorName() + " sin spawn er flyttet hit");
-					} else {
-						sendWarning(sender, place.getError(mySender));
-					}
+					info = place.getColorName() + " sin spawn er flyttet hit";
 				}
 			} else if (args[0].equalsIgnoreCase("slett")) {
 				place.setRemoved(mySender, true);
-				if (place.save(mySender)) {
-					sendInfo(sender, place.getColorName() + " er slettet");
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = place.getColorName() + " er slettet";
 			} else if (args[0].equalsIgnoreCase("entre")) {
 				place.setEnter("Velkommen til " + place.getName());
-				if (place.save(mySender)) {
-					sendInfo(sender, "Velkomstmelding er satt til standard for " + place.getColorName());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = "Velkomstmelding er satt til standard for " + place.getColorName();
 			} else if (args[0].equalsIgnoreCase("forlate")) {
-				place.setEnter("Du forlater " + place.getName());
-				if (place.save(mySender)) {
-					sendInfo(sender, "Forlatemelding er satt til standard for " + place.getColorName());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				place.setLeave("Du forlater " + place.getName());
+				info = "Forlatemelding er satt til standard for " + place.getColorName();
 			} else if (args[0].equalsIgnoreCase("navn")) {
-				sendWarning(sender, "/plass navn <plass-navn> <nytt-plass-navn>");
+				warning = "/plass navn <plass-navn> <nytt-plass-navn>";
+			} else if (args[0].equalsIgnoreCase("endre")) {
+				warning = "/plass endre <plass-navn> <radius>";
 			} else if (args[0].equalsIgnoreCase("toggle")) {
-				sendWarning(sender, "/plass toggle <plass-navn> <[privat] [pvp] [monstre] [dyr]>");
+				warning = "/plass toggle <plass-navn> <[privat] [pvp] [monstre] [dyr]>";
 			} else if (args[0].equalsIgnoreCase("medlem")) {
-				sendWarning(sender, "/plass medlem <plass-navn> <spiller-navn>");
+				warning = "/plass medlem <plass-navn> <spiller-navn>";
 			} else if (args[0].equalsIgnoreCase("spark")) {
-				sendWarning(sender, "/plass spark <plass-navn> <spiller-navn>");
+				warning = "/plass spark <plass-navn> <spiller-navn>";
 			} else if (args[0].equalsIgnoreCase("eier")) {
-				sendWarning(sender, "/plass eier <plass-navn> <spiller-navn>");
+				warning = "/plass eier <plass-navn> <spiller-navn>";
 			} else {
 				Util.sendAsPages(sender, "1", 0, "Hjelp: /plass", "", help());
 			}
 		} else if (args.length == 3) {
+			myTarget = MyPlayer.getPlayer(args[2]);
 			if (args[0].equalsIgnoreCase("ny")) {
 				if (mySender == null) {
-					sendWarning(sender, Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere");
+					warning = Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere";
 				} else {
 					Place newPlace = new Place(mySender, args[1], args[2]);
 					newPlace.setChargeAble(true);
-					if (newPlace.save(mySender)) {
-						sendInfo(sender, "Din nye plass heter " + newPlace.getColorName() + ", for info skriv: " + Color.COMMAND + "/plass " + newPlace.getColorName());
-					} else {
-						sendWarning(sender, newPlace.getError(mySender));
-					}
+					info = "Din nye plass heter " + newPlace.getColorName() + ", for info skriv: " + Color.COMMAND + "/plass " + newPlace.getColorName();
 				}
 			} else if (args[0].equalsIgnoreCase("endre")) {
 				place.setRadius(args[2]);
-				if (place.save(mySender)) {
-					sendInfo(sender, "Du har endret radiusen for " + place.getColorName() + " til " + Color.VARIABLE + place.getRadius());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = "Du har endret radiusen for " + place.getColorName() + " til " + Color.VARIABLE + place.getRadius();
 			} else if (args[0].equalsIgnoreCase("entre")) {
 				place.setEnter(args[2]);
-				if (place.save(mySender)) {
-					sendInfo(sender, "Ny velkomstmelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getEnter());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = "Ny velkomstmelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getEnter();
 			} else if (args[0].equalsIgnoreCase("forlate")) {
 				place.setLeave(args[2]);
-				if (place.save(mySender)) {
-					sendInfo(sender, "Ny forlatemelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getLeave());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = "Ny forlatemelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getLeave();
 			} else if (args[0].equalsIgnoreCase("navn")) {
 				String oldName = place.getName();
 				place.setName(args[2]);
@@ -215,182 +183,95 @@ public class PlaceCmd {
 					place.setEnter(place.getEnter().replaceAll("(?i)" + oldName, args[2]));
 				if (place.getLeave().toLowerCase().contains(oldName.toLowerCase()))
 					place.setLeave(place.getLeave().replaceAll("(?i)" + oldName, args[2]));
-				if (place.save(mySender)) {
-					sendInfo(sender, Color.PLACE + oldName + Color.INFO + " har byttet navn til " + place.getColorName());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = Color.PLACE + oldName + Color.INFO + " har byttet navn til " + place.getColorName();
 			} else if (args[0].equalsIgnoreCase("toggle")) {
 				if (args[2].equalsIgnoreCase("privat")) {
-					if (place.getPriv()) {
-						place.setPriv(false);
-						if (place.save(mySender)) {
-							sendInfo(sender, place.getColorName() + " er nå offentlig");
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					} else {
-						place.setPriv(true);
-						if (place.save(mySender)) {
-							sendInfo(sender, place.getColorName() + " er nå privat");
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					}
+					place.setPriv(!place.getPriv());
+					if (place.getPriv()) info = place.getColorName() + " er nå privat";
+					else info = place.getColorName() + " er nå offentlig";
 				} else if (args[2].equalsIgnoreCase("pvp")) {
-					if (place.getPvP()) {
-						place.setPvP(false);
-						if (place.save(mySender)) {
-							sendInfo(sender, place.getColorName() + " er ikke i PvP modus");
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					} else {
-						place.setPvP(true);
-						if (place.save(mySender)) {
-							sendInfo(sender, place.getColorName() + " er nå i PvP modus");
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					}
+					place.setPvP(!place.getPvP());
+					if (place.getPvP()) info = place.getColorName() + " er nå i PvP modus";
+					else info = place.getColorName() + " er ikke i PvP modus";
 				} else if (args[2].equalsIgnoreCase("monstre")) {
-					if (place.getMonsters()) {
-						place.setMonsters(false);
-						if (place.save(mySender)) {
-							sendInfo(sender, "Monstre vil ikke spawne i " + place.getColorName());
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					} else {
-						place.setMonsters(true);
-						if (place.save(mySender)) {
-							sendInfo(sender, "Monstre vil nå spawne i " + place.getColorName());
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					}
+					place.setMonsters(!place.getMonsters());
+					if (place.getMonsters()) info = "Monstre vil nå spawne i " + place.getColorName();
+					else info = "Monstre vil ikke spawne i " + place.getColorName();
 				} else if (args[2].equalsIgnoreCase("dyr")) {
-					if (place.getAnimals()) {
-						place.setAnimals(false);
-						if (place.save(mySender)) {
-							sendInfo(sender, "Dyr (og villager) vil ikke spawne i " + place.getColorName());
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					} else {
-						place.setAnimals(true);
-						if (place.save(mySender)) {
-							sendInfo(sender, "Dyr (og villager) vil nå spawne i " + place.getColorName());
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
-					}
+					place.setAnimals(!place.getAnimals());
+					if (place.getAnimals()) info = "Dyr (og villager) vil nå spawne i " + place.getColorName();
+					else info = "Dyr (og villager) vil ikke spawne i " + place.getColorName();
 				} else {
-					sendWarning(sender, "/plass toggle <plass-navn> <[privat] [pvp] [monstre] [dyr]>");
-					return true;
+					warning = "/plass toggle <plass-navn> <[privat] [pvp] [monstre] [dyr]>";
 				}
 			} else if (args[0].equalsIgnoreCase("medlem")) {
-				myTarget = MyPlayer.getPlayer(args[2]);
 				if (myTarget == null) {
-					sendWarning(sender, Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her");
+					warning = Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her";
 				} else {
 					if (place.setMember(myTarget)) {
-						if (place.save(mySender)) {
-							sendInfo(sender, MyPlayer.getColorName(myTarget) + " er nå medlem av " + place.getColorName());
-							if (myTarget.getOnlinePlayer() != null) {
-								myTarget.getOnlinePlayer().sendMessage(Color.INFO + "Du er blitt medlem av " + place.getColorName());
-							}
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
+						info = MyPlayer.getColorName(myTarget) + " er nå medlem av " + place.getColorName();
+						target = Color.INFO + "Du er blitt medlem av " + place.getColorName();
 					} else {
-						if (place.save(mySender)) {
-							sendWarning(sender, MyPlayer.getColorName(myTarget) + Color.WARNING + " er allerede medlem av " + place.getColorName());
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
+						info = MyPlayer.getColorName(myTarget) + Color.INFO + " er allerede medlem av " + place.getColorName();
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("spark")) {
-				myTarget = MyPlayer.getPlayer(args[2]);
 				if (myTarget == null) {
-					sendWarning(sender, Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her");
+					warning = Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her";
 				} else {
 					if (place.removeMember(myTarget)) {
-						if (place.save(mySender)) {
-							sendInfo(sender, MyPlayer.getColorName(myTarget) + " er nå sparket ut av " + place.getColorName());
-							if (myTarget.getOnlinePlayer() != null) {
-								myTarget.getOnlinePlayer().sendMessage(Color.WARNING + "Du er sparket fra " + place.getColorName());
-							}
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
+						info = MyPlayer.getColorName(myTarget) + " er nå sparket ut av " + place.getColorName();
+						target = Color.WARNING + "Du er sparket fra " + place.getColorName();
 					} else {
-						if (place.save(mySender)) {
-							sendWarning(sender, MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke medlem av " + place.getColorName());
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
+						info = MyPlayer.getColorName(myTarget) + Color.INFO + " er ikke medlem av " + place.getColorName();
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("eier")) {
-				myTarget = MyPlayer.getPlayer(args[2]);
 				if (myTarget == null) {
-					sendWarning(sender, Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her");
+					warning = Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her";
 				} else {
 					if (place.getOwner().equals(myTarget.getUUID())) {
-						sendWarning(sender, MyPlayer.getColorName(myTarget) + Color.WARNING + " er allerede eier av " + place.getColorName());
+						info = MyPlayer.getColorName(myTarget) + Color.INFO + " er allerede eier av " + place.getColorName();
 					} else {
 						place.setOwner(myTarget);
-						if (place.save(mySender)) {
-							sendInfo(sender, MyPlayer.getColorName(myTarget) + " er nå eier av " + place.getColorName());
-							sendWarning(sender, "Du er dermed degradert til medlem av " + place.getColorName());
-							if (myTarget.getOnlinePlayer() != null) {
-								myTarget.getOnlinePlayer().sendMessage(Color.INFO + "Du er blitt eier av " + place.getColorName());
-							}
-						} else {
-							sendWarning(sender, place.getError(mySender));
-						}
+						info = MyPlayer.getColorName(myTarget) + " er nå eier av " + place.getColorName();
+						target = Color.INFO + "Du er blitt eier av " + place.getColorName();
 					}
 				}
 			} else {
 				Util.sendAsPages(sender, "1", 0, "Hjelp: /plass", "", help());
 			}
-		} else if (args.length > 3 && (args[0].equalsIgnoreCase("entre") || args[0].equalsIgnoreCase("forlate"))) {
+		} else if (args.length > 3) {
 			String arg = "";
 			for (int i = 2; i < args.length; i++) {
 				arg = arg + args[i] + " ";
 			}
 			arg = arg.trim();
+			
 			if (args[0].equalsIgnoreCase("entre")) {
 				place.setEnter(arg);
-				if (place.save(mySender)) {
-					sendInfo(sender, "Ny velkomstmelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getEnter());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = "Ny velkomstmelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getEnter();
 			} else if (args[0].equalsIgnoreCase("forlate")) {
 				place.setLeave(arg);
-				if (place.save(mySender)) {
-					sendInfo(sender, "Ny forlatemelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getLeave());
-				} else {
-					sendWarning(sender, place.getError(mySender));
-				}
+				info = "Ny forlatemelding for " + place.getColorName() + " er: " + Color.VARIABLE + place.getLeave();
 			} else {
 				Util.sendAsPages(sender, "1", 0, "Hjelp: /plass", "", help());
 			}
 		} else {
 			Util.sendAsPages(sender, "1", 0, "Hjelp: /plass", "", help());
 		}
+
+		if (info != "") {
+			if (place.save(mySender)) {
+				sender.sendMessage(Color.INFO + info);
+				if (target != "" && myTarget.getOnlinePlayer() != null) myTarget.getOnlinePlayer().sendMessage(target);
+			} else {
+				sender.sendMessage(Color.WARNING + place.getError(mySender));
+			}
+		} else if (warning != "") {
+			sender.sendMessage(Color.WARNING + warning);
+		}
 		return true;
-	}
-	
-	private void sendInfo(CommandSender sender, String string) {
-		sender.sendMessage(Color.INFO + string);
-	}
-	
-	private void sendWarning(CommandSender sender, String string) {
-		sender.sendMessage(Color.WARNING + string);
 	}
 	
 	private void sendPlaceInfo(CommandSender sender, Place place) {
@@ -427,7 +308,7 @@ public class PlaceCmd {
 		list.add(Color.INFO + "Entré melding: " + Color.VARIABLE + place.getEnter());
 		list.add(Color.INFO + "Forlate melding: " + Color.VARIABLE + place.getLeave());
 		
-		String about = "Plass: " + place.getName() + ChatColor.GRAY + " (" + Util.getTimeDate(place.getTime()) + ")";
+		String about = Color.INFO + "[" + place.getColorName() + "]" + ChatColor.GRAY + " (" + Util.getTimeDate(place.getTime()) + ")";
 		Util.sendAsPages(sender, "1", 10, about, "", list);
 	}
 	

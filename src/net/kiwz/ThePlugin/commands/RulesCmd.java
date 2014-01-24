@@ -22,7 +22,7 @@ public class RulesCmd {
 			list.add(Color.SAFE + "" + i + ": " + rule);
 			i++;
 		}
-		Util.sendAsPages(sender, "1", 10, "Regler: ", "", list);
+		Util.sendAsPages(sender, "1", 10, "Regler", "", list);
 		return true;
 	}
 }

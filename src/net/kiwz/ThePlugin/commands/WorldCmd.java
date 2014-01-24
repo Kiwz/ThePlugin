@@ -26,11 +26,13 @@ public class WorldCmd {
 	}
 	
 	public boolean world(CommandSender sender, Command cmd, String[] args) {
+		String info = "";
+		String warning = "";
 		ChunkLag chunkLag = new ChunkLag();
 
 		for (String arg : args) {
 			if (!arg.matches("[a-zA-Z-_0-9]+")) {
-				sendWarning(sender, "Tillatte tegn er a-z A-Z 0-9 _");
+				sender.sendMessage(Color.WARNING + "Tillatte tegn er a-z A-Z 0-9 _");
 				return true;
 			}
 		}
@@ -40,7 +42,7 @@ public class WorldCmd {
 			if (!args[0].equalsIgnoreCase("new")) {
 				myWorld = MyWorld.getWorld(args[1]);
 				if (myWorld == null || myWorld.isRemoved()) {
-					sendWarning(sender, args[1] + " finnes ikke");
+					sender.sendMessage(Color.VARIABLE + args[1] + Color.WARNING + " finnes ikke");
 					return true;
 				}
 			}
@@ -57,85 +59,85 @@ public class WorldCmd {
 				Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 			} else {
 				if (MyWorld.getWorld(args[0]) == null) {
-					sendWarning(sender, args[0] + " finnes ikke");
+					warning = Color.VARIABLE + args[0] + Color.WARNING + " finnes ikke";
 				} else {
 					sendWorld(sender, MyWorld.getWorld(args[0]));
 				}
 			}
 		} else if (args[0].equalsIgnoreCase("new")) {
 			if (Bukkit.getServer().getWorld(args[1].toLowerCase()) != null) {
-				sendWarning(sender, args[1] + " eksisterer allerede");
+				warning = Color.VARIABLE + args[1] + Color.WARNING + " eksisterer allerede";
 			} else {
 				if (args.length == 2) myWorld = new MyWorld(args[1]);
 				if (args.length == 3) myWorld = new MyWorld(args[1], args[2]);
 				if (args.length == 4) myWorld = new MyWorld(args[1], args[2], args[3]);
 				if (args.length == 5) myWorld = new MyWorld(args[1], args[2], args[3], args[4]);
 				myWorld.save();
-				sendInfo(sender, "Starter generering av ny verden...");
+				sender.sendMessage(Color.INFO + "Starter generering av ny verden...");
 				MultiWorld.loadMyWorld(myWorld);
 				MultiWorld.setWorldOptions(myWorld);
-				sendInfo(sender, Color.INFO + "World: " + Color.VARIABLE + myWorld.getName()
+				info = "World: " + Color.VARIABLE + myWorld.getName()
 						+ Color.INFO + " Environment: " + Color.VARIABLE + myWorld.getEnv().toString()
 						+ Color.INFO + " Type: " + Color.VARIABLE + myWorld.getType().toString()
-						+ Color.INFO + " Seed: " + Color.VARIABLE + myWorld.getSeed());
+						+ Color.INFO + " Seed: " + Color.VARIABLE + myWorld.getSeed();
 			}
 		} else if (args.length == 2) {
 			FillWorld fillWorld = FillWorld.getFillWorld(myWorld);
 			if (args[0].equalsIgnoreCase("fill")) {
 				if (fillWorld != null) {
-					sendWarning(sender, "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.WARNING + " er allerede startet");
+					warning = "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.WARNING + " er allerede startet";
 				} else {
 					new FillWorld(myWorld).start();
-					sendInfo(sender, "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.INFO + " er startet, se consolen for info");
+					info = "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.INFO + " er startet, se consolen for info";
 				}
 			} else if (args[0].equalsIgnoreCase("cancelfill")) {
 				if (fillWorld == null) {
-					sendWarning(sender, "Det er ikke startet noen fylling av " + Color.VARIABLE + myWorld.getName());
+					warning = "Det er ikke startet noen fylling av " + Color.VARIABLE + myWorld.getName();
 				} else {
 					fillWorld.cancelTask();
-					sendInfo(sender, "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.INFO + " er avbrutt");
+					info = "Fylling av " + Color.VARIABLE + myWorld.getName() + Color.INFO + " er avbrutt";
 				}
 			} else if (args[0].equalsIgnoreCase("claimable")) {
 				myWorld.setClaimable(!myWorld.getClaimable());
-				if (myWorld.getClaimable()) sendInfo(sender, "Plasser er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Plasser er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getClaimable()) info = "Plasser er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "Plasser er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("firespread")) {
 				myWorld.setFireSpread(!myWorld.getFireSpread());
-				if (myWorld.getFireSpread()) sendInfo(sender, "Ill spredning er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Ill spredning er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getFireSpread()) info = "Ill spredning er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "Ill spredning er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("explosions")) {
 				myWorld.setExplosions(!myWorld.getExplosions());
-				if (myWorld.getFireSpread()) sendInfo(sender, "Eksplosjoner er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Eksplosjoner er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getExplosions()) info = "Eksplosjoner er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "Eksplosjoner er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("monstergrief")) {
 				myWorld.setMonsterGrief(!myWorld.getMonsterGrief());
-				if (myWorld.getMonsterGrief()) sendInfo(sender, "Monster grifing er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Monster grifing er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getMonsterGrief()) info = "Monster grifing er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "Monster grifing er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("trample")) {
 				myWorld.setTrample(!myWorld.getTrample());
-				if (myWorld.getTrample()) sendInfo(sender, "Tråkking er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Tråkking er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getTrample()) info = "Tråkking er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "Tråkking er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("pvp")) {
 				myWorld.setPvp(!myWorld.getPvp());
-				if (myWorld.getPvp()) sendInfo(sender, "PvP er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "PvP er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getPvp()) info = "PvP er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "PvP er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("monsters")) {
 				myWorld.setMonsters(!myWorld.getMonsters());
-				if (myWorld.getMonsters()) sendInfo(sender, "Monstre er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Monstre er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getMonsters()) info = "Monstre er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "Monstre er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("animals")) {
 				myWorld.setAnimals(!myWorld.getAnimals());
-				if (myWorld.getAnimals()) sendInfo(sender, "Dyr er aktivert for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Dyr er deaktivert for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getAnimals()) info = "Dyr er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "Dyr er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("keepspawn")) {
 				myWorld.setKeepSpawn(!myWorld.getKeepSpawn());
-				if (myWorld.getKeepSpawn()) sendInfo(sender, "Beholder spawn i minne for " + Color.VARIABLE + myWorld.getName());
-				else sendInfo(sender, "Beholder ikke spawn i minne for " + Color.VARIABLE + myWorld.getName());
+				if (myWorld.getKeepSpawn()) info = "Beholder spawn i minne for " + Color.VARIABLE + myWorld.getName();
+				else info = "Beholder ikke spawn i minne for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1]);
 			} else if (args[0].equalsIgnoreCase("delete")) {
 				MultiWorld.unloadWorld(myWorld);
-				sendInfo(sender, Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet");
+				info = Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet";
 			} else {
 				Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 			}
@@ -144,7 +146,7 @@ public class WorldCmd {
 			if (args[0].equalsIgnoreCase("border")) {
 				myWorld.setBorder(Util.parseInt(args[2]));
 				int size = myWorld.getBorder() * 2;
-				sendInfo(sender, "Ny størrelse for " + Color.VARIABLE + myWorld.getName() + " er " + Color.VARIABLE + size);
+				info = "Ny størrelse for " + Color.VARIABLE + myWorld.getName() + " er " + Color.VARIABLE + size;
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1], args[2]);
 			} else {
@@ -153,15 +155,10 @@ public class WorldCmd {
 		} else {
 			Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 		}
+		
+		if (warning != "") sender.sendMessage(Color.WARNING + warning);
+		else if (info != "") sender.sendMessage(Color.INFO + info);
 		return true;
-	}
-	
-	private void sendInfo(CommandSender sender, String string) {
-		sender.sendMessage(Color.INFO + string);
-	}
-	
-	private void sendWarning(CommandSender sender, String string) {
-		sender.sendMessage(Color.WARNING + string);
 	}
 	
 	private void sendWorld(CommandSender sender, MyWorld myWorld) {
@@ -189,16 +186,16 @@ public class WorldCmd {
 		String type = myWorld.getType().toString();
 		String seed = myWorld.getSeed() + "";
 		
-		list.add(Color.INFO + "Størrelse: " + Color.VARIABLE + size);
-		list.add(Color.INFO + "Plasser: " + Color.VARIABLE + claimable);
-		list.add(Color.INFO + "Ill spredning: " + Color.VARIABLE + fireSpread);
-		list.add(Color.INFO + "Eksplosjoner: " + Color.VARIABLE + explosions);
-		list.add(Color.INFO + "Monster grifing: " + Color.VARIABLE + monsterGrief);
-		list.add(Color.INFO + "Tråkking: " + Color.VARIABLE + trample);
-		list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp);
-		list.add(Color.INFO + "Monstre: " + Color.VARIABLE + monsters);
-		list.add(Color.INFO + "Dyr: " + Color.VARIABLE + animals);
-		list.add(Color.INFO + "Behold spawn i minne: " + Color.VARIABLE + keepSpawn);
+		list.add(Color.INFO + "Størrelse: " + Color.VARIABLE + size
+				+ Color.INFO + " Plasser: " + Color.VARIABLE + claimable);
+		list.add(Color.INFO + "Ill spredning: " + Color.VARIABLE + fireSpread
+				+ Color.INFO + " Eksplosjoner: " + Color.VARIABLE + explosions);
+		list.add(Color.INFO + "Monster grifing: " + Color.VARIABLE + monsterGrief
+				+ Color.INFO + " Tråkking: " + Color.VARIABLE + trample);
+		list.add(Color.INFO + "Monstre: " + Color.VARIABLE + monsters
+				+ Color.INFO + " Dyr: " + Color.VARIABLE + animals);
+		list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp
+				+ Color.INFO + " Behold spawn i minne: " + Color.VARIABLE + keepSpawn);
 		list.add(Color.INFO + "Frø: " + Color.VARIABLE + seed);
 
 		String about = (myWorld.getName().toUpperCase());
@@ -212,8 +209,7 @@ public class WorldCmd {
 			list.add(Color.VARIABLE + world.getName().toUpperCase());
 		}
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
-		String about = ("Liste over alle verdener på denne server");
-		Util.sendAsPages(sender, "1", 10, about, "", list);
+		Util.sendAsPages(sender, "1", 10, "Våre verdener", "", list);
 	}
 	
 	private List<String> help() {
