@@ -71,7 +71,7 @@ public class WorldCmd {
 				if (args.length == 2) myWorld = new MyWorld(args[1]);
 				if (args.length == 3) myWorld = new MyWorld(args[1], args[2]);
 				if (args.length == 4) myWorld = new MyWorld(args[1], args[2], args[3]);
-				if (args.length == 5) myWorld = new MyWorld(args[1], args[2], args[3], args[4]);
+				if (args.length >= 5) myWorld = new MyWorld(args[1], args[2], args[3], args[4]);
 				myWorld.save();
 				sender.sendMessage(Color.INFO + "Starter generering av ny verden...");
 				MultiWorld.loadMyWorld(myWorld);

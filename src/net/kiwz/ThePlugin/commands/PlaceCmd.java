@@ -163,9 +163,9 @@ public class PlaceCmd {
 				if (mySender == null) {
 					warning = Color.COMMAND + "/plass " + args[0] + Color.WARNING + " kan bare brukes av spillere";
 				} else {
-					Place newPlace = new Place(mySender, args[1], args[2]);
-					newPlace.setChargeAble(true);
-					info = "Din nye plass heter " + newPlace.getColorName() + ", for info skriv: " + Color.COMMAND + "/plass " + newPlace.getColorName();
+					place = new Place(mySender, args[1], args[2]);
+					place.setChargeAble(true);
+					info = "Din nye plass heter " + place.getColorName() + ", for info skriv: " + Color.COMMAND + "/plass " + place.getColorName();
 				}
 			} else if (args[0].equalsIgnoreCase("endre")) {
 				place.setRadius(args[2]);
