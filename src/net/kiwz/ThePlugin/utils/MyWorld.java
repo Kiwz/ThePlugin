@@ -30,6 +30,7 @@ public class MyWorld {
 	private boolean trample;
 	private int border;
 	private int fill;
+	private int filled;
 	private String spawnCoords;
 	private String spawnDirection;
 	private boolean changed;
@@ -65,6 +66,7 @@ public class MyWorld {
 		this.trample = false;
 		this.border = 1000;
 		this.fill = 0;
+		this.filled = 0;
 		this.changed = true;
 		this.loaded = true;
 		this.removed = false;
@@ -87,13 +89,15 @@ public class MyWorld {
 		this.trample = false;
 		this.border = 1000;
 		this.fill = 0;
+		this.filled = 0;
 		this.changed = true;
 		this.loaded = true;
 		this.removed = false;
 	}
 	
 	public MyWorld(String name, String env, String type, long seed, String coords, String direction, boolean keepSpawn, boolean pvp,
-			boolean monsters, boolean animals, boolean monsterGrief, boolean fireSpread, boolean claimable, boolean explosions, boolean trample, int border, int fill) {
+			boolean monsters, boolean animals, boolean monsterGrief, boolean fireSpread, boolean claimable, boolean explosions, boolean trample,
+			int border, int fill, int filled) {
 		this.name = name;
 		this.env = getEnvironment(env);
 		this.type = getWorldType(type);
@@ -110,6 +114,7 @@ public class MyWorld {
 		this.trample = trample;
 		this.border = border;
 		this.fill = fill;
+		this.filled = filled;
 		this.spawnCoords = coords;
 		this.spawnDirection = direction;
 		this.changed = false;
@@ -281,6 +286,15 @@ public class MyWorld {
 	
 	public int getFill() {
 		return this.fill;
+	}
+	
+	public void setFilled(int filled) {
+		this.filled = filled;
+		setChanged(true);
+	}
+	
+	public int getFilled() {
+		return this.filled;
 	}
 	
 	public String getSpawnCoords() {

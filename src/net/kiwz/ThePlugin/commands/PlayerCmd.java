@@ -1,172 +1,88 @@
 package net.kiwz.ThePlugin.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
-import net.kiwz.ThePlugin.utils.Place;
-import net.kiwz.ThePlugin.utils.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class PlayerCmd {
-	private String cmd = "";
-	private CommandSender sender = null;
-	private Player target = null;
-	private MyPlayer mySender = null;
-	private MyPlayer myTarget = null;
+	private String cmd;
+	private String[] args;
+	private CommandSender sender;
+	private Player player = null;
 	private String senderName = "";
-	private String targetName = "";
+	private MyPlayer mySender = null;
+	private String warning = "";
 	
 	public PlayerCmd(CommandSender sender, String cmd, String[] args) {
 		this.cmd = cmd;
+		this.args = args;
 		this.sender = sender;
 		mySender = MyPlayer.getPlayer(sender);
 		senderName = MyPlayer.getColorName(mySender);
-		if (args.length == 0 && mySender == null) {
-			sender.sendMessage(Color.WARNING + "Spesifiser en spiller");
-		} else if (args.length == 0) {
-			target = mySender.getOnlinePlayer();
-			myTarget = mySender;
-			targetName = senderName;
-		} else {
-			myTarget = MyPlayer.getPlayer(args[0]);
-			targetName = MyPlayer.getColorName(myTarget);
-			if (myTarget == null) {
-				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
-			} else if (cmd.equals("hvem")) {
-				target = myTarget.getOfflinePlayer();
-			} else if (myTarget.getOnlinePlayer() == null) {
-				sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
-			} else {
-				target = myTarget.getOnlinePlayer();
-			}
-		}
-	}
-	
-	public void exec() {
-		if (target == null);
-		else if (cmd.equals("fly")) fly();
-		else if (cmd.equals("gm")) gm();
-		else if (cmd.equals("heal")) heal();
-		else if (cmd.equals("hvem")) hvem();
-	}
-	
 
-	private void fly() {
-		target.setAllowFlight(!target.getAllowFlight());
-		if (sender.getName() == target.getName()) {
-			if (target.getAllowFlight()) target.sendMessage(Color.INFO + "Du kan fly");
-			else target.sendMessage(Color.INFO + "Du kan ikke fly");
+		if (mySender == null) {
+			warning = Color.COMMAND + "/" + cmd + Color.WARNING + " kan bare brukes av spillere";
 		} else {
-			if (target.getAllowFlight()) {
-				target.sendMessage(senderName + " skrudde på fly modus");
-				sender.sendMessage(targetName + " kan fly");
-			} else {
-				target.sendMessage(senderName + " skrudde av fly modus");
-				sender.sendMessage(targetName + " kan ikke fly");
-			}
+			player = mySender.getOnlinePlayer();
 		}
 	}
 	
-	private void gm() {
-		GameMode gm = target.getGameMode();
-		GameMode survival = GameMode.SURVIVAL;
-		GameMode creative = GameMode.CREATIVE;
-		if (sender.getName() == target.getName()) {
-			if (gm == survival) {
-				target.setGameMode(creative);
-				target.sendMessage(Color.INFO + "Du er nå i Creative modus");
-			}
-			else {
-				target.setGameMode(survival);
-				target.sendMessage(Color.INFO + "Du er nå i Survival modus");
-			}
-		} else {
-			if (gm == survival) {
-				target.setGameMode(creative);
-				target.sendMessage(senderName + " endret modusen din til Creative");
-				sender.sendMessage(targetName + " er nå i Creative modus");
-			} else {
-				target.setGameMode(survival);
-				target.sendMessage(senderName + " endret modusen din til Survival");
-				sender.sendMessage(targetName + " er nå i Survival modus");
-			}
-		}
+	public boolean exec() {
+		if (svar() || tid()) return true;
+		else return false;
 	}
 	
-	private void heal() {
-		target.setHealth(20);
-		target.setFoodLevel(20);
-		target.setSaturation(20);
-		if (sender.getName() == target.getName()) {
-			target.sendMessage(Color.INFO + "Du fikk fullt liv og masse mat");
-		} else {
-			target.sendMessage(senderName + " ga deg fullt liv og masse mat");
-			sender.sendMessage(targetName + " har fått fullt liv og masse mat");
-		}
-	}
-	
-	private void hvem() {
-		List<String> list = new ArrayList<String>();
-		Location loc = target.getLocation();
-		String lastLogin = Util.getTimeFullDate(myTarget.getLastPlayed());
-		long timePlayed = Util.getTimeHours(myTarget.getTimePlayed());
-		String plasser = "";
-		for (Place p : Place.getPlacesByOwner(myTarget)) {
-			plasser = plasser + "[" + p.getColorName() + "] ";
-		}
-		String fly = "Nei";
-		if (target.getAllowFlight()) fly = "Ja";
-		String muted = "Nei";
-		if (myTarget.isMuted()) muted = "Ja";
-		String spy = "Nei";
-		if (myTarget.isSpy()) spy = "Ja";
-		String pvp = "Nei";
-		if (myTarget.isPvp()) pvp = "Ja";
-		Place place = Place.getPlace(loc);
-		String placeName = "";
-		if (place != null) placeName = " Plass: [" + place.getColorName() + "]";
+	private boolean svar() {
+		if (!cmd.equals("svar")) return false;
 		
-		if (myTarget.isBanned()) {
-			MyPlayer myBannedBy = MyPlayer.getPlayer(myTarget.getBannedBy());
-			list.add(Color.WARNING + "Bannet av: " + MyPlayer.getColorName(myBannedBy)
-					+ Color.WARNING + " Benådes: " + Color.VARIABLE + Util.getTimeFullDate(myTarget.getBanExpire() + 60));
-			list.add(Color.WARNING + "Årsak: " + Color.VARIABLE + myTarget.getBanReason());
-		}
-		list.add(Color.INFO + "Siste innlogging: " + Color.VARIABLE + lastLogin + Color.INFO
-				+ " Tid spilt: " + Color.VARIABLE + timePlayed + " timer");
-		list.add(Color.INFO + "Eier av: " + plasser);
-		if (mySender == null || mySender.isAdmin()) {
-			list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted + Color.INFO
-					+ " PvP: " + Color.VARIABLE + pvp + Color.INFO
-					+ " Spionering: " + Color.VARIABLE + spy);
-			list.add(Color.INFO + "GameMode: " + Color.VARIABLE + target.getGameMode() + Color.INFO
-					+ " Flying: " + Color.VARIABLE + fly);
+		MyPlayer myTarget = mySender.getReplayTo();
+		String targetName = MyPlayer.getColorName(myTarget);
+		if (myTarget == null) {
+			sender.sendMessage(Color.WARNING + "Det er ingen du kan svare");
+		} else if (myTarget.getOnlinePlayer() == null) {
+			sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
+		} else if (args.length == 0) {
+			sender.sendMessage(Color.WARNING + "Du må skrive en melding");
 		} else {
-			list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted);
+			String message = senderName + Color.WHISPER + " -> " + targetName + Color.WHISPER + ": ";
+			for (int i = 0; args.length > i; i++) {
+				message = message + args[i] + " ";
+			}
+			myTarget.getOnlinePlayer().sendMessage(message);
+			sender.sendMessage(message);
+			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+				MyPlayer mySpy = MyPlayer.getPlayer(player);
+				if (mySpy.isSpy() && (!mySpy.equals(mySender) && !mySpy.equals(myTarget))) {
+					player.sendMessage(Color.WARNING + "[SPY] " + message);
+				}
+			}
+			myTarget.setReplayTo(mySender);
 		}
-		list.add(Color.INFO + "Level: " + Color.VARIABLE + target.getLevel() +Color.INFO
-				+ " Experience: " + Color.VARIABLE + target.getTotalExperience());
-		list.add(Color.INFO + "Helse: " + Color.VARIABLE + (int) target.getHealth() +  Color.INFO
-				+ " Sult: " + Color.VARIABLE + target.getFoodLevel() +  Color.INFO
-				+ " Metning: " + Color.VARIABLE + (int) target.getSaturation());
-		if (mySender == null || mySender.isAdmin() || mySender.equals(myTarget) || loc.getWorld().equals(Bukkit.getServer().getWorlds().get(0))) {
-			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
-					+ " X: " + Color.VARIABLE + loc.getBlockX() + Color.INFO
-					+ " Y: " + Color.VARIABLE + loc.getBlockY() + Color.INFO
-					+ " Z: " + Color.VARIABLE + loc.getBlockZ() + Color.INFO + placeName);
+		return true;
+	}
+	
+	private boolean tid() {
+		if (!cmd.equals("tid")) return false;
+		
+		if (mySender == null) {
+			sender.sendMessage(warning);
+		} else if (args.length == 0) {
+			player.resetPlayerTime();
+			sender.sendMessage(Color.INFO + "Din tid er lik serveren sin tid");
+		} else if (args[0].equalsIgnoreCase("dag")) {
+			player.setPlayerTime(6000L, false);
+			sender.sendMessage(Color.INFO + "Din tid er alltid dag");
+		} else if (args[0].equalsIgnoreCase("natt")) {
+			player.setPlayerTime(18000L, false);
+			sender.sendMessage(Color.INFO + "Din tid er alltid natt");
 		} else {
-			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
-					+ " X: " + Color.VARIABLE + "??" + Color.INFO
-					+ " Y: " + Color.VARIABLE + "??" + Color.INFO
-					+ " Z: " + Color.VARIABLE + "??" + Color.INFO);
+			player.resetPlayerTime();
+			sender.sendMessage(Color.INFO + "Din tid er lik serveren sin tid");
 		}
-		Util.sendAsPages(sender, "1", 10, targetName, "ip: " + myTarget.getIp(), list);
+		return true;
 	}
 }

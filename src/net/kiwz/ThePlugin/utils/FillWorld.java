@@ -22,6 +22,7 @@ public class FillWorld {
 	public FillWorld(MyWorld myWorld) {
 		this.myWorld = myWorld;
 		this.key = myWorld.getFill();
+		this.generated = myWorld.getFilled();
 	}
 	
 	public static FillWorld getFillWorld(MyWorld myWorld) {
@@ -42,6 +43,7 @@ public class FillWorld {
 			FillWorld fillWorld = getFillWorld(myWorld);
 			fillWorld.cancelTask();
 			myWorld.setFill(fillWorld.getKey());
+			myWorld.setFilled(fillWorld.getGenerated());
 		}
 	}
 	
@@ -49,10 +51,15 @@ public class FillWorld {
 		task.cancel();
 		fillWorlds.remove(myWorld);
 		myWorld.setFill(0);
+		myWorld.setFilled(0);
 	}
 	
 	public int getKey() {
 		return this.key;
+	}
+	
+	public int getGenerated() {
+		return this.generated;
 	}
 	
 	public void start() {
@@ -92,6 +99,7 @@ public class FillWorld {
 		if (chunkMap.get(key) == null) {
 			task.cancel();
 			myWorld.setFill(0);
+			myWorld.setFilled(0);
 			fillWorlds.remove(myWorld);
 		} else {
 			int x = chunkMap.get(key)[0];

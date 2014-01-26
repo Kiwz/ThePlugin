@@ -13,6 +13,7 @@ import net.minecraft.server.v1_7_R1.WorldServer;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
@@ -381,4 +382,63 @@ public class MyPlayer {
         }
         return player;
     }
+    
+	public List<String> getInfo(MyPlayer mySender) {
+		List<String> list = new ArrayList<String>();
+		Player player = this.getOfflinePlayer();
+		Location loc = player.getLocation();
+		String lastLogin = Util.getTimeFullDate(getLastPlayed());
+		long timePlayed = Util.getTimeHours(getTimePlayed());
+		String plasser = "";
+		for (Place p : Place.getPlacesByOwner(this)) {
+			plasser = plasser + "[" + p.getColorName() + "] ";
+		}
+		String fly = "Nei";
+		if (player.getAllowFlight()) fly = "Ja";
+		String muted = "Nei";
+		if (isMuted()) muted = "Ja";
+		String spy = "Nei";
+		if (isSpy()) spy = "Ja";
+		String pvp = "Nei";
+		if (isPvp()) pvp = "Ja";
+		Place place = Place.getPlace(loc);
+		String placeName = "";
+		if (place != null) placeName = " Plass: [" + place.getColorName() + "]";
+		
+		if (isBanned()) {
+			MyPlayer myBannedBy = MyPlayer.getPlayer(getBannedBy());
+			list.add(Color.WARNING + "Bannet av: " + MyPlayer.getColorName(myBannedBy)
+					+ Color.WARNING + " Benådes: " + Color.VARIABLE + Util.getTimeFullDate(getBanExpire() + 60));
+			list.add(Color.WARNING + "Årsak: " + Color.VARIABLE + getBanReason());
+		}
+		list.add(Color.INFO + "Siste innlogging: " + Color.VARIABLE + lastLogin + Color.INFO
+				+ " Tid spilt: " + Color.VARIABLE + timePlayed + " timer");
+		list.add(Color.INFO + "Eier av: " + plasser);
+		if (mySender == null || mySender.isAdmin()) {
+			list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted + Color.INFO
+					+ " PvP: " + Color.VARIABLE + pvp + Color.INFO
+					+ " Spionering: " + Color.VARIABLE + spy);
+			list.add(Color.INFO + "GameMode: " + Color.VARIABLE + player.getGameMode() + Color.INFO
+					+ " Flying: " + Color.VARIABLE + fly);
+		} else {
+			list.add(Color.INFO + "Muted: " + Color.VARIABLE + muted);
+		}
+		list.add(Color.INFO + "Level: " + Color.VARIABLE + player.getLevel() +Color.INFO
+				+ " Experience: " + Color.VARIABLE + player.getTotalExperience());
+		list.add(Color.INFO + "Helse: " + Color.VARIABLE + (int) player.getHealth() +  Color.INFO
+				+ " Sult: " + Color.VARIABLE + player.getFoodLevel() +  Color.INFO
+				+ " Metning: " + Color.VARIABLE + (int) player.getSaturation());
+		if (mySender == null || mySender.isAdmin() || mySender.equals(this) || loc.getWorld().equals(Bukkit.getServer().getWorlds().get(0))) {
+			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
+					+ " X: " + Color.VARIABLE + loc.getBlockX() + Color.INFO
+					+ " Y: " + Color.VARIABLE + loc.getBlockY() + Color.INFO
+					+ " Z: " + Color.VARIABLE + loc.getBlockZ() + Color.INFO + placeName);
+		} else {
+			list.add(Color.INFO + "Lokasjon: " + Color.VARIABLE + loc.getWorld().getName() + Color.INFO
+					+ " X: " + Color.VARIABLE + "??" + Color.INFO
+					+ " Y: " + Color.VARIABLE + "??" + Color.INFO
+					+ " Z: " + Color.VARIABLE + "??" + Color.INFO);
+		}
+		return list;
+	}
 }
