@@ -15,7 +15,7 @@ public class ChestCmd {
 		MyPlayer mySender = MyPlayer.getPlayer(sender);
 		
 		if (mySender == null) {
-			sender.sendMessage(Color.COMMAND + "/pvp " + Color.WARNING + "kan bare brukes av spillere");
+			sender.sendMessage(Color.COMMAND + "/chest " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length == 0) {
 			mySender.setWoolChestOwner(mySender);
 			sender.sendMessage(Color.INFO + "Du vil nå se dine egne kister");

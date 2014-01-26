@@ -3,9 +3,6 @@ package net.kiwz.ThePlugin;
 import net.kiwz.ThePlugin.commands.BanCmd;
 import net.kiwz.ThePlugin.commands.ChestCmd;
 import net.kiwz.ThePlugin.commands.EntityCmd;
-import net.kiwz.ThePlugin.commands.FlyCmd;
-import net.kiwz.ThePlugin.commands.GmCmd;
-import net.kiwz.ThePlugin.commands.HealCmd;
 import net.kiwz.ThePlugin.commands.HelpCmd;
 import net.kiwz.ThePlugin.commands.HomeCmd;
 import net.kiwz.ThePlugin.commands.IgnoreCmd;
@@ -14,6 +11,7 @@ import net.kiwz.ThePlugin.commands.MemCmd;
 import net.kiwz.ThePlugin.commands.MuteCmd;
 import net.kiwz.ThePlugin.commands.OiCmd;
 import net.kiwz.ThePlugin.commands.PlaceCmd;
+import net.kiwz.ThePlugin.commands.PlayerCmd;
 import net.kiwz.ThePlugin.commands.PvpCmd;
 import net.kiwz.ThePlugin.commands.ReplayCmd;
 import net.kiwz.ThePlugin.commands.RulesCmd;
@@ -24,7 +22,6 @@ import net.kiwz.ThePlugin.commands.TimeCmd;
 import net.kiwz.ThePlugin.commands.TpCmd;
 import net.kiwz.ThePlugin.commands.TpchunkCmd;
 import net.kiwz.ThePlugin.commands.TpsCmd;
-import net.kiwz.ThePlugin.commands.WhoisCmd;
 import net.kiwz.ThePlugin.commands.WorldCmd;
 
 import org.bukkit.command.Command;
@@ -34,22 +31,29 @@ import org.bukkit.command.CommandSender;
 public class Commands implements CommandExecutor {
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		String c = cmd.getName().toLowerCase();
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		String c = command.getName().toLowerCase();
 
+		// Test her:
 		if (c.equals("test")) {
-			// Test her:
 			
-			// Test slutter!
+			
+			
 			return true;
 		}
-
+		// Test slutter!
+		
+		
+		else if (c.equals("fly") || c.equals("gm") || c.equals("heal") || c.equals("hvem") || c.equals("ignorer")
+				|| c.equals("melde") || c.equals("mute")|| c.equals("unmute") || c.equals("oi") || c.equals("oe")) {
+			new PlayerCmd(sender, c, args).exec();
+			return true;
+		}
+		
+		
 		else if (c.equals("ban") || c.equals("unban") || c.equals("kick")) return BanCmd.exec(sender, c, args);
 		else if (c.equals("chest")) return ChestCmd.exec(sender, args);
 		else if (c.equals("entity")) return EntityCmd.exec(sender, args);
-		else if (c.equals("fly")) return FlyCmd.exec(sender, args);
-		else if (c.equals("gm")) return GmCmd.exec(sender, args);
-		else if (c.equals("heal")) return HealCmd.exec(sender, args);
 		else if (c.equals("hjelp")) return HelpCmd.exec(sender, args);
 		else if (c.equals("hjem")) return HomeCmd.execGet(sender, args);
 		else if (c.equals("setthjem")) return HomeCmd.execSet(sender, args);
@@ -73,8 +77,7 @@ public class Commands implements CommandExecutor {
 		else if (c.equals("tpa")) return TpCmd.exec(sender);
 		else if (c.equals("tpchunk")) return TpchunkCmd.exec(sender, args);
 		else if (c.equals("ticks")) return TpsCmd.exec(sender, args);
-		else if (c.equals("hvem")) return WhoisCmd.exec(sender, args);
-		else if (c.equals("world")) return WorldCmd.exec(sender, cmd, args);
+		else if (c.equals("world")) return WorldCmd.exec(sender, args);
 		else return false;
 	}
 }
