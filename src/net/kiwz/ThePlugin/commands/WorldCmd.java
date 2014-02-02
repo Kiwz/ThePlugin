@@ -15,16 +15,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 public class WorldCmd {
 	private Server server = Bukkit.getServer();
 	
-	public static boolean exec(CommandSender sender, String[] args) {
-		return new WorldCmd().world(sender, args);
+	public static boolean exec(CommandSender sender, Command cmd, String[] args) {
+		return new WorldCmd().world(sender, cmd, args);
 	}
 	
-	public boolean world(CommandSender sender, String[] args) {
+	public boolean world(CommandSender sender, Command cmd, String[] args) {
 		String info = "";
 		String warning = "";
 		ChunkLag chunkLag = new ChunkLag();
