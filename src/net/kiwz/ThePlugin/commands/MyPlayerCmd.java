@@ -7,7 +7,9 @@ import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class MyPlayerCmd {

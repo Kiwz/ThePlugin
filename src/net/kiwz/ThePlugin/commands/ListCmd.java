@@ -2,31 +2,20 @@ package net.kiwz.ThePlugin.commands;
 
 import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
 
-public class InfoCmd {
+public class ListCmd {
 	private Server server = Bukkit.getServer();
-	private String cmd;
-	private CommandSender sender;
-	private String page = "1";
 	
-	public InfoCmd(CommandSender sender, String cmd, String[] args) {
-		this.cmd = cmd;
-		this.sender = sender;
-		if(args.length != 0) this.page = args[0];
+	public static boolean exec(CommandSender sender, String[] args) {
+		return new ListCmd().list(sender, args);
 	}
 	
-	public boolean exec() {
-		if (hjelp() || minne() || regler() || online()) return true;
-		else return false;
-	}
-	
-	private boolean online(CommandSender sender, String[] args) {
+	private boolean list(CommandSender sender, String[] args) {
 		Player[] players = Bukkit.getServer().getOnlinePlayers();
 		sender.sendMessage(Color.INFO + "Det er " + Color.VARIABLE + players.length + "/" + server.getMaxPlayers() + Color.INFO + " spillere online");
 		StringBuilder header = new StringBuilder();

@@ -1,5 +1,4 @@
 Bugs:
-FillWorld skal ikke nullstille progresionen sin.
 
 
 Opprydding:
@@ -8,8 +7,6 @@ Bygge listeners mye bedre!
 
 
 Tillegg:
-Hus-ikoner skal få egen på/av knapp og være av som standard.
-Plasser hvor eieren ikke har hvert online på en stund skal bli gule på dynmappet, kanskje også en info på plass-infoen også om dette.
 MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
 
 

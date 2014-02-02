@@ -4,7 +4,7 @@ import net.kiwz.ThePlugin.commands.BanCmd;
 import net.kiwz.ThePlugin.commands.EntityCmd;
 import net.kiwz.ThePlugin.commands.HelpCmd;
 import net.kiwz.ThePlugin.commands.HomeCmd;
-import net.kiwz.ThePlugin.commands.InfoCmd;
+import net.kiwz.ThePlugin.commands.ListCmd;
 import net.kiwz.ThePlugin.commands.MemCmd;
 import net.kiwz.ThePlugin.commands.MyPlayerCmd;
 import net.kiwz.ThePlugin.commands.PlaceCmd;
@@ -39,7 +39,6 @@ public class Commands implements CommandExecutor {
 		// Test slutter!
 		
 
-		if (new InfoCmd(sender, c, args).exec()) return true;
 		if (new ServerCmd(sender, c, args).exec()) return true;
 		if (new PlayerCmd(sender, c, args).exec()) return true;
 		if (new MyServerCmd(sender, c, args).exec()) return true;
@@ -51,6 +50,7 @@ public class Commands implements CommandExecutor {
 		else if (c.equals("hjelp")) return HelpCmd.exec(sender, args);
 		else if (c.equals("hjem")) return HomeCmd.execGet(sender, args);
 		else if (c.equals("setthjem")) return HomeCmd.execSet(sender, args);
+		else if (c.equals("online")) return ListCmd.exec(sender, args);
 		else if (c.equals("minne")) return MemCmd.exec(sender);
 		else if (c.equals("plass")) return PlaceCmd.exec(sender, args);
 		else if (c.equals("spy")) return SpyCmd.exec(sender);
