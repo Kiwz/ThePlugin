@@ -47,10 +47,9 @@ public class SqlQuery {
 				boolean trample = res.getBoolean("Trample");
 				int border = res.getInt("Border");
 				int fill = res.getInt("Fill");
-				int filled = res.getInt("Filled");
 				
 				MyWorld myWorld = new MyWorld(name, environment, type, seed, coords, direction, keepSpawn, pvp,
-						monsters, animals, monsterGrief, fireSpread, claimable, explosions, trample, border, fill, filled);
+						monsters, animals, monsterGrief, fireSpread, claimable, explosions, trample, border, fill);
 				myWorld.save();
 				MultiWorld.loadMyWorld(myWorld);
 				MultiWorld.setWorldOptions(myWorld);
@@ -73,7 +72,7 @@ public class SqlQuery {
 				e.printStackTrace();
 			}
 		} else if (myWorld.isChanged()) {
-			String query = "INSERT INTO worlds VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+			String query = "INSERT INTO worlds VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
 					+ "ON DUPLICATE KEY UPDATE "
 					+ "Environment=values(Environment), "
 					+ "Type=values(Type), "
@@ -90,8 +89,7 @@ public class SqlQuery {
 					+ "Explosions=values(Explosions), "
 					+ "Trample=values(Trample), "
 					+ "Border=values(Border), "
-					+ "Fill=values(Fill), "
-					+ "Filled=values(Filled);";
+					+ "Fill=values(Fill);";
 			try {
 				PreparedStatement prep = conn.prepareStatement(query);
 				prep.setString(1, myWorld.getName());
@@ -112,7 +110,6 @@ public class SqlQuery {
 				prep.setBoolean(15, myWorld.getTrample());
 				prep.setInt(16, myWorld.getBorder());
 				prep.setInt(17, myWorld.getFill());
-				prep.setInt(18, myWorld.getFilled());
 				prep.execute();
 				prep.close();
 				myWorld.setChanged(false);

@@ -19,8 +19,10 @@ public class Perm {
 		if (MyPlayer.getPlayer(player).isAdmin() && !player.isOp()) {
 			atch.setPermission("worldedit.navigation.jumpto.tool", true);
 			atch.setPermission("ThePlugin.ban", true);
+			atch.setPermission("ThePlugin.unban", true);
 			atch.setPermission("ThePlugin.kick", true);
 			atch.setPermission("ThePlugin.mute", true);
+			atch.setPermission("ThePlugin.unmute", true);
 			atch.setPermission("ThePlugin.fly", true);
 			atch.setPermission("ThePlugin.oe", true);
 			atch.setPermission("ThePlugin.oi", true);

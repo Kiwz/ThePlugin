@@ -13,17 +13,13 @@ commands:
     aliases: []
     permission: ThePlugin.ban
     permission-message: §cDu har ikke tilgang!
-    usage: /ban <spiller-navn> <minutter> <årsak>
-  banlist:
-    description: Liste over alle som er bannet
-    aliases: []
-    permission: ThePlugin.ban
-    permission-message: §cDu har ikke tilgang!
-    usage: /banlist
+    usage: |
+      /ban
+      /ban <spiller-navn> <minutter> <årsak>
   unban:
     description: Benåde en spiller
     aliases: []
-    permission: ThePlugin.ban
+    permission: ThePlugin.unban
     permission-message: §cDu har ikke tilgang!
     usage: /unban <spiller-navn>
   kick:
@@ -123,25 +119,17 @@ commands:
     aliases: []
     permission: ThePlugin.mute
     permission-message: §cDu har ikke tilgang!
-    usage: /mute <spiller-navn>
-  mutelist:
-    description: Liste over alle som er nektet chatting
-    aliases: []
-    permission: ThePlugin.mute
-    permission-message: §cDu har ikke tilgang!
-    usage: /mutelist
+    usage: |
+      /mute
+      /mute <spiller-navn>
   unmute:
     description: Spilleren kan chatte igjen
     aliases: []
-    permission: ThePlugin.mute
+    permission: ThePlugin.unmute
     permission-message: §cDu har ikke tilgang!
-    usage: /unmute <spiller-navn>
-  unmuteall:
-    description: Alle spillere kan chatte igjen
-    aliases: []
-    permission: ThePlugin.mute
-    permission-message: §cDu har ikke tilgang!
-    usage: /unmuteall
+    usage: |
+      /unmute <spiller-navn>
+      /unmute all
   oe:
     description: Åpner enderchesten til en spiller
     aliases: [openender]
