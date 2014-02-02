@@ -4,7 +4,7 @@ import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
+import org.bukkit.WeatherType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,7 +32,7 @@ public class PlayerCmd {
 	}
 	
 	public boolean exec() {
-		if (svar() || tid()) return true;
+		if (svar() || tid() || vær()) return true;
 		else return false;
 	}
 	
@@ -82,6 +82,27 @@ public class PlayerCmd {
 		} else {
 			player.resetPlayerTime();
 			sender.sendMessage(Color.INFO + "Din tid er lik serveren sin tid");
+		}
+		return true;
+	}
+	
+	private boolean vær() {
+		if (!cmd.equals("vær")) return false;
+		
+		if (mySender == null) {
+			sender.sendMessage(warning);
+		} else if (args.length == 0) {
+			player.resetPlayerWeather();
+			sender.sendMessage(Color.INFO + "Ditt vær er lik serveren sitt vær");
+		} else if (args[0].equalsIgnoreCase("sol")) {
+			player.setPlayerWeather(WeatherType.CLEAR);
+			sender.sendMessage(Color.INFO + "Ditt vær er alltid opphold");
+		} else if (args[0].equalsIgnoreCase("regn")) {
+			player.setPlayerWeather(WeatherType.DOWNFALL);
+			sender.sendMessage(Color.INFO + "Ditt vær er alltid nedbør");
+		} else {
+			player.resetPlayerTime();
+			sender.sendMessage(Color.INFO + "Ditt vær er lik serveren sitt vær");
 		}
 		return true;
 	}
