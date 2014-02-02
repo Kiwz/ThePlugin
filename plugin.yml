@@ -240,6 +240,15 @@ commands:
     permission: ThePlugin.world
     permission-message: §cDu har ikke tilgang!
     usage: /world
+  vær:
+    description: Sett ditt eget vær
+    aliases: []
+    permission: ThePlugin.vær
+    permission-message: §cDu har ikke tilgang!
+    usage: |
+      /vær sol
+      /vær regn
+      /vær server
   test:
     description: IKKE RØR!!!
     aliases: []
@@ -279,6 +288,8 @@ permissions:
   ThePlugin.tpa:
     default: true
   ThePlugin.hvem:
+    default: true
+  ThePlugin.vær:
     default: true
   bukkit.command.kill:
     default: op
