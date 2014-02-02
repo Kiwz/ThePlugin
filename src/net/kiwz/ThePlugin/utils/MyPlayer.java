@@ -292,6 +292,13 @@ public class MyPlayer {
 		return this.woolChestOwner;
 	}
 	
+	public boolean isOld() {
+		long dayes = 10;
+		long timeSinceLastPlayed = System.currentTimeMillis() / 1000 - this.lastPlayed;
+		if (timeSinceLastPlayed < dayes * 24 * 60 * 60) return false;
+		return true;
+	}
+	
 	public void setChanged(boolean changed) {
 		this.changed = changed;
 	}

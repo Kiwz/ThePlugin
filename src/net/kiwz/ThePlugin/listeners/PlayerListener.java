@@ -100,9 +100,6 @@ public class PlayerListener implements Listener {
 			if (place != null) {
 				if (!place.hasAccess(myPlayer)) {
 					event.setCancelled(true);
-					/**
-					 * TODO iPlate og gPlate kaller ikke på denne eventen!
-					 */
 					if (clickedBlock.equals(wPlate) || clickedBlock.equals(sPlate) ||
 							clickedBlock.equals(iPlate) || clickedBlock.equals(gPlate)) {
 					} else {

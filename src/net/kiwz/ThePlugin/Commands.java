@@ -24,7 +24,7 @@ import net.kiwz.ThePlugin.commands.TimeCmd;
 import net.kiwz.ThePlugin.commands.TpCmd;
 import net.kiwz.ThePlugin.commands.TpchunkCmd;
 import net.kiwz.ThePlugin.commands.TpsCmd;
-import net.kiwz.ThePlugin.commands.VærCmd;
+import net.kiwz.ThePlugin.commands.VaerCmd;
 import net.kiwz.ThePlugin.commands.WhoisCmd;
 import net.kiwz.ThePlugin.commands.WorldCmd;
 
@@ -76,7 +76,7 @@ public class Commands implements CommandExecutor {
 		else if (c.equals("ticks")) return TpsCmd.exec(sender, args);
 		else if (c.equals("hvem")) return WhoisCmd.exec(sender, args);
 		else if (c.equals("world")) return WorldCmd.exec(sender, args);
-		else if (c.equals("vær")) return VærCmd.exec(sender, args);
+		else if (c.equals("vaer")) return VaerCmd.exec(sender, args);
 		else return false;
 	}
 }

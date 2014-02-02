@@ -240,15 +240,15 @@ commands:
     permission: ThePlugin.world
     permission-message: §cDu har ikke tilgang!
     usage: /world
-  vær:
+  vaer:
     description: Sett ditt eget vær
-    aliases: []
-    permission: ThePlugin.vær
+    aliases: [weather]
+    permission: ThePlugin.vaer
     permission-message: §cDu har ikke tilgang!
     usage: |
-      /vær sol
-      /vær regn
-      /vær server
+      /vaer sol
+      /vaer regn
+      /vaer server
   test:
     description: IKKE RØR!!!
     aliases: []
@@ -289,7 +289,7 @@ permissions:
     default: true
   ThePlugin.hvem:
     default: true
-  ThePlugin.vær:
+  ThePlugin.vaer:
     default: true
   bukkit.command.kill:
     default: op

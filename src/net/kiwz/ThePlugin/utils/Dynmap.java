@@ -18,11 +18,14 @@ public class Dynmap {
 	private Plugin dynmap = Bukkit.getServer().getPluginManager().getPlugin("dynmap");
 	private DynmapAPI api;
 	private MarkerAPI markerApi;
+	private MarkerSet areaSet;
 	private MarkerSet set;
     private Map<String, AreaMarker> areaMarkers = new HashMap<String, AreaMarker>();
     private Map<String, Marker> markers = new HashMap<String, Marker>();
-    private String markerSetID = "ThePlugin";
-    private String markerSetLabel = "Plasser";
+    private String areaMarkerSetID = "plasser";
+    private String areaMarkerSetLabel = "Plasser";
+    private String markerSetID = "plass-spawn";
+    private String markerSetLabel = "Plass-Spawn";
 
     public void markTheMap() {
         if (dynmap == null) {
@@ -35,17 +38,30 @@ public class Dynmap {
             return;
         }
         
+        areaSet = markerApi.getMarkerSet(areaMarkerSetID);
+        if (areaSet == null) {
+        	areaSet = markerApi.createMarkerSet(areaMarkerSetID, areaMarkerSetLabel, null, false);
+        } else {
+        	areaSet.setMarkerSetLabel(areaMarkerSetLabel);
+        }
+        
+        if (areaSet == null) {
+            return;
+        }
+        
         set = markerApi.getMarkerSet(markerSetID);
         if (set == null) {
         	set = markerApi.createMarkerSet(markerSetID, markerSetLabel, null, false);
-        }
-        else {
+        } else {
         	set.setMarkerSetLabel(markerSetLabel);
         }
         
         if (set == null) {
             return;
+        } else {
+        	set.setHideByDefault(true);
         }
+        
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(ThePlugin.getPlugin(), new Runnable() {
 			@Override
             public void run() {
@@ -59,19 +75,25 @@ public class Dynmap {
         Map<String, Marker> newMarkers = new HashMap<String, Marker>();
         for (Place place : Place.getPlaces()) {
         	if (place.isRemoved()) break;
+        	boolean old = true;
         	String name = place.getName();
         	Location loc = place.getCenter();
-        	String owner = MyPlayer.getPlayerById(place.getOwner()).getName();
+        	MyPlayer myPlayer = MyPlayer.getPlayerById(place.getOwner());
+        	if (!myPlayer.isOld()) old = false;
+        	String owner = myPlayer.getName();
         	String members = "";
         	for (String member : place.getMembers()) {
-        		MyPlayer myMember = MyPlayer.getPlayerById(member);
-        		if (myMember != null) members = members + myMember.getName() + ", ";
+        		myPlayer = MyPlayer.getPlayerById(member);
+        		if (myPlayer != null) {
+        			members = members + myPlayer.getName() + ", ";
+                	if (!myPlayer.isOld()) old = false;
+        		}
         	}
         	if (members.length() > 1) {
         		members = members.substring(0, members.length() - 2);
         	}
 
-        	String markerID = "ThePlugin_" + place.getId();
+        	String markerID = "plass_" + place.getId();
         	String label = name + " (" + owner + ")";
         	String world = loc.getWorld().getName();
 	        StringBuilder str = new StringBuilder();
@@ -89,7 +111,7 @@ public class Dynmap {
         	double[] x = getX(loc.getBlockX(), place.getRadius() + 1);
         	double[] z = getZ(loc.getBlockZ(), place.getRadius() + 1);
         	boolean pvp = place.getPvP();
-	        setAreaMarker(markerID, label, world, desc, x, z, pvp, newAreaMarkers);
+	        setAreaMarker(markerID, label, world, desc, x, z, pvp, old, newAreaMarkers);
 	        
 	        double SpawnX = place.getSpawn().getX();
 	        double SpawnY = place.getSpawn().getY();
@@ -108,25 +130,26 @@ public class Dynmap {
         markers = newMarkers;
     }
     
-    private void setAreaMarker(String markerID, String label, String world, String desc, double[] x, double[] z, boolean pvp, Map<String, AreaMarker> newAreaMarkers){
+    private void setAreaMarker(String markerID, String label, String world, String desc, double[] x, double[] z, boolean pvp, boolean old, Map<String, AreaMarker> newAreaMarkers){
         markerID = markerID + "_area";
         AreaMarker area = areaMarkers.remove(markerID);
         if (area == null) {
-            area = set.createAreaMarker(markerID, label, false, world, x, z, false);
+            area = areaSet.createAreaMarker(markerID, label, false, world, x, z, false);
             if (area == null) {
                 return;
             }
-        }
-        else {
+        } else {
             area.setCornerLocations(x, z);
             area.setLabel(label);
         }
         area.setDescription(desc);
     	area.setFillStyle(0, 0xFF0000);
-        if (pvp) {
+    	
+        if (old) {
+            area.setLineStyle(3, 1, 0xFFFF00);
+        } else if (pvp) {
             area.setLineStyle(3, 1, 0xFF0000);
-        }
-        else {
+        } else {
             area.setLineStyle(3, 1, 0x00FF00);
         }
         newAreaMarkers.put(markerID, area);
@@ -140,8 +163,7 @@ public class Dynmap {
             if (marker == null) {
                 return;
             }
-        }
-        else {
+        } else {
             marker.setLocation(world, x, y, z);;
             marker.setLabel(label);
         }

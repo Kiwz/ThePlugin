@@ -41,14 +41,14 @@ public class FillWorld {
 		for (MyWorld myWorld : fillWorlds.keySet()) {
 			FillWorld fillWorld = getFillWorld(myWorld);
 			fillWorld.cancelTask();
-			myWorld.setFill(fillWorld.getKey());
+			myWorld.setFill(fillWorld.getKey() - 10);
 		}
 	}
 	
 	public void cancelTask() {
 		task.cancel();
+		myWorld.setFill(getKey() - 10);
 		fillWorlds.remove(myWorld);
-		myWorld.setFill(0);
 	}
 	
 	public int getKey() {
@@ -91,45 +91,39 @@ public class FillWorld {
 		status(world);
 		if (chunkMap.get(key) == null) {
 			task.cancel();
-			myWorld.setFill(0);
+			myWorld.setFill(key - 10);
 			fillWorlds.remove(myWorld);
 		} else {
 			int x = chunkMap.get(key)[0];
 			int z = chunkMap.get(key)[1];
 			
-			if (world.isChunkLoaded(x, z) || world.loadChunk(x, z, false)) {
-				key++;
-				if (key % 10 != 0) generateChunk();
-				else fillWorlds.put(myWorld, this);
-			} else {
-		    	int nearbyX;
-		    	int nearbyZ;
-		    	
-				nearbyX = x - 2;
-		    	while (nearbyX <= x + 2) {
-		    		nearbyZ = z - 2;
-		    		while (nearbyZ <= z + 2) {
-		    			world.loadChunk(nearbyX, nearbyZ, false);
-		    			nearbyZ++;
-		    		}
-		    		nearbyX++;
-		    	}
-		    	
-				world.loadChunk(x, z);
-				world.unloadChunk(x, z);
-				key++;
-				generated++;
-				fillWorlds.put(myWorld, this);
-				
-				nearbyX = x - 2;
-		    	while (nearbyX <= x + 2) {
-		    		nearbyZ = z - 2;
-		    		while (nearbyZ <= z + 2) {
-		    			world.unloadChunk(nearbyX, nearbyZ);
-		    			nearbyZ++;
-		    		}
-		    		nearbyX++;
-				}
+	    	int nearbyX;
+	    	int nearbyZ;
+	    	
+			nearbyX = x - 2;
+	    	while (nearbyX <= x + 2) {
+	    		nearbyZ = z - 2;
+	    		while (nearbyZ <= z + 2) {
+	    			world.loadChunk(nearbyX, nearbyZ, false);
+	    			nearbyZ++;
+	    		}
+	    		nearbyX++;
+	    	}
+	    	
+			world.loadChunk(x, z);
+			world.unloadChunk(x, z);
+			key++;
+			generated++;
+			fillWorlds.put(myWorld, this);
+			
+			nearbyX = x - 2;
+	    	while (nearbyX <= x + 2) {
+	    		nearbyZ = z - 2;
+	    		while (nearbyZ <= z + 2) {
+	    			world.unloadChunk(nearbyX, nearbyZ);
+	    			nearbyZ++;
+	    		}
+	    		nearbyX++;
 			}
 		}
 	}
@@ -140,6 +134,7 @@ public class FillWorld {
 			ThePlugin.getPlugin().getLogger().info("(" + myWorld.getName() + ") Starter generering av " + totChunks + " chunks");
 		} else if (key % 1200 == 0) {
 			world.save();
+			myWorld.setFill(key - 10);
 			String percent = String.format("%.2f", (key * 100.0) / totChunks);
 			ThePlugin.getPlugin().getLogger().info("(" + myWorld.getName() + ") " + percent + "% generert");
 		}

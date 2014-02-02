@@ -8,18 +8,18 @@ import org.bukkit.WeatherType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class VærCmd {
+public class VaerCmd {
 	private Server server = Bukkit.getServer();
 	
 	public static boolean exec(CommandSender sender, String[] args) {
-		return new VærCmd().vær(sender, args);
+		return new VaerCmd().vaer(sender, args);
 	}
 	
-	private boolean vær(CommandSender sender, String[] args) {
+	private boolean vaer(CommandSender sender, String[] args) {
 		Player player = server.getPlayer(sender.getName());
 
 		if (player == null) {
-			sender.sendMessage(Color.COMMAND + "/vær " + Color.WARNING + "kan bare brukes av spillere");
+			sender.sendMessage(Color.COMMAND + "/vaer " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length == 0) {
 			player.resetPlayerWeather();
 			sender.sendMessage(Color.INFO + "Ditt vær er lik serveren sitt vær");
