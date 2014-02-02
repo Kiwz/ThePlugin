@@ -32,6 +32,7 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
+import org.bukkit.projectiles.ProjectileSource;
 
 public class EntityListener implements Listener {
 	private String denyString = Color.WARNING + "Du har ingen tilgang her";
@@ -120,7 +121,7 @@ public class EntityListener implements Listener {
 		}
 		
 		if (attacker instanceof Projectile && victim instanceof Player) {
-			LivingEntity shooter = ((Projectile) attacker).getShooter();
+			ProjectileSource shooter = ((Projectile) attacker).getShooter();
 			if (shooter instanceof Player) {
 				playerAttacker = (Player) shooter;
 				playerVictim = (Player) victim;
@@ -173,7 +174,7 @@ public class EntityListener implements Listener {
 			}
 			
 			if (attacker instanceof Projectile && victim instanceof Ageable) {
-				LivingEntity shooter = ((Projectile) attacker).getShooter();
+				ProjectileSource shooter = ((Projectile) attacker).getShooter();
 				if (shooter instanceof Player) {
 					playerAttacker = (Player) shooter;
 					MyPlayer myPlayer = MyPlayer.getPlayer(playerAttacker);
@@ -224,7 +225,7 @@ public class EntityListener implements Listener {
 	public void onPotionSplashEvent(PotionSplashEvent event) {
 		List<LivingEntity> affectedEntities = (List<LivingEntity>) event.getAffectedEntities();
 		ThrownPotion potion = event.getPotion();
-		Entity attacker = potion.getShooter();
+		ProjectileSource attacker = potion.getShooter();
 		/*for (LivingEntity victim : affectedEntities) {
 			if (attacker != victim) {
 				event.setIntensity(victim, -1.0);
