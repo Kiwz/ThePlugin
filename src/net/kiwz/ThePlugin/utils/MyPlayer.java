@@ -213,6 +213,7 @@ public class MyPlayer {
 		this.banReason = banReason;
 		this.bannedBy = bannedBy;
 		setChanged(true);
+		MyServer.getMyServer().setBannedPlayer(this, banned);
 	}
 	
 	public boolean isBanned() {
@@ -293,7 +294,7 @@ public class MyPlayer {
 	}
 	
 	public boolean isOld() {
-		long dayes = 10;
+		long dayes = 30;
 		long timeSinceLastPlayed = System.currentTimeMillis() / 1000 - this.lastPlayed;
 		if (timeSinceLastPlayed < dayes * 24 * 60 * 60) return false;
 		return true;

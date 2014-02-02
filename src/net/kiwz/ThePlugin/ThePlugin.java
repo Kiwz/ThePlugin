@@ -19,7 +19,7 @@ import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.MyWorld;
 import net.kiwz.ThePlugin.utils.Perm;
 import net.kiwz.ThePlugin.utils.Place;
-import net.kiwz.ThePlugin.utils.ServerManager;
+import net.kiwz.ThePlugin.utils.MyServer;
 import net.kiwz.ThePlugin.utils.WoolChest;
 
 import org.bukkit.Bukkit;
@@ -38,6 +38,7 @@ public class ThePlugin extends JavaPlugin {
 	}
 	
 	public void onEnable() {
+		MyServer myServer = MyServer.getMyServer();
 		Config.getConfig().loadConfig();
 		
 		Connection conn = new SqlConnection().getConnection();
@@ -58,11 +59,16 @@ public class ThePlugin extends JavaPlugin {
 			query.loadWoolChests();
 			try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
+
+		myServer.setStopTask(myServer.autoStopTask());
+		myServer.setStopping(false);
+		myServer.saveTask();
+		myServer.unbanTask();
+		myServer.setFilter();
 		
 		MultiWorld.saveBukkitWorlds();
     	new Dynmap().markTheMap();
 		Perm.setPermissions();
-		ServerManager.start();
 		FillWorld.restoreFill();
 		
 		Commands cmds = new Commands();

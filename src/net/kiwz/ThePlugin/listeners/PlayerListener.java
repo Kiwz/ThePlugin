@@ -6,7 +6,7 @@ import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.MyWorld;
 import net.kiwz.ThePlugin.utils.Perm;
-import net.kiwz.ThePlugin.utils.ServerManager;
+import net.kiwz.ThePlugin.utils.MyServer;
 import net.kiwz.ThePlugin.utils.Util;
 import net.kiwz.ThePlugin.utils.WoolChest;
 
@@ -205,7 +205,7 @@ public class PlayerListener implements Listener {
 			if (msg.length > 1) arg = msg[1];
 	    	HelpTopic topic = server.getHelpMap().getHelpTopic(cmd);
 	    	if (topic != null) {
-	    		ServerManager.logString("[COMMAND] " + player.getName() + ": " + event.getMessage());
+	    		MyServer.getMyServer().logString("[COMMAND] " + player.getName() + ": " + event.getMessage());
 		    	if (server.getPlayer(arg) != null && (cmd.equalsIgnoreCase("/op") || cmd.equalsIgnoreCase("/deop"))) {
 		    		final Player target = server.getPlayer(arg);
 		    		server.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
@@ -243,7 +243,7 @@ public class PlayerListener implements Listener {
 			}
 		}
 		
-		ServerManager.logString("[CHAT] " + player.getName() + ": " + event.getMessage());
+		MyServer.getMyServer().logString("[CHAT] " + player.getName() + ": " + event.getMessage());
 		event.setCancelled(true);
 	}
 	
@@ -344,7 +344,7 @@ public class PlayerListener implements Listener {
         
     	Perm.setPlayerPermissions(player);
         Util.setTabColor(player);
-		ServerManager.logString("[CONN] " + log);
+		MyServer.getMyServer().logString("[CONN] " + log);
         server.getLogger().info(log);
 	}
 	
@@ -373,7 +373,7 @@ public class PlayerListener implements Listener {
 			event.getPlayer().damage(1000);
 		}
 		event.setQuitMessage(MyPlayer.getColorName(myPlayer) + Color.WARNING + " logget ut");
-		ServerManager.logString("[CONN] " + myPlayer.getName() + " logget ut");
+		MyServer.getMyServer().logString("[CONN] " + myPlayer.getName() + " logget ut");
 	}
 	
 	private void giveItem(Player player, Material material, int amount) {

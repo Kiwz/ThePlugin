@@ -1,4 +1,5 @@
 Bugs:
+Noe med /replay funker ikke
 
 
 Opprydding:
@@ -7,11 +8,16 @@ Bygge listeners mye bedre!
 
 
 Tillegg:
-MOTD (ny spiller MOTD) skal flyttes til configgen med mulighet for farge-valg
+/plass toggle pvp må få en heat-up (2min)
+når en plass aktiverer pvp bør alle spillere som befinner seg i plassen få beskjed om dette
+/plass spawn skal gi en advarsel før man blir teleportert dersom plassen har PVP
+Ny usynlig "worker" rank, skal få /fly og mulighet for å plassere "gratis" blokker
+Gi plasser spesielle egenskaper, som f.eks "Handel", "Kreativ"
 
 
 
 Kommandoer:
+/handel <spiller-navn>, /handel aksepter, /handel fullfør, /handel angre
 
 
 Plasser:

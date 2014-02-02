@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.kiwz.ThePlugin.ThePlugin;
 import net.kiwz.ThePlugin.mysql.SqlConnection;
@@ -26,30 +28,83 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.fusesource.jansi.Ansi;
 
-public class ServerManager {
-	private static BukkitTask stopTask = null;
+public class MyServer {
+	private static MyServer myServer = new MyServer();
+
+	private BukkitTask stopTask;
+	private boolean stopping;
+	private Set<MyPlayer> bannedPlayers = new HashSet<MyPlayer>();
 	
-	public static void start() {
-		ServerManager sm = new ServerManager();
-		sm.unban();
-	    sm.save();
-	    sm.autoStop();
-	    sm.setFilter();
+	public static MyServer getMyServer() {
+		return myServer;
 	}
 	
-	private void unban() {
-		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(ThePlugin.getPlugin(), new Runnable() {
-			public void run() {
-				for (MyPlayer myPlayer : MyPlayer.getPlayers()) {
-					if (myPlayer.isBanned() && myPlayer.getBanExpire() < System.currentTimeMillis() / 1000) {
-						myPlayer.setBanned(false, 0, "", "");
-					}
+	public void setStopTask(BukkitTask stopTask) {
+		this.stopTask = stopTask;
+	}
+	
+	public BukkitTask getStopTask() {
+		return this.stopTask;
+	}
+	
+	public void setStopping(boolean stopping) {
+		this.stopping = stopping;
+	}
+	
+	public boolean isStopping() {
+		return this.stopping;
+	}
+	
+	public void setBannedPlayer(MyPlayer myPlayer, boolean banned) {
+		if (banned) this.bannedPlayers.add(myPlayer);
+		else this.bannedPlayers.remove(myPlayer);
+	}
+	
+	public Set<MyPlayer> getBannedPlayers() {
+		return this.bannedPlayers;
+	}
+	
+	public void logString(String string) {
+		long unix = System.currentTimeMillis() / 1000;
+		try {
+			File file = new File("player.log");
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
+			bw.write(Util.getTimeLogDate(unix) + " " + string + "\n");
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public BukkitTask autoStopTask() {
+		return Bukkit.getServer().getScheduler().runTaskTimer(ThePlugin.getPlugin(), new Runnable() {
+            public void run() {
+				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+				int min = Calendar.getInstance().get(Calendar.MINUTE);
+				if ((hour == 01 || hour == 13 || hour == 17) && (min >= 55)) {
+					MyServer myServer = MyServer.getMyServer();
+					myServer.setStopping(true);
+					broadcastMsg(Color.SERVER + "*** Server restarter om ca 5 minutter ***");
+					Bukkit.getServer().getScheduler().runTaskLater(ThePlugin.getPlugin(), new Runnable() {
+						public void run() {
+							broadcastMsg(Color.SERVER + "*** Server restarter ***");
+							Bukkit.getServer().getScheduler().runTaskLater(ThePlugin.getPlugin(), new Runnable() {
+								public void run() {
+									for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+										player.kickPlayer("Serveren restarter, kom tilbake om 1 minutt");
+									}
+									Bukkit.shutdown();
+								}
+							}, 60);
+						}
+					}, 5900);
+					myServer.getStopTask().cancel();
 				}
 			}
-		}, 20, 200);
+		}, 28800, 20);
 	}
 	
-	private void save() {
+	public void saveTask() {
 		Bukkit.getServer().getScheduler().runTaskTimer(ThePlugin.getPlugin(), new Runnable() {
             public void run() {
 				long time = System.currentTimeMillis();
@@ -82,46 +137,17 @@ public class ServerManager {
 		}, 12000, 12000);
 	}
 	
-	private void autoStop() {
-		stopTask = Bukkit.getServer().getScheduler().runTaskTimer(ThePlugin.getPlugin(), new Runnable() {
-            public void run() {
-				int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-				int min = Calendar.getInstance().get(Calendar.MINUTE);
-				if ((hour == 01 || hour == 13 || hour == 17) && (min >= 55)) {
-					broadcastMsg(Color.SERVER + "*** Server restarter om ca 5 minutter ***");
-					Bukkit.getServer().getScheduler().runTaskLater(ThePlugin.getPlugin(), new Runnable() {
-						public void run() {
-							broadcastMsg(Color.SERVER + "*** Server restarter ***");
-							Bukkit.getServer().getScheduler().runTaskLater(ThePlugin.getPlugin(), new Runnable() {
-								public void run() {
-									for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-										player.kickPlayer("Serveren restarter, kom tilbake om 1 minutt");
-									}
-									Bukkit.shutdown();
-								}
-							}, 60);
-						}
-					}, 5900);
-					stopTask.cancel();
+	public void unbanTask() {
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(ThePlugin.getPlugin(), new Runnable() {
+			public void run() {
+				for (MyPlayer myPlayer : MyServer.getMyServer().getBannedPlayers()) {
+					if (myPlayer.getBanExpire() < System.currentTimeMillis() / 1000) myPlayer.setBanned(false, 0, "", "");
 				}
 			}
-		}, 28800, 20);
+		}, 20, 20);
 	}
 	
-	public static void logString(String string) {
-		int unix = (int) (System.currentTimeMillis() / 1000);
-		try {
-			File file = new File("player.log");
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8"));
-			bw.write(Util.getTimeLogDate(unix) + " " + string);
-			bw.write("\n");
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void setFilter() {
+	public void setFilter() {
 		Logger coreLogger = (Logger) LogManager.getRootLogger();
 		coreLogger.addFilter(new Filter() {
 			@Override

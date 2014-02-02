@@ -6,7 +6,7 @@ import net.kiwz.ThePlugin.utils.Color;
 import net.kiwz.ThePlugin.utils.MyPlayer;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.MyWorld;
-import net.kiwz.ThePlugin.utils.ServerManager;
+import net.kiwz.ThePlugin.utils.MyServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -55,7 +55,7 @@ public class BlockListener implements Listener {
 			int x = loc.getBlockX();
 			int y = loc.getBlockY();
 			int z = loc.getBlockZ();
-			ServerManager.logString("[MINING] " + player.getName() + ": " + mat + " (" + world + " " + x + ", " + y + ", " + z + ")");
+			MyServer.getMyServer().logString("[MINING] " + player.getName() + ": " + mat + " (" + world + " " + x + ", " + y + ", " + z + ")");
 		}
     }
 

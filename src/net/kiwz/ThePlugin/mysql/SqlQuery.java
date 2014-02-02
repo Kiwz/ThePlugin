@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import net.kiwz.ThePlugin.utils.Home;
 import net.kiwz.ThePlugin.utils.MultiWorld;
 import net.kiwz.ThePlugin.utils.MyPlayer;
+import net.kiwz.ThePlugin.utils.MyServer;
 import net.kiwz.ThePlugin.utils.MyWorld;
 import net.kiwz.ThePlugin.utils.Place;
 import net.kiwz.ThePlugin.utils.Util;
@@ -138,6 +139,7 @@ public class SqlQuery {
 				MyPlayer myPlayer = new MyPlayer(uuid, name, ip, lastPlayed, timePlayed, muted,
 						banned, banTime, banExpire, banReason, bannedBy);
 				myPlayer.save();
+				MyServer.getMyServer().setBannedPlayer(myPlayer, myPlayer.isBanned());
 			}
 			res.close();
 		} catch (SQLException e) {
