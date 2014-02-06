@@ -6,9 +6,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
@@ -58,46 +56,6 @@ public class Util {
         } else {
         	player.setPlayerListName(Color.PLAYER + playerName + ChatColor.WHITE);
         }
-	}
-	
-	public static boolean isSpawnSafe(Location loc) {
-		Block block = loc.getBlock();
-		Material a = block.getRelative(0, 1, 0).getType();
-		Material b = block.getRelative(0, 0, 0).getType();
-		Material c = block.getRelative(0, -1, 0).getType();
-		Material d = block.getRelative(0, -2, 0).getType();
-		Material air = Material.AIR;
-		
-		if (!a.equals(air) || !b.equals(air) || (c.equals(air) && d.equals(air))) return false;
-		
-		for (String spotBlock : Config.getConfig().getSpotBlocks()) {
-			Material mat = Material.getMaterial(spotBlock);
-			if (c.equals(mat)) return false;
-			if (c.equals(air) && d.equals(mat)) return false;
-		}
-		
-		World world = loc.getWorld();
-		int locMaxX = loc.getBlockX() + 2;
-		int locMaxY = loc.getBlockY() + 3;
-		int locMaxZ = loc.getBlockZ() + 2;
-		int locX = loc.getBlockX() - 2;
-		while (locMaxX >= locX) {
-			int locY = loc.getBlockY() - 2;
-			while (locMaxY >= locY) {
-				int locZ = loc.getBlockZ() - 2;
-				while (locMaxZ >= locZ) {
-					Material mat = world.getBlockAt(locX, locY, locZ).getType();
-					for (String areaBlock : Config.getConfig().getAreaBlocks()) {
-						Material m = Material.getMaterial(areaBlock);
-						if (mat.equals(m)) return false;
-					}
-					locZ++;
-				}
-				locY++;
-			}
-			locX++;
-		}
-		return true;
 	}
 	
 	public static void sendAsPages(CommandSender sender, String pageN, int pageHeight, String about, String adminInfo, List<String> list) {

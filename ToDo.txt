@@ -5,12 +5,9 @@ Noe med /replay funker ikke
 Opprydding:
 adde egne kommandoer for ban, unban, banlist, mute, mutelist, unmute, unmuteall
 Bygge listeners mye bedre!
-
+Ban lista skal først sorteres på dato!
 
 Tillegg:
-/plass toggle pvp må få en heat-up (2min)
-når en plass aktiverer pvp bør alle spillere som befinner seg i plassen få beskjed om dette
-/plass spawn skal gi en advarsel før man blir teleportert dersom plassen har PVP
 Ny usynlig "worker" rank, skal få /fly og mulighet for å plassere "gratis" blokker
 Gi plasser spesielle egenskaper, som f.eks "Handel", "Kreativ"
 

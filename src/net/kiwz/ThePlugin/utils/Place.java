@@ -7,9 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.kiwz.ThePlugin.ThePlugin;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 /**
@@ -34,6 +38,7 @@ public class Place {
 	private boolean animals;
 	private String enter;
 	private String leave;
+	private int pvpTaskId;
 	private boolean isChargeAble;
 	private boolean changed;
 	private boolean loaded;
@@ -62,6 +67,7 @@ public class Place {
 		this.animals = true;
 		this.enter = "Velkommen til " + name;
 		this.leave = "Du forlater " + name;
+		this.pvpTaskId = 0;
 		this.changed = true;
 		this.loaded = true;
 		this.removed = false;
@@ -91,6 +97,7 @@ public class Place {
 		this.animals = animals;
 		this.enter = enter;
 		this.leave = leave;
+		this.pvpTaskId = 0;
 		this.changed = false;
 		this.loaded = false;
 		this.removed = false;
@@ -116,6 +123,7 @@ public class Place {
 		place.animals = places.get(id).animals;
 		place.enter = places.get(id).enter;
 		place.leave = places.get(id).leave;
+		place.pvpTaskId = places.get(id).pvpTaskId;
 		place.isChargeAble = places.get(id).isChargeAble;
 		place.changed = places.get(id).changed;
 		place.loaded = places.get(id).loaded;
@@ -230,8 +238,8 @@ public class Place {
 	
 	public boolean hasAccess(MyPlayer myPlayer) {
 		if (myPlayer.isAdmin()) return true;
-		if (this.owner.equals(myPlayer.getUUID())) return true;
-		if (this.members.contains(myPlayer.getUUID())) return true;
+		if (getOwner().equals(myPlayer.getUUID())) return true;
+		if (getMembers().contains(myPlayer.getUUID())) return true;
 		return false;
 	}
 	
@@ -252,13 +260,13 @@ public class Place {
 	}
 	
 	public String getColorName() {
-		if (this.isLoaded()) return Color.PLACE + this.name + Color.INFO;
-		else return Color.WARNING + this.name + Color.INFO;
+		if (isLoaded()) return Color.PLACE + getName() + Color.INFO;
+		else return Color.WARNING + getName() + Color.INFO;
 	}
 	
 	public void setOwner(MyPlayer myPlayer) {
-		this.members.add(getOwner());
-		this.members.remove(myPlayer.getUUID());
+		setMember(MyPlayer.getPlayer(getOwner()));
+		removeMember(myPlayer);
 		this.owner = myPlayer.getUUID();
 	}
 	
@@ -319,6 +327,14 @@ public class Place {
 		return this.pvp;
 	}
 	
+	public void setPvPTaskId(int pvpTaskId) {
+		this.pvpTaskId = pvpTaskId;
+	}
+	
+	public int getPvPTaskId() {
+		return this.pvpTaskId;
+	}
+	
 	public void setMonsters(boolean monsters) {
 		this.monsters = monsters;
 	}
@@ -355,6 +371,10 @@ public class Place {
 		this.isChargeAble = isChargeAble;
 	}
 	
+	public boolean isChargeAble() {
+		return isChargeAble;
+	}
+	
 	public void setWorldName(String worldName) {
 		this.worldName = worldName;
 	}
@@ -362,7 +382,7 @@ public class Place {
 	public String getWorldName() {
 		return this.worldName;
 	}
-	//
+	
 	public void setChanged(boolean changed) {
 		this.changed = changed;
 	}
@@ -380,7 +400,7 @@ public class Place {
 	}
 	
 	public void setRemoved(MyPlayer myPlayer, boolean removed) {
-			this.loaded = false;
+			setLoaded(false);
 			this.removed = removed;
 	}
 	
@@ -389,23 +409,35 @@ public class Place {
 	}
 	
 	public void remove() {
-		usedNames.remove(this.name.toLowerCase());
-		places.remove(id);
+		usedNames.remove(getName().toLowerCase());
+		places.remove(getId());
 	}
 	
 	public void save() {
-		usedIDs.add(this.id);
-		usedNames.add(this.name.toLowerCase());
-		if (this.center.getWorld() != null) setLoaded(true);
-		places.put(this.id, this);
+		usedIDs.add(getId());
+		usedNames.add(getName().toLowerCase());
+		if (getCenter().getWorld() != null) setLoaded(true);
+		places.put(getId(), this);
 	}
 	
 	public boolean save(MyPlayer myPlayer) {
 		if (error(myPlayer)) return false;
-		if (getPlace(this.id) != null) usedNames.remove(getPlace(this.id).getName().toLowerCase());
-		usedIDs.add(this.id);
-		usedNames.add(this.name.toLowerCase());
-		places.put(this.id, this);
+		if (getPlace(getId()) != null) {
+			Place place = getPlace(getId());
+			usedNames.remove(place.getName().toLowerCase());
+			if (place.getPvP() != getPvP()) {
+				if (getPvPTaskId() != 0) {
+					setPvP(false);
+					cancelPvPTask();
+				} else if (getPvP()) {
+					setPvP(false);
+					startPvPTask();
+				}
+			}
+		}
+		usedIDs.add(getId());
+		usedNames.add(getName().toLowerCase());
+		places.put(getId(), this);
 		setChanged(true);
 		return true;
 	}
@@ -414,31 +446,31 @@ public class Place {
 		boolean op = false;
 		if (myPlayer == null) op = true;
 		else op = myPlayer.getOfflinePlayer().isOp();
-		Place place = getPlace(this.id);
+		Place place = getPlace(getId());
 		if (place != null) {
-			MyPlayer newOwner = MyPlayer.getPlayerById(this.owner);
+			MyPlayer newOwner = MyPlayer.getPlayerById(getOwner());
 			if (!place.getOwner().equals(newOwner.getUUID())) {
 				if (!op && getPlacesByOwner(newOwner).size() >= 3) return true;
 			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return true;
-			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return true;
-			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
-				if (getPlace(this.spawn) == null) return true;
-				if (getPlace(this.spawn).getId() != (this.id)) return true;
+			if (!place.getName().equalsIgnoreCase(getName()) && usedNames.contains(getName().toLowerCase())) return true;
+			if (place.getSpawn() != getSpawn() && place.getCenter() == getCenter()) {
+				if (getPlace(getSpawn()) == null) return true;
+				if (getPlace(getSpawn()).getId() != (getId())) return true;
 			}
 		} else {
 			if (!op && getPlacesByOwner(myPlayer).size() >= 3) return true;
-			if (usedNames.contains(this.name.toLowerCase())) return true;
+			if (usedNames.contains(getName().toLowerCase())) return true;
 		}
 		
-		if (this.name.equalsIgnoreCase("liste") || this.name.equalsIgnoreCase("her") || this.name.equalsIgnoreCase("spiller")) return true;
-		if (this.name.length() < 2 || this.name.length() > 12) return true;
-		if (!op && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return true;
-		if (!op && this.radius < 10) return true;
-		if (!op && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return true;
-		if (!op && this.radius > 70) return true;
+		if (getName().equalsIgnoreCase("liste") || getName().equalsIgnoreCase("her") || getName().equalsIgnoreCase("spiller")) return true;
+		if (getName().length() < 2 || getName().length() > 12) return true;
+		if (!op && !MyWorld.getWorld(getCenter().getWorld()).getClaimable()) return true;
+		if (!op && getRadius() < 10) return true;
+		if (!op && distanceToSpawn(getCenter()) <= 300 && getRadius() > 15) return true;
+		if (!op && getRadius() > 70) return true;
 		if (!available(this).isEmpty()) return true;
-		if (!op && this.isChargeAble) {
+		if (!op && isChargeAble()) {
 			if (!myPlayer.charge(5)) return true;
 		}
 		return false;
@@ -448,36 +480,79 @@ public class Place {
 		boolean op = false;
 		if (myPlayer == null) op = true;
 		else op = myPlayer.getOfflinePlayer().isOp();
-		Place place = getPlace(this.id);
+		Place place = getPlace(getId());
 		if (place != null) {
-			MyPlayer newOwner = MyPlayer.getPlayerById(this.owner);
+			MyPlayer newOwner = MyPlayer.getPlayerById(getOwner());
 			if (!place.getOwner().equals(newOwner.getUUID())) {
 				if (!op && getPlacesByOwner(newOwner).size() >= 3) return MyPlayer.getColorName(newOwner) + Color.WARNING + " eier allerede 3 plasser";
 			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";
-			if (!place.getName().equalsIgnoreCase(this.name) && usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
-			if (place.getSpawn() != this.spawn && place.getCenter() == this.center) {
-				if (getPlace(this.spawn) == null) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";
-				if (getPlace(this.spawn).getId() != (this.id)) return "Du må stå i " + Color.PLACE + this.name + Color.WARNING + " når du setter spawn";
+			if (!place.getName().equalsIgnoreCase(getName()) && usedNames.contains(getName().toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
+			if (place.getSpawn() != getSpawn() && place.getCenter() == getCenter()) {
+				if (getPlace(getSpawn()) == null) return "Du må stå i " + Color.PLACE + getName() + Color.WARNING + " når du setter spawn";
+				if (getPlace(getSpawn()).getId() != (getId())) return "Du må stå i " + Color.PLACE + getName() + Color.WARNING + " når du setter spawn";
 			}
 		} else {
 			if (!op && getPlacesByOwner(myPlayer).size() >= 3) return "Du kan ikke lage flere enn 3 plasser";
-			if (usedNames.contains(this.name.toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
+			if (usedNames.contains(getName().toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
 		}
 		
-		if (this.name.equalsIgnoreCase("liste") || this.name.equalsIgnoreCase("her") || this.name.equalsIgnoreCase("spiller")) return "Dette navnet er reservert, prøv ett annet navn";
-		if (this.name.length() < 2 || this.name.length() > 12) return "Navnet må være mellom 2 og 12 bokstaver";
-		if (!op && !MyWorld.getWorld(this.getCenter().getWorld()).getClaimable()) return "Du kan ikke lage plass i denne verdenen";
-		if (!op && this.radius < 10) return "Plassen du lager må ha en radius større enn 9";
-		if (!op && distanceToSpawn(this.getCenter()) <= 300 && this.radius > 15) return "Plasser nære spawn (innenfor 300 blokker) må ha en radius mindre enn 16";
-		if (!op && this.radius > 70) return "Plassen du lager må ha en radius mindre enn 71";
+		if (getName().equalsIgnoreCase("liste") || getName().equalsIgnoreCase("her") || getName().equalsIgnoreCase("spiller")) return "Dette navnet er reservert, prøv ett annet navn";
+		if (getName().length() < 2 || getName().length() > 12) return "Navnet må være mellom 2 og 12 bokstaver";
+		if (!op && !MyWorld.getWorld(getCenter().getWorld()).getClaimable()) return "Du kan ikke lage plass i denne verdenen";
+		if (!op && getRadius() < 10) return "Plassen du lager må ha en radius større enn 9";
+		if (!op && distanceToSpawn(getCenter()) <= 300 && getRadius() > 15) return "Plasser nære spawn (innenfor 300 blokker) må ha en radius mindre enn 16";
+		if (!op && getRadius() > 70) return "Plassen du lager må ha en radius mindre enn 71";
 		if (!available(this).isEmpty()) {
 			String error = "Du er for nærme følgende plasser: ";
 			for (Place otherPlace : available(this)) error = error + Color.INFO + "[" + Color.PLACE + otherPlace.getName() + Color.INFO + "] ";
 			return error;
 		}
-		if (!op && this.isChargeAble) return "Det koster 5 gullbarer for å lage eller flytte en plass";
+		if (!op && isChargeAble()) return "Det koster 5 gullbarer for å lage eller flytte en plass";
 		return "Det skjedde en feil, henvend deg til en Admin";
+	}
+	
+	public boolean isSpawnSafe() {
+		Location loc = getSpawn();
+		Block block = loc.getBlock();
+		Material a = block.getRelative(0, 1, 0).getType();
+		Material b = block.getRelative(0, 0, 0).getType();
+		Material c = block.getRelative(0, -1, 0).getType();
+		Material d = block.getRelative(0, -2, 0).getType();
+		Material air = Material.AIR;
+		
+		if (getPvP()) return false;
+		
+		if (!a.equals(air) || !b.equals(air) || (c.equals(air) && d.equals(air))) return false;
+		
+		for (String spotBlock : Config.getConfig().getSpotBlocks()) {
+			Material mat = Material.getMaterial(spotBlock);
+			if (c.equals(mat)) return false;
+			if (c.equals(air) && d.equals(mat)) return false;
+		}
+		
+		World world = loc.getWorld();
+		int locMaxX = loc.getBlockX() + 2;
+		int locMaxY = loc.getBlockY() + 3;
+		int locMaxZ = loc.getBlockZ() + 2;
+		int locX = loc.getBlockX() - 2;
+		while (locMaxX >= locX) {
+			int locY = loc.getBlockY() - 2;
+			while (locMaxY >= locY) {
+				int locZ = loc.getBlockZ() - 2;
+				while (locMaxZ >= locZ) {
+					Material mat = world.getBlockAt(locX, locY, locZ).getType();
+					for (String areaBlock : Config.getConfig().getAreaBlocks()) {
+						Material m = Material.getMaterial(areaBlock);
+						if (mat.equals(m)) return false;
+					}
+					locZ++;
+				}
+				locY++;
+			}
+			locX++;
+		}
+		return true;
 	}
 	
 	private int distanceToSpawn(Location loc) {
@@ -506,5 +581,34 @@ public class Place {
 	    	}
 		}
 		return list;
+	}
+	
+	private void startPvPTask() {
+		int taskId = Bukkit.getServer().getScheduler().runTaskTimer(ThePlugin.getPlugin(), new Runnable() {
+			int sec = 120;
+			public void run() {
+				Place place = getPlace(getId());
+				Player owner = MyPlayer.getPlayerById(place.getOwner()).getOnlinePlayer();
+				if (sec == 30 || (sec < 6 && sec > 0)) {
+					for (Player player : MyPlayer.getPlayersInArea(place.getCenter(), place.getRadius())) {
+						if (player != owner) player.sendMessage(Color.UNSAFE + "PvP modus aktiveres om " + sec);
+					}
+				} else if (sec == 0) {
+					place.setPvP(true);
+					place.setPvPTaskId(0);
+					if (owner != null) owner.sendMessage(place.getColorName() + " er satt i PvP modus");
+					for (Player player : MyPlayer.getPlayersInArea(place.getCenter(), place.getRadius())) {
+						if (player != owner) player.sendMessage(Color.WARNING + "PvP modus aktivert, pass deg for andre spillere!");
+					}
+				}
+				sec--;
+			}
+		}, 1, 20).getTaskId();
+		setPvPTaskId(taskId);
+	}
+	
+	private void cancelPvPTask() {
+		Bukkit.getServer().getScheduler().cancelTask(getPvPTaskId());
+		setPvPTaskId(0);
 	}
 }

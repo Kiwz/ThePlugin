@@ -120,10 +120,11 @@ public class PlaceCmd {
 				} else if (mySender.isDamaged()) {
 					warning = "Du kan ikke teleportere rett etter du har tatt skade";
 				} else {
-					if (place.hasAccess(mySender) || (!place.getPriv() && Util.isSpawnSafe(place.getSpawn()))) {
+					if (place.hasAccess(mySender) || (!place.getPriv() && place.isSpawnSafe())) {
 						mySender.getOnlinePlayer().teleport(place.getSpawn());
 					} else {
-						warning = place.getColorName() + Color.WARNING + " har ingen spawn";
+						warning = "Plassen du ønsker å besøke kan være farlig!\n" + Color.INFO
+								+ "Teleportering til " + place.getColorName() + " er avbrutt";
 					}
 				}
 			} else if (args[0].equalsIgnoreCase("setspawn")) {
@@ -191,8 +192,13 @@ public class PlaceCmd {
 					else info = place.getColorName() + " er nå offentlig";
 				} else if (args[2].equalsIgnoreCase("pvp")) {
 					place.setPvP(!place.getPvP());
-					if (place.getPvP()) info = place.getColorName() + " er nå i PvP modus";
-					else info = place.getColorName() + " er ikke i PvP modus";
+					if (place.getPvPTaskId() != 0) {
+						info = place.getColorName() + " blir ikke satt i PvP modus";
+					} else if (!place.getPvP()) {
+						info = place.getColorName() + " er ikke i PvP modus";
+					} else {
+						info = place.getColorName() + " blir satt i PvP modus om ca 2 min";
+					}
 				} else if (args[2].equalsIgnoreCase("monstre")) {
 					place.setMonsters(!place.getMonsters());
 					if (place.getMonsters()) info = "Monstre vil nå spawne i " + place.getColorName();
@@ -299,8 +305,8 @@ public class PlaceCmd {
 		list.add(Color.INFO + "Eier: " + Color.VARIABLE + MyPlayer.getColorName(MyPlayer.getPlayerById(place.getOwner())));
 		list.add(Color.INFO + "Medlemmer: " + Color.VARIABLE + members + " ");
 		list.add(Color.INFO + "Verden: " + Color.VARIABLE + place.getCenter().getWorld().getName() + Color.INFO
-				 + " Sentrum: " + Color.VARIABLE + center + Color.INFO
-				 + " Størrelse: " + Color.VARIABLE + size + " x " + size);
+				+ " Sentrum: " + Color.VARIABLE + center + Color.INFO
+				+ " Størrelse: " + Color.VARIABLE + size + " x " + size);
 		list.add(Color.INFO + "Spawn: " + Color.VARIABLE + spawn
 				+ Color.INFO + " PvP: " + Color.VARIABLE + pvp
 				+ Color.INFO + " Monstre: " + Color.VARIABLE + monsters

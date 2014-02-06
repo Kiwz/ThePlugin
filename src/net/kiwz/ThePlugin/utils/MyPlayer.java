@@ -13,6 +13,7 @@ import net.minecraft.server.v1_7_R1.WorldServer;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
@@ -294,9 +295,9 @@ public class MyPlayer {
 	}
 	
 	public boolean isOld() {
-		long dayes = 30;
-		long timeSinceLastPlayed = System.currentTimeMillis() / 1000 - this.lastPlayed;
-		if (timeSinceLastPlayed < dayes * 24 * 60 * 60) return false;
+		long days = 30;
+		long timeSinceLastPlayed = System.currentTimeMillis() / 1000 - getLastPlayed();
+		if (timeSinceLastPlayed < days * 24 * 60 * 60) return false;
 		return true;
 	}
 	
@@ -388,5 +389,21 @@ public class MyPlayer {
         	}
         }
         return player;
+    }
+    
+    public static List<Player> getPlayersInArea(Location center, int radius) {
+    	List<Player> players = new ArrayList<Player>();
+    	for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+			Location loc = player.getLocation();
+    		if (center.getWorld() == loc.getWorld()) {
+    			if ((center.getBlockX() + radius) >= loc.getBlockX()
+					&& (center.getBlockX() - radius) <= loc.getBlockX()
+					&& (center.getBlockZ() + radius) >= loc.getBlockZ()
+					&& (center.getBlockZ() - radius) <= loc.getBlockZ()) {
+						players.add(player);
+					}
+    		}
+    	}
+    	return players;
     }
 }
