@@ -265,7 +265,7 @@ public class Place {
 	}
 	
 	public void setOwner(MyPlayer myPlayer) {
-		setMember(MyPlayer.getPlayer(getOwner()));
+		setMember(MyPlayer.getPlayerById(getOwner()));
 		removeMember(myPlayer);
 		this.owner = myPlayer.getUUID();
 	}
