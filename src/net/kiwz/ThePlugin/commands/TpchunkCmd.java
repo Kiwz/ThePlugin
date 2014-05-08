@@ -24,7 +24,7 @@ public class TpchunkCmd {
 		if (player == null) {
 			sender.sendMessage(Color.COMMAND + "/tpchunk " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length < 4 ) {
-			sender.sendMessage(Color.WARNING + "Du må skrive navnet på verdenen, chunk x, koordinat y og chunk z");
+			sender.sendMessage(Color.WARNING + "Du mÃ¥ skrive navnet pÃ¥ verdenen, chunk x, koordinat y og chunk z");
 		} else {
 			MyWorld myWorld = MyWorld.getWorld(args[0]);
 			int x = Util.parseInt(args[1]);
@@ -36,7 +36,7 @@ public class TpchunkCmd {
 				Chunk chunk = server.getWorld(myWorld.getName()).getChunkAt(x, z);
 				Location loc = chunk.getBlock(8, y, 8).getLocation();
 				player.teleport(loc);
-				sender.sendMessage(Color.INFO + "Du ble teleportert til ønsket chunk");
+				sender.sendMessage(Color.INFO + "Du ble teleportert til Ã¸nsket chunk");
 			}
 		}
 		return true;

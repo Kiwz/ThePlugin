@@ -25,7 +25,7 @@ public class ReplayCmd {
 			} else if (myTarget.getOnlinePlayer() == null) {
 				sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
 			} else if (args.length == 0) {
-				sender.sendMessage(Color.WARNING + "Du må skrive en melding");
+				sender.sendMessage(Color.WARNING + "Du mÃ¥ skrive en melding");
 			} else {
 				String message = "";
 				for (String s : args) {

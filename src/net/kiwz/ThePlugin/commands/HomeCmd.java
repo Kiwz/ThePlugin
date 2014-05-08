@@ -39,7 +39,7 @@ public class HomeCmd {
 		}
 		
 		if (home == null) {
-			sender.sendMessage(Color.WARNING + "Fant ikke ditt hjem, bruk " + Color.VARIABLE + "/setthjem" + Color.WARNING + " for å lage nytt hjem");
+			sender.sendMessage(Color.WARNING + "Fant ikke ditt hjem, bruk " + Color.VARIABLE + "/setthjem" + Color.WARNING + " for Ã¥ lage nytt hjem");
 		} else if (mySender.isDamaged()) {
 			sender.sendMessage(Color.WARNING + "Du kan ikke teleportere rett etter du har tatt skade");
 		} else {
@@ -56,7 +56,7 @@ public class HomeCmd {
 		} else {
 			Home home = new Home(mySender);
 			home.save();
-			sender.sendMessage(Color.INFO + "Du har satt ditt hjem hit, skriv " + Color.VARIABLE + "/hjem" + Color.INFO + " for å komme hit");
+			sender.sendMessage(Color.INFO + "Du har satt ditt hjem hit, skriv " + Color.VARIABLE + "/hjem" + Color.INFO + " for Ã¥ komme hit");
 		}
 		return true;
 	}

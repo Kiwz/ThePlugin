@@ -62,7 +62,7 @@ public class MultiWorld {
 		
 		for (Player player : world.getPlayers()) {
 			player.teleport(MyWorld.getWorld(server.getWorlds().get(0)).getSpawn());
-			player.sendMessage(Color.WARNING + "Verdenen du var i ble slettet, du er nå i hoved-spawnen");
+			player.sendMessage(Color.WARNING + "Verdenen du var i ble slettet, du er nÃ¥ i hoved-spawnen");
 		}
 		
 		for (Place place : Place.getPlaces()) {

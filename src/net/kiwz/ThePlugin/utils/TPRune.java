@@ -13,7 +13,7 @@ public class TPRune {
 			loc.setPitch(player.getLocation().getPitch());
 			loc.setYaw(player.getLocation().getYaw());
 			player.teleport(loc);
-			player.sendMessage(Color.INFO + "Du ble på magisk vis teleportet");
+			player.sendMessage(Color.INFO + "Du ble pÃ¥ magisk vis teleportet");
 		}
 	}
 	
@@ -23,7 +23,7 @@ public class TPRune {
 			loc.setPitch(player.getLocation().getPitch());
 			loc.setYaw(player.getLocation().getYaw());
 			player.teleport(loc);
-			player.sendMessage(Color.INFO + "Du ble på magisk vis teleportet");
+			player.sendMessage(Color.INFO + "Du ble pÃ¥ magisk vis teleportet");
 		}
 	}
 	

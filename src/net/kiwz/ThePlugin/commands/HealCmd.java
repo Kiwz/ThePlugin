@@ -31,7 +31,7 @@ public class HealCmd {
 				myTarget.getOnlinePlayer().setFoodLevel(20);
 				myTarget.getOnlinePlayer().setSaturation(20);
 				myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " ga deg fullt liv og masse mat");
-				sender.sendMessage(MyPlayer.getColorName(myTarget) + " har fått fullt liv og masse mat");
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + " har fÃ¥tt fullt liv og masse mat");
 			}
 		}
 		return true;

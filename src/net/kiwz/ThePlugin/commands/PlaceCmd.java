@@ -26,8 +26,8 @@ public class PlaceCmd {
 		Place place = null;
 		
 		for (String arg : args) {
-			if (!arg.matches("[a-zA-Z-_0-9æøåÆØÅ]+")) {
-				sender.sendMessage(Color.WARNING + "Tillatte tegn er " + Color.VARIABLE + "a-å A-Å 0-9 - _");
+			if (!arg.matches("[a-zA-Z-_0-9Ã¦Ã¸Ã¥Ã†Ã˜Ã…]+")) {
+				sender.sendMessage(Color.WARNING + "Tillatte tegn er " + Color.VARIABLE + "a-Ã¥ A-Ã… 0-9 - _");
 				return true;
 			}
 		}
@@ -123,7 +123,7 @@ public class PlaceCmd {
 					if (place.hasAccess(mySender) || (!place.getPriv() && place.isSpawnSafe())) {
 						mySender.getOnlinePlayer().teleport(place.getSpawn());
 					} else {
-						warning = "Plassen du ønsker å besøke kan være farlig!\n" + Color.INFO
+						warning = "Plassen du Ã¸nsker Ã¥ besÃ¸ke kan vÃ¦re farlig!\n" + Color.INFO
 								+ "Teleportering til " + place.getColorName() + " er avbrutt";
 					}
 				}
@@ -188,8 +188,8 @@ public class PlaceCmd {
 			} else if (args[0].equalsIgnoreCase("toggle")) {
 				if (args[2].equalsIgnoreCase("privat")) {
 					place.setPriv(!place.getPriv());
-					if (place.getPriv()) info = place.getColorName() + " er nå privat";
-					else info = place.getColorName() + " er nå offentlig";
+					if (place.getPriv()) info = place.getColorName() + " er nÃ¥ privat";
+					else info = place.getColorName() + " er nÃ¥ offentlig";
 				} else if (args[2].equalsIgnoreCase("pvp")) {
 					place.setPvP(!place.getPvP());
 					if (place.getPvPTaskId() != 0) {
@@ -201,11 +201,11 @@ public class PlaceCmd {
 					}
 				} else if (args[2].equalsIgnoreCase("monstre")) {
 					place.setMonsters(!place.getMonsters());
-					if (place.getMonsters()) info = "Monstre vil nå spawne i " + place.getColorName();
+					if (place.getMonsters()) info = "Monstre vil nÃ¥ spawne i " + place.getColorName();
 					else info = "Monstre vil ikke spawne i " + place.getColorName();
 				} else if (args[2].equalsIgnoreCase("dyr")) {
 					place.setAnimals(!place.getAnimals());
-					if (place.getAnimals()) info = "Dyr (og villager) vil nå spawne i " + place.getColorName();
+					if (place.getAnimals()) info = "Dyr (og villager) vil nÃ¥ spawne i " + place.getColorName();
 					else info = "Dyr (og villager) vil ikke spawne i " + place.getColorName();
 				} else {
 					warning = "/plass toggle <plass-navn> <[privat] [pvp] [monstre] [dyr]>";
@@ -215,7 +215,7 @@ public class PlaceCmd {
 					warning = Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her";
 				} else {
 					if (place.setMember(myTarget)) {
-						info = MyPlayer.getColorName(myTarget) + " er nå medlem av " + place.getColorName();
+						info = MyPlayer.getColorName(myTarget) + " er nÃ¥ medlem av " + place.getColorName();
 						target = Color.INFO + "Du er blitt medlem av " + place.getColorName();
 					} else {
 						info = MyPlayer.getColorName(myTarget) + Color.INFO + " er allerede medlem av " + place.getColorName();
@@ -226,7 +226,7 @@ public class PlaceCmd {
 					warning = Color.PLAYER + args[2] + Color.WARNING + " er ikke en spiller her";
 				} else {
 					if (place.removeMember(myTarget)) {
-						info = MyPlayer.getColorName(myTarget) + " er nå sparket ut av " + place.getColorName();
+						info = MyPlayer.getColorName(myTarget) + " er nÃ¥ sparket ut av " + place.getColorName();
 						target = Color.WARNING + "Du er sparket fra " + place.getColorName();
 					} else {
 						info = MyPlayer.getColorName(myTarget) + Color.INFO + " er ikke medlem av " + place.getColorName();
@@ -240,7 +240,7 @@ public class PlaceCmd {
 						info = MyPlayer.getColorName(myTarget) + Color.INFO + " er allerede eier av " + place.getColorName();
 					} else {
 						place.setOwner(myTarget);
-						info = MyPlayer.getColorName(myTarget) + " er nå eier av " + place.getColorName();
+						info = MyPlayer.getColorName(myTarget) + " er nÃ¥ eier av " + place.getColorName();
 						target = Color.INFO + "Du er blitt eier av " + place.getColorName();
 					}
 				}
@@ -306,12 +306,12 @@ public class PlaceCmd {
 		list.add(Color.INFO + "Medlemmer: " + Color.VARIABLE + members + " ");
 		list.add(Color.INFO + "Verden: " + Color.VARIABLE + place.getCenter().getWorld().getName() + Color.INFO
 				+ " Sentrum: " + Color.VARIABLE + center + Color.INFO
-				+ " Størrelse: " + Color.VARIABLE + size + " x " + size);
+				+ " StÃ¸rrelse: " + Color.VARIABLE + size + " x " + size);
 		list.add(Color.INFO + "Spawn: " + Color.VARIABLE + spawn
 				+ Color.INFO + " PvP: " + Color.VARIABLE + pvp
 				+ Color.INFO + " Monstre: " + Color.VARIABLE + monsters
 				+ Color.INFO + " Dyr: " + Color.VARIABLE + animals);
-		list.add(Color.INFO + "Entré melding: " + Color.VARIABLE + place.getEnter());
+		list.add(Color.INFO + "EntrÃ¨ melding: " + Color.VARIABLE + place.getEnter());
 		list.add(Color.INFO + "Forlate melding: " + Color.VARIABLE + place.getLeave());
 		
 		String about = Color.INFO + "[" + place.getColorName() + "]" + ChatColor.GRAY + " (" + Util.getTimeDate(place.getTime()) + ")";
@@ -323,31 +323,31 @@ public class PlaceCmd {
 		ChatColor gold = ChatColor.GOLD;
 		List<String> help = new ArrayList<String>();
 		help.add(gold + "/plass her");
-		help.add(white + "Viser info om plassen du står på");
+		help.add(white + "Viser info om plassen du stÃ¥r pÃ¥");
 		help.add(gold + "/plass <plass-navn>");
 		help.add(white + "Viser info om angitte plass");
 		help.add(gold + "/plass ny <plass-navn>");
-		help.add(white + "Lager ny plass der du står (størrelse blir 81x81)");
+		help.add(white + "Lager ny plass der du stÃ¥r (stÃ¸rrelse blir 81x81)");
 		help.add(gold + "/plass ny <plass-navn> <radius>");
-		help.add(white + "Lager ny plass der du står med ønsket radius");
+		help.add(white + "Lager ny plass der du stÃ¥r med Ã¸nsket radius");
 		help.add(gold + "/plass flytt <plass-navn>");
-		help.add(white + "Flytter plassen din til der du står");
+		help.add(white + "Flytter plassen din til der du stÃ¥r");
 		help.add(gold + "/plass endre <plass-navn> <radius>");
-		help.add(white + "Endrer størrelsen på angitt plass til angitt radius");
+		help.add(white + "Endrer stÃ¸rrelsen pÃ¥ angitt plass til angitt radius");
 		help.add(gold + "/plass spawn <plass-navn>");
 		help.add(white + "Teleporterer deg til spawn i angitt plass");
 		help.add(gold + "/plass setspawn <plass-navn>");
-		help.add(white + "Setter ny spawn til der du står for angitt plass");
+		help.add(white + "Setter ny spawn til der du stÃ¥r for angitt plass");
 		help.add(gold + "/plass medlem <plass-navn> <spiller-navn>");
-		help.add(white + "Inviterer spiller til å bli medlem av angitt plass");
+		help.add(white + "Inviterer spiller til Ã¥ bli medlem av angitt plass");
 		help.add(gold + "/plass spark <plass-navn> <spiller-navn>");
 		help.add(white + "Fjerner spiller som medlem av angitt plass");
 		help.add(gold + "/plass eier <plass-navn> <spiller-navn>");
-		help.add(white + "Setter ny eier i angitt plass, DU kan IKKE gjøre om dette");
+		help.add(white + "Setter ny eier i angitt plass, DU kan IKKE gjÃ¸re om dette");
 		help.add(gold + "/plass navn <plass-navn> <nytt-plass-navn>");
-		help.add(white + "Bytter navn på angitt plass");
+		help.add(white + "Bytter navn pÃ¥ angitt plass");
 		help.add(gold + "/plass toggle <plass-navn> [privat, pvp, monstre, dyr]");
-		help.add(white + "Skrur på/av privat, pvp, monstre eller dyr for angitt plass");
+		help.add(white + "Skrur pÃ¥/av privat, pvp, monstre eller dyr for angitt plass");
 		help.add(gold + "/plass entre <plass-navn> <ny velkomst-melding>");
 		help.add(white + "Setter ny velkomst-melding for angitt plass");
 		help.add(gold + "/plass entre <plass-navn>");

@@ -114,8 +114,8 @@ public class WorldCmd {
 				else info = "Monster grifing er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("trample")) {
 				myWorld.setTrample(!myWorld.getTrample());
-				if (myWorld.getTrample()) info = "Tråkking er aktivert for " + Color.VARIABLE + myWorld.getName();
-				else info = "Tråkking er deaktivert for " + Color.VARIABLE + myWorld.getName();
+				if (myWorld.getTrample()) info = "TrÃ¥kking er aktivert for " + Color.VARIABLE + myWorld.getName();
+				else info = "TrÃ¥kking er deaktivert for " + Color.VARIABLE + myWorld.getName();
 			} else if (args[0].equalsIgnoreCase("pvp")) {
 				myWorld.setPvp(!myWorld.getPvp());
 				if (myWorld.getPvp()) info = "PvP er aktivert for " + Color.VARIABLE + myWorld.getName();
@@ -136,7 +136,7 @@ public class WorldCmd {
 				chunkLag.sendChunks(sender, args[1]);
 			} else if (args[0].equalsIgnoreCase("delete")) {
 				MultiWorld.unloadWorld(myWorld);
-				info = Color.VARIABLE + myWorld.getName() + Color.INFO + " er nå slettet";
+				info = Color.VARIABLE + myWorld.getName() + Color.INFO + " er nÃ¥ slettet";
 			} else {
 				Util.sendAsPages(sender, args[0], 0, "Hjelp: /world", "", help());
 			}
@@ -145,7 +145,7 @@ public class WorldCmd {
 			if (args[0].equalsIgnoreCase("border")) {
 				myWorld.setBorder(Util.parseInt(args[2]));
 				int size = myWorld.getBorder() * 2;
-				info = "Ny størrelse for " + Color.VARIABLE + myWorld.getName() + " er " + Color.VARIABLE + size;
+				info = "Ny stÃ¸rrelse for " + Color.VARIABLE + myWorld.getName() + " er " + Color.VARIABLE + size;
 			} else if (args[0].equalsIgnoreCase("lag") || args[0].equalsIgnoreCase("lagg")) {
 				chunkLag.sendChunks(sender, args[1], args[2]);
 			} else {
@@ -185,17 +185,17 @@ public class WorldCmd {
 		String type = myWorld.getType().toString();
 		String seed = myWorld.getSeed() + "";
 		
-		list.add(Color.INFO + "Størrelse: " + Color.VARIABLE + size
+		list.add(Color.INFO + "StÃ¸rrelse: " + Color.VARIABLE + size
 				+ Color.INFO + " Plasser: " + Color.VARIABLE + claimable);
 		list.add(Color.INFO + "Ill spredning: " + Color.VARIABLE + fireSpread
 				+ Color.INFO + " Eksplosjoner: " + Color.VARIABLE + explosions);
 		list.add(Color.INFO + "Monster grifing: " + Color.VARIABLE + monsterGrief
-				+ Color.INFO + " Tråkking: " + Color.VARIABLE + trample);
+				+ Color.INFO + " TrÃ¥kking: " + Color.VARIABLE + trample);
 		list.add(Color.INFO + "Monstre: " + Color.VARIABLE + monsters
 				+ Color.INFO + " Dyr: " + Color.VARIABLE + animals);
 		list.add(Color.INFO + "PvP: " + Color.VARIABLE + pvp
 				+ Color.INFO + " Behold spawn i minne: " + Color.VARIABLE + keepSpawn);
-		list.add(Color.INFO + "Frø: " + Color.VARIABLE + seed);
+		list.add(Color.INFO + "FrÃ¸: " + Color.VARIABLE + seed);
 
 		String about = (myWorld.getName().toUpperCase());
 		String adminInfo = (environment + ", " + type);
@@ -208,7 +208,7 @@ public class WorldCmd {
 			list.add(Color.VARIABLE + world.getName().toUpperCase());
 		}
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
-		Util.sendAsPages(sender, "1", 10, "Våre verdener", "", list);
+		Util.sendAsPages(sender, "1", 10, "VÃ¥re verdener", "", list);
 	}
 	
 	private List<String> help() {
@@ -228,37 +228,37 @@ public class WorldCmd {
 		help.add(white + "Lager ny normal verden");
 		help.add(yellow + "Environment: NORMAL, NETHER, THE_END");
 		help.add(yellow + "Type: NORMAL, FLAT, LARGE_BIOMES, VERSION1");
-		help.add(yellow + "Seed: Må være ett tall (kan være negativt)");
+		help.add(yellow + "Seed: MÃ¥ vÃ¦re ett tall (kan vÃ¦re negativt)");
 		help.add(gold + "/world new <verden-navn> [Environment]");
 		help.add(white + "Lager ny verden med oppgitte omgivelsen");
 		help.add(gold + "/world new <verden-navn> [Environment] [Type]");
 		help.add(white + "Lager ny verden med oppgitte omgivelsen og typen");
 		help.add(gold + "/world new <verden-navn> [Environment] [Type] [Seed]");
-		help.add(white + "Lager ny verden med oppgitte omgivelse, type og frø");
+		help.add(white + "Lager ny verden med oppgitte omgivelse, type og frÃ¸");
 		help.add(gold + "/world border <verden-navn> <radius>");
 		help.add(white + "Setter ny grense for oppgitte verden");
 		help.add(gold + "/world fill <verden-navn>");
 		help.add(white + "Genererer alle chunks t.o.m. 12 chunks utenfor border");
 		help.add(gold + "/world cancelfill <verden-navn>");
-		help.add(white + "Avbryter en pågående generering av angitt verden");
+		help.add(white + "Avbryter en pÃ¥gÃ¥ende generering av angitt verden");
 		help.add(gold + "/world claimable <verden-navn>");
-		help.add(white + "Skrur på/av mulighet for å lage plasser");
+		help.add(white + "Skrur pÃ¥/av mulighet for Ã¥ lage plasser");
 		help.add(gold + "/world firespread <verden-navn>");
-		help.add(white + "Skrur på/av ill spredning");
+		help.add(white + "Skrur pÃ¥/av ill spredning");
 		help.add(gold + "/world explosions <verden-navn>");
-		help.add(white + "Skrur på/av eksplosjoner");
+		help.add(white + "Skrur pÃ¥/av eksplosjoner");
 		help.add(gold + "/world monstergrief <verden-navn>");
-		help.add(white + "Skrur på/av Monster grifing");
+		help.add(white + "Skrur pÃ¥/av Monster grifing");
 		help.add(gold + "/world trample <verden-navn>");
-		help.add(white + "Skrur på/av tråkking");
+		help.add(white + "Skrur pÃ¥/av trÃ¥kking");
 		help.add(gold + "/world pvp <verden-navn>");
-		help.add(white + "Skrur på/av PvP");
+		help.add(white + "Skrur pÃ¥/av PvP");
 		help.add(gold + "/world monsters <verden-navn>");
-		help.add(white + "Skrur på/av monstre");
+		help.add(white + "Skrur pÃ¥/av monstre");
 		help.add(gold + "/world animals <verden-navn>");
-		help.add(white + "Skrur på/av dyr");
+		help.add(white + "Skrur pÃ¥/av dyr");
 		help.add(gold + "/world keepspawn <verden-navn>");
-		help.add(white + "Skrur på/av beholde spawn i minne");
+		help.add(white + "Skrur pÃ¥/av beholde spawn i minne");
 		help.add(gold + "/world lag [dyr, monstre, items, alt] [antall]");
 		help.add(white + "Informerer om de mest laggete chunksa");
 		return help;

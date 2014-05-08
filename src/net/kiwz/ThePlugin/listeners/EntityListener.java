@@ -36,7 +36,7 @@ import org.bukkit.projectiles.ProjectileSource;
 
 public class EntityListener implements Listener {
 	private String denyString = Color.WARNING + "Du har ingen tilgang her";
-	private String pvpDenyString = Color.WARNING + "PvP er deaktivert på denne plassen";
+	private String pvpDenyString = Color.WARNING + "PvP er deaktivert pÃ¥ denne plassen";
 	
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onHangingBreak(HangingBreakByEntityEvent event) {
@@ -97,7 +97,7 @@ public class EntityListener implements Listener {
 				playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade en Admin");
 			} else if (!MyPlayer.getPlayer(playerAttacker).isPvp()) {
 				event.setCancelled(true);
-				playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade andre når du har skrudd av pvp");
+				playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade andre nÃ¥r du har skrudd av pvp");
 			} else if (place != null) {
 				if (!place.getPvP()) {
 					event.setCancelled(true);
@@ -130,7 +130,7 @@ public class EntityListener implements Listener {
 					playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade en Admin");
 				} else if (!MyPlayer.getPlayer(playerAttacker).isPvp()) {
 					event.setCancelled(true);
-					playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade andre når du har skrudd av pvp");
+					playerAttacker.sendMessage(Color.WARNING + "Du kan ikke skade andre nÃ¥r du har skrudd av pvp");
 				} else if (place != null) {
 					if (!place.getPvP()) {
 						event.setCancelled(true);

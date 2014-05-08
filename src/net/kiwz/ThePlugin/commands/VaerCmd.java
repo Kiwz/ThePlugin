@@ -22,16 +22,16 @@ public class VaerCmd {
 			sender.sendMessage(Color.COMMAND + "/vaer " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length == 0) {
 			player.resetPlayerWeather();
-			sender.sendMessage(Color.INFO + "Ditt vær er lik serveren sitt vær");
+			sender.sendMessage(Color.INFO + "Ditt vÃ¦r er lik serveren sitt vÃ¦r");
 		} else if (args[0].equalsIgnoreCase("sol")) {
 			player.setPlayerWeather(WeatherType.CLEAR);
-			sender.sendMessage(Color.INFO + "Ditt vær er alltid opphold");
+			sender.sendMessage(Color.INFO + "Ditt vÃ¦r er alltid opphold");
 		} else if (args[0].equalsIgnoreCase("regn")) {
 			player.setPlayerWeather(WeatherType.DOWNFALL);
-			sender.sendMessage(Color.INFO + "Ditt vær er alltid nedbør");
+			sender.sendMessage(Color.INFO + "Ditt vÃ¦r er alltid nedbÃ¸r");
 		} else {
 			player.resetPlayerWeather();
-			sender.sendMessage(Color.INFO + "Ditt vær er lik serveren sitt vær");
+			sender.sendMessage(Color.INFO + "Ditt vÃ¦r er lik serveren sitt vÃ¦r");
 		}
 		return true;
 	}

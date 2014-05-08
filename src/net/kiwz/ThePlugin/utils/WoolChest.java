@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.kiwz.ThePlugin.ThePlugin;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -54,17 +56,22 @@ public class WoolChest {
 		if (enchants != "") {
 			String[] enchant = enchants.split(" ");
 			for (int i = 0; enchant.length > i; i++) {
-				Enchantment ench = Enchantment.getByName(enchant[i]);
-				i++;
-				int level = Integer.parseInt(enchant[i]);
-				if (itemStack.getType() == Material.ENCHANTED_BOOK) {
-					EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
-					meta.addEnchant(ench, level, false);
-					meta.setDisplayName(ChatColor.YELLOW + "Enchanted Book");
-					itemStack.setItemMeta(meta);
-				} else {
-					itemStack.addEnchantment(ench, level);
-				}
+			   	try {
+        				Enchantment ench = Enchantment.getByName(enchant[i]);
+        				i++;
+        				int level = Integer.parseInt(enchant[i]);
+        				if (itemStack.getType() == Material.ENCHANTED_BOOK) {
+        					EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
+        					meta.addEnchant(ench, level, false);
+        					meta.setDisplayName(ChatColor.YELLOW + "Enchanted Book");
+        					itemStack.setItemMeta(meta);
+        				} else {
+        					itemStack.addEnchantment(ench, level);
+        				}
+			    	}
+			   	catch (IllegalArgumentException ex) {
+					ThePlugin.getPlugin().getLogger().warning("Enchantment Error! (" + enchants + ")");
+			   	}
 			}
 		}
 		this.inventory.setItem(index, itemStack);

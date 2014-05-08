@@ -21,10 +21,10 @@ public class GmCmd {
 		} else if (args.length == 0) {
 			if (mySender.getOnlinePlayer().getGameMode().equals(survival)) {
 				mySender.getOnlinePlayer().setGameMode(creative);
-				sender.sendMessage(Color.INFO + "Du er nå i Creative modus");
+				sender.sendMessage(Color.INFO + "Du er nÃ¥ i Creative modus");
 			} else {
 				mySender.getOnlinePlayer().setGameMode(survival);
-				sender.sendMessage(Color.INFO + "Du er nå i Survival modus");
+				sender.sendMessage(Color.INFO + "Du er nÃ¥ i Survival modus");
 			}
 		} else {
 			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
@@ -36,11 +36,11 @@ public class GmCmd {
 				if (myTarget.getOnlinePlayer().getGameMode().equals(survival)) {
 					myTarget.getOnlinePlayer().setGameMode(creative);
 					myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " endret modusen din til Creative");
-					sender.sendMessage(MyPlayer.getColorName(myTarget) + " er nå i Creative modus");
+					sender.sendMessage(MyPlayer.getColorName(myTarget) + " er nÃ¥ i Creative modus");
 				} else {
 					myTarget.getOnlinePlayer().setGameMode(survival);
 					myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(myTarget) + " endret modusen din til Survival");
-					sender.sendMessage(MyPlayer.getColorName(myTarget) + " er nå i Survival modus");
+					sender.sendMessage(MyPlayer.getColorName(myTarget) + " er nÃ¥ i Survival modus");
 				}
 			}
 		}

@@ -140,7 +140,7 @@ public class FillWorld {
 		}
 		if (chunkMap.get(key) == null) {
 			world.save();
-			ThePlugin.getPlugin().getLogger().info("(" + myWorld.getName() + ") Ferdig å generere " + generated + "/" + totChunks + " chunks");
+			ThePlugin.getPlugin().getLogger().info("(" + myWorld.getName() + ") Ferdig Ã¥ generere " + generated + "/" + totChunks + " chunks");
 		}
 	}
 }

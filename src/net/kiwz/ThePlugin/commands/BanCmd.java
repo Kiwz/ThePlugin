@@ -92,9 +92,9 @@ public class BanCmd {
 						+ " frem til " + Color.VARIABLE + Util.getTimeFullDate(banExpire + 60));
 			}
 		} else {
-			sender.sendMessage(Color.WARNING + "For å se hvem som er bannet skriv:");
+			sender.sendMessage(Color.WARNING + "For Ã¥ se hvem som er bannet skriv:");
 			sender.sendMessage("/ban <side-nr>");
-			sender.sendMessage(Color.WARNING + "For å banne en spiller skriv:");
+			sender.sendMessage(Color.WARNING + "For Ã¥ banne en spiller skriv:");
 			sender.sendMessage("/ban <spiller-navn> <minutter> <begrunnelse>");
 		}
 		return true;
@@ -110,7 +110,7 @@ public class BanCmd {
 				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
 			} else if (myTarget.isBanned()) {
 				myTarget.setBanned(false, 0, "", "");
-				sender.sendMessage(MyPlayer.getColorName(myTarget) + " er benådet");
+				sender.sendMessage(MyPlayer.getColorName(myTarget) + " er benÃ¥det");
 			} else {
 				sender.sendMessage(MyPlayer.getColorName(myTarget) + " var ikke bannet");
 			}
@@ -142,7 +142,7 @@ public class BanCmd {
 				sender.sendMessage(Color.INFO + "Du kicket " + MyPlayer.getColorName(myTarget));
 			}
 		} else {
-			sender.sendMessage(Color.WARNING + "Kommandoen må inneholde flere argumenter:");
+			sender.sendMessage(Color.WARNING + "Kommandoen mÃ¥ inneholde flere argumenter:");
 			sender.sendMessage("/kick <spiller-navn> <begrunnelse>");
 		}
 		return true;

@@ -90,7 +90,7 @@ public class PlayerListener implements Listener {
 				}
 				
 				if (woolChest == null){
-					player.sendMessage(MyPlayer.getColorName(myPlayer.getWoolChestOwner()) + Color.WARNING + " har ikke åpnet denne kisten enda");
+					player.sendMessage(MyPlayer.getColorName(myPlayer.getWoolChestOwner()) + Color.WARNING + " har ikke Ã¥pnet denne kisten enda");
 				} else {
 					player.openInventory(woolChest.getInventory());
 				}
@@ -111,7 +111,7 @@ public class PlayerListener implements Listener {
 				if (!(heldItem.equals(boat) || heldItem.equals(cart) || heldItem.equals(sCart) ||
 						heldItem.equals(pCart) || heldItem.equals(hCart))) {
 					event.setCancelled(true);
-					/// Må fikse iPlate og gPlate
+					/// MÃ¥ fikse iPlate og gPlate
 					if (clickedBlock.equals(wPlate) || clickedBlock.equals(sPlate) ||
 							clickedBlock.equals(iPlate) || clickedBlock.equals(gPlate)) {
 						return;
@@ -226,7 +226,7 @@ public class PlayerListener implements Listener {
 		String msg = MyPlayer.getColorName(myPlayer) + Color.PLAYER + ": " + Color.WHITE + event.getMessage();
 		
 		if (myPlayer.isMuted()) {
-			player.sendMessage(Color.WARNING + "En admin har bestemt at du ikke får snakke av gode grunner");
+			player.sendMessage(Color.WARNING + "En admin har bestemt at du ikke fÃ¥r snakke av gode grunner");
 			event.setCancelled(true);
 			return;
 		}
@@ -262,7 +262,7 @@ public class PlayerListener implements Listener {
 		int x = loc.getBlockX();
 		int y = loc.getBlockY();
 		int z = loc.getBlockZ();
-		event.getEntity().sendMessage(Color.WARNING + "Du døde i " + Color.VARIABLE + world
+		event.getEntity().sendMessage(Color.WARNING + "Du dÃ¸de i " + Color.VARIABLE + world
 				+ Color.WARNING + " X: " + Color.VARIABLE + x + Color.WARNING + " Y: " + Color.VARIABLE + y + Color.WARNING + " Z: " + Color.VARIABLE + z);
 	}
 	
@@ -307,8 +307,8 @@ public class PlayerListener implements Listener {
         } else {
         	myPlayer = new MyPlayer(player);
         	myPlayer.save();
-	        log = playerName + " logget inn for første gang (" + worldName + " " + coords + ") [" + ip + "]";
-			event.setJoinMessage(MyPlayer.getColorName(myPlayer) + Color.HEADER + " logget inn for første gang");
+	        log = playerName + " logget inn for fÃ¸rste gang (" + worldName + " " + coords + ") [" + ip + "]";
+			event.setJoinMessage(MyPlayer.getColorName(myPlayer) + Color.HEADER + " logget inn for fÃ¸rste gang");
 			player.teleport(MyWorld.getWorld(player.getWorld()).getSpawn());
 			Bukkit.getScheduler().scheduleSyncDelayedTask(ThePlugin.getPlugin(), new Runnable() {
 				public void run() {
@@ -325,15 +325,15 @@ public class PlayerListener implements Listener {
 			giveItem(player, Material.IRON_HELMET, 1);
 			giveItem(player, Material.IRON_CHESTPLATE, 1);
 			player.sendMessage(Color.INFO + "############################################");
-			player.sendMessage(Color.INFO + "Velkommen som ny spiller på LarvikGaming.net");
+			player.sendMessage(Color.INFO + "Velkommen som ny spiller pÃ¥ LarvikGaming.net");
 			player.sendMessage(Color.INFO + "Kjekt om du vil lese Info-Tavlen i spawnen og " + Color.HEADER + "/regler");
 			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/hjelp" + Color.INFO +
 					" for hjelp, skriv " + Color.HEADER + "/plass" + Color.INFO + " for beskyttelse");
-			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/spawn farm" + Color.INFO +" for å skaffe materialer");
-			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/spawn world " + Color.INFO + "for å finne ett sted du vil bygge");
-			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/plass ny <plass-navn>" + Color.INFO + " for å lage plass");
-			player.sendMessage(Color.INFO + "Kostnad for å lage eller flytte plass er 5 gullbarer");
-			player.sendMessage(Color.INFO + "Du kan eie 3 plasser og invitere hvem du ønsker til din plass");
+			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/spawn farm" + Color.INFO +" for Ã¥ skaffe materialer");
+			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/spawn world " + Color.INFO + "for Ã¥ finne ett sted du vil bygge");
+			player.sendMessage(Color.INFO + "Skriv " + Color.HEADER + "/plass ny <plass-navn>" + Color.INFO + " for Ã¥ lage plass");
+			player.sendMessage(Color.INFO + "Kostnad for Ã¥ lage eller flytte plass er 5 gullbarer");
+			player.sendMessage(Color.INFO + "Du kan eie 3 plasser og invitere hvem du Ã¸nsker til din plass");
 			player.sendMessage(Color.INFO + "############################################");
         }
     	

@@ -21,7 +21,7 @@ public class SpyCmd {
 			sender.sendMessage(Color.WARNING + "SpyMsg er AV");
 		} else {
 			mySender.setSpy(true);
-			sender.sendMessage(Color.INFO + "SpyMsg er PÅ");
+			sender.sendMessage(Color.INFO + "SpyMsg er PÃ…");
 		}
 		return true;
 	}

@@ -18,14 +18,14 @@ public class ChestCmd {
 			sender.sendMessage(Color.COMMAND + "/chest " + Color.WARNING + "kan bare brukes av spillere");
 		} else if (args.length == 0) {
 			mySender.setWoolChestOwner(mySender);
-			sender.sendMessage(Color.INFO + "Du vil nå se dine egne kister");
+			sender.sendMessage(Color.INFO + "Du vil nÃ¥ se dine egne kister");
 		} else {
 			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
 			if (myTarget == null) {
 				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
 			} else {
 				mySender.setWoolChestOwner(myTarget);
-				sender.sendMessage(Color.INFO + "Du vil nå se kistene til " + MyPlayer.getColorName(myTarget));
+				sender.sendMessage(Color.INFO + "Du vil nÃ¥ se kistene til " + MyPlayer.getColorName(myTarget));
 			}
 		}
 		return true;

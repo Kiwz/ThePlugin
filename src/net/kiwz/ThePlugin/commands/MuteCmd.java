@@ -42,8 +42,8 @@ public class MuteCmd {
 	
 	private boolean unMute(CommandSender sender, String[] args) {
 		if (args.length == 0) {
-			sender.sendMessage(Color.WARNING + "Du må skrive navnet på en spiller");
-			sender.sendMessage(Color.WARNING + "Eller " + Color.VARIABLE + "/unmute all" + Color.WARNING + " for å unmute alle");
+			sender.sendMessage(Color.WARNING + "Du mÃ¥ skrive navnet pÃ¥ en spiller");
+			sender.sendMessage(Color.WARNING + "Eller " + Color.VARIABLE + "/unmute all" + Color.WARNING + " for Ã¥ unmute alle");
 		} else if (args[0].equalsIgnoreCase("all")) {
 			for (MyPlayer myPlayer : MyPlayer.getPlayers()) {
 				myPlayer.setMuted(false);

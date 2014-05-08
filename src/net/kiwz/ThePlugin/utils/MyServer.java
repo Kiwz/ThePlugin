@@ -131,7 +131,7 @@ public class MyServer {
 						world.save();
 					}
 					time = System.currentTimeMillis() - time;
-					broadcastMsg(Color.SERVER + "Lagring fullført (" + time + "ms)");
+					broadcastMsg(Color.SERVER + "Lagring fullfÃ¸rt (" + time + "ms)");
 				}
 			}
 		}, 12000, 12000);

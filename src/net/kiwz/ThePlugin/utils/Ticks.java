@@ -31,6 +31,6 @@ public class Ticks implements Runnable {
 		ticksPerSecond = (elapsedTicks * 1000000000.0) / elapsedNanoTime;
 		if (!sender.isOp()) ticksPerSecond = ticksPerSecond + 0.1;
 		tps = df.format(ticksPerSecond);
-		sender.sendMessage(Color.INFO + "TPS: " + Color.VARIABLE + tps + Color.INFO + " (målt over " + delay + " sek)");
+		sender.sendMessage(Color.INFO + "TPS: " + Color.VARIABLE + tps + Color.INFO + " (mÃ¥lt over " + delay + " sek)");
 	}
 }

@@ -49,18 +49,18 @@ public class TpCmd {
 						TpCmd.map.remove(myDestination);
 						TpCmd.schedules.remove(myDestination);
 						if (mySender.getOnlinePlayer() != null) {
-							mySender.getOnlinePlayer().sendMessage(MyPlayer.getColorName(myDestination) + " ønsker ikke besøk av deg");
+							mySender.getOnlinePlayer().sendMessage(MyPlayer.getColorName(myDestination) + " Ã¸nsker ikke besÃ¸k av deg");
 						}
 					}
 				}, 60 * 20);
 				schedules.put(myDestination, scheduleID);
 				map.put(myDestination, mySender);
-				myDestination.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " ønsker å bli teleportert til deg");
-				myDestination.getOnlinePlayer().sendMessage(Color.INFO + "For å hente "
+				myDestination.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " Ã¸nsker Ã¥ bli teleportert til deg");
+				myDestination.getOnlinePlayer().sendMessage(Color.INFO + "For Ã¥ hente "
 						+ MyPlayer.getColorName(mySender) + " skriv: " + Color.COMMAND + "/tpa");
-				sender.sendMessage(Color.INFO + "Venter på aksept fra " + MyPlayer.getColorName(myDestination));
+				sender.sendMessage(Color.INFO + "Venter pÃ¥ aksept fra " + MyPlayer.getColorName(myDestination));
 			} else {
-				sender.sendMessage(Color.WARNING + "Det koster 1 gullbar for å teleportere til " + MyPlayer.getColorName(myDestination));
+				sender.sendMessage(Color.WARNING + "Det koster 1 gullbar for Ã¥ teleportere til " + MyPlayer.getColorName(myDestination));
 			}
 		} else if (!mySender.isAdmin()) {
 			sender.sendMessage(Color.WARNING + "/tp <spiller-navn>");
@@ -113,11 +113,11 @@ public class TpCmd {
 				TpCmd.schedules.remove(myDestination);
 			} else {
 				myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(myDestination) + Color.WARNING
-						+ " forsøkte å teleportere deg, men du hadde ikke 1 gullbar");
+						+ " forsÃ¸kte Ã¥ teleportere deg, men du hadde ikke 1 gullbar");
 				sender.sendMessage(MyPlayer.getColorName(myTarget) + " kunne ikke betale for teleporteringen");
 			}
 		} else {
-			sender.sendMessage(Color.WARNING + "Det er ingen som har sendt teleport forespørsel til deg");
+			sender.sendMessage(Color.WARNING + "Det er ingen som har sendt teleport forespÃ¸rsel til deg");
 		}
 		return true;
 	}

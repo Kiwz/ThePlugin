@@ -36,7 +36,7 @@ public class IgnoreCmd {
 			if (myTarget == null) {
 				sender.sendMessage(Color.PLAYER + args[0] + Color.WARNING + " er ikke en spiller her");
 			} else if (mySender.remIgnored(myTarget)) {
-				sender.sendMessage(Color.INFO + "Du kan nå se hva " + MyPlayer.getColorName(myTarget) + " skriver");
+				sender.sendMessage(Color.INFO + "Du kan nÃ¥ se hva " + MyPlayer.getColorName(myTarget) + " skriver");
 			} else {
 				mySender.addIgnored(myTarget);
 				sender.sendMessage(Color.INFO + "Du vil IKKE se hva " + MyPlayer.getColorName(myTarget) + " skriver");

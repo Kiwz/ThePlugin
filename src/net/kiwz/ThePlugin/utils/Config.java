@@ -95,7 +95,7 @@ public class Config {
 		conf.addDefault(filtersPath, filters);
 		admins.add("Kiwz");
 		conf.addDefault(adminsPath, admins);
-		rules.add("Regler får nummer foran seg i chatten");
+		rules.add("Regler fÃ¥r nummer foran seg i chatten");
 		conf.addDefault(rulesPath, rules);
 		areaBlocks.add("ENUM navn til blokken");
 		conf.addDefault(areaBlocksPath, areaBlocks);

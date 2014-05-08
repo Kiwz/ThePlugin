@@ -487,28 +487,28 @@ public class Place {
 				if (!op && getPlacesByOwner(newOwner).size() >= 3) return MyPlayer.getColorName(newOwner) + Color.WARNING + " eier allerede 3 plasser";
 			}
 			if (!op && !place.getOwner().equals(myPlayer.getUUID())) return "Dette er ikke din plass";
-			if (!place.getName().equalsIgnoreCase(getName()) && usedNames.contains(getName().toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
+			if (!place.getName().equalsIgnoreCase(getName()) && usedNames.contains(getName().toLowerCase())) return "Dette navnet finnes fra fÃ¸r, prÃ¸v ett annet navn";
 			if (place.getSpawn() != getSpawn() && place.getCenter() == getCenter()) {
-				if (getPlace(getSpawn()) == null) return "Du må stå i " + Color.PLACE + getName() + Color.WARNING + " når du setter spawn";
-				if (getPlace(getSpawn()).getId() != (getId())) return "Du må stå i " + Color.PLACE + getName() + Color.WARNING + " når du setter spawn";
+				if (getPlace(getSpawn()) == null) return "Du mÃ¥ stÃ¥ i " + Color.PLACE + getName() + Color.WARNING + " nÃ¥r du setter spawn";
+				if (getPlace(getSpawn()).getId() != (getId())) return "Du mÃ¥ stÃ¥ i " + Color.PLACE + getName() + Color.WARNING + " nÃ¥r du setter spawn";
 			}
 		} else {
 			if (!op && getPlacesByOwner(myPlayer).size() >= 3) return "Du kan ikke lage flere enn 3 plasser";
-			if (usedNames.contains(getName().toLowerCase())) return "Dette navnet finnes fra før, prøv ett annet navn";
+			if (usedNames.contains(getName().toLowerCase())) return "Dette navnet finnes fra fÃ¸r, prÃ¸v ett annet navn";
 		}
 		
-		if (getName().equalsIgnoreCase("liste") || getName().equalsIgnoreCase("her") || getName().equalsIgnoreCase("spiller")) return "Dette navnet er reservert, prøv ett annet navn";
-		if (getName().length() < 2 || getName().length() > 12) return "Navnet må være mellom 2 og 12 bokstaver";
+		if (getName().equalsIgnoreCase("liste") || getName().equalsIgnoreCase("her") || getName().equalsIgnoreCase("spiller")) return "Dette navnet er reservert, prÃ¸v ett annet navn";
+		if (getName().length() < 2 || getName().length() > 12) return "Navnet mÃ¥ vÃ¦re mellom 2 og 12 bokstaver";
 		if (!op && !MyWorld.getWorld(getCenter().getWorld()).getClaimable()) return "Du kan ikke lage plass i denne verdenen";
-		if (!op && getRadius() < 10) return "Plassen du lager må ha en radius større enn 9";
-		if (!op && distanceToSpawn(getCenter()) <= 300 && getRadius() > 15) return "Plasser nære spawn (innenfor 300 blokker) må ha en radius mindre enn 16";
-		if (!op && getRadius() > 70) return "Plassen du lager må ha en radius mindre enn 71";
+		if (!op && getRadius() < 10) return "Plassen du lager mÃ¥ ha en radius stÃ¸rre enn 9";
+		if (!op && distanceToSpawn(getCenter()) <= 300 && getRadius() > 15) return "Plasser nÃ¦re spawn (innenfor 300 blokker) mÃ¥ ha en radius mindre enn 16";
+		if (!op && getRadius() > 70) return "Plassen du lager mÃ¥ ha en radius mindre enn 71";
 		if (!available(this).isEmpty()) {
-			String error = "Du er for nærme følgende plasser: ";
+			String error = "Du er for nÃ¦rme fÃ¸lgende plasser: ";
 			for (Place otherPlace : available(this)) error = error + Color.INFO + "[" + Color.PLACE + otherPlace.getName() + Color.INFO + "] ";
 			return error;
 		}
-		if (!op && isChargeAble()) return "Det koster 5 gullbarer for å lage eller flytte en plass";
+		if (!op && isChargeAble()) return "Det koster 5 gullbarer for Ã¥ lage eller flytte en plass";
 		return "Det skjedde en feil, henvend deg til en Admin";
 	}
 	

@@ -37,7 +37,7 @@ public class FlyCmd {
 				}
 				else {
 					myTarget.getOnlinePlayer().setAllowFlight(true);
-					myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " skrudde på fly modus");
+					myTarget.getOnlinePlayer().sendMessage(MyPlayer.getColorName(mySender) + " skrudde pÃ¥ fly modus");
 					sender.sendMessage(MyPlayer.getColorName(myTarget) + " kan fly");
 				}
 			}

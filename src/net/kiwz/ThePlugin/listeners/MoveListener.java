@@ -61,7 +61,7 @@ public class MoveListener implements Listener {
 		
 		if (MyWorld.getWorld(toLoc.getWorld()).reachedBorder(toLoc)) {
 			player.teleport(fromLoc);
-			player.sendMessage(Color.WARNING + "Du har nådd enden av denne verden");
+			player.sendMessage(Color.WARNING + "Du har nÃ¥dd enden av denne verden");
 		}
 		
 		if (block.getRelative(0, -2, 0).getType().equals(Material.DIAMOND_BLOCK)) {

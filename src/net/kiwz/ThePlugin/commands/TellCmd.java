@@ -16,7 +16,7 @@ public class TellCmd {
 		MyPlayer mySender = MyPlayer.getPlayer(sender);
 		
 		if (args.length == 0) {
-			sender.sendMessage(Color.WARNING + "Du må skrive navnet på en spiller");
+			sender.sendMessage(Color.WARNING + "Du mÃ¥ skrive navnet pÃ¥ en spiller");
 		} else {
 			MyPlayer myTarget = MyPlayer.getPlayer(args[0]);
 			if (myTarget == null) {
@@ -24,7 +24,7 @@ public class TellCmd {
 			} else if (myTarget.getOnlinePlayer() == null) {
 				sender.sendMessage(MyPlayer.getColorName(myTarget) + Color.WARNING + " er ikke online");
 			} else if (args.length == 1) {
-				sender.sendMessage(Color.WARNING + "Du må skrive en melding til " + MyPlayer.getColorName(myTarget));
+				sender.sendMessage(Color.WARNING + "Du mÃ¥ skrive en melding til " + MyPlayer.getColorName(myTarget));
 			} else {
 				String message = "";
 				args[0] = "";

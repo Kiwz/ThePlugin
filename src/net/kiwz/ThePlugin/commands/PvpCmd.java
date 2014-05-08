@@ -21,7 +21,7 @@ public class PvpCmd {
 			sender.sendMessage(Color.SAFE + "PvP er AV");
 		} else {
 			mySender.setPvp(true);
-			sender.sendMessage(Color.UNSAFE + "PvP er PÅ");
+			sender.sendMessage(Color.UNSAFE + "PvP er PÃ…");
 		}
 		return true;
 	}
